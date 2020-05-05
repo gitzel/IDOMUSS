@@ -1,0 +1,11 @@
+CREATE MASTER KEY ENCRYPTION
+BY PASSWORD = 'maguisa' --Setando uma senha para a Chave Mestra
+
+CREATE CERTIFICATE MeuCertificado
+ENCRYPTION BY PASSWORD = 'maguisacertificado'
+WITH SUBJECT = 'Meu Certificado'
+
+CREATE SYMMETRIC KEY MinhaChave
+WITH ALGORITHM = AES_256
+ENCRYPTION BY CERTIFICATE MeuCertificado
+
