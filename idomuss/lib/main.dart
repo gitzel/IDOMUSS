@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:idomuss/Connect.dart';
+import 'package:idomuss/connect.dart';
+import 'package:idomuss/db/cliente.dart';
 
 void main() => runApp(MyApp());
 
@@ -51,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future getApi() async {
-    print((await Conect.cadastro(controller.text, 'qwert')));
+    Cliente teste = new Cliente('0123456','0123456','testeNode1', 'testeNode1@gmail.com', '1237462924', '12/03/1999','Homem', 0, 'oi, sou legal', 'asgdusi.png');
+
+    Connect.deletar(teste, "aeiou");
   }
 
   @override
@@ -92,6 +95,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-
