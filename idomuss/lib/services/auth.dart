@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/user.dart';
 import 'package:idomuss/services/database.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
 
@@ -32,6 +33,21 @@ class AuthService {
       }
     }
 
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    //register with google
+    Future signInWithGoogle(Cliente client)  async {
+      final GoogleSignInAccount googleSignInAccount = await googleSignIn
+          .signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+    }
+
     // register with email & password
     Future register(String email, String password, Cliente client) async{
         try{
@@ -48,6 +64,12 @@ class AuthService {
         }
     }
 
+    //update email
+    Future updateEmailUser(String novoEmail) async {
+
+    }
+
+
     // sign out
     Future signOut() async{
       try{
@@ -56,5 +78,10 @@ class AuthService {
         print(e.toString());
         return null;
       }
+    }
+
+    // sign out with google
+    void signOutGoogle() async{
+      await googleSignIn.signOut();
     }
 }

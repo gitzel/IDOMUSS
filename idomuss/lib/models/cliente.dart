@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
 class Cliente
 {
     @protected

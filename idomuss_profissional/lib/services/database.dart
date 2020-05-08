@@ -18,11 +18,20 @@ class DatabaseService{
           "genero"          : profissional.genero,
           "querGenero"      : profissional.querGenero,
           "descricao"       : profissional.descricao,
-          "foto"            : profissional.foto,
+          "idServico"       : profissional.idServico,
         });
     }
 
     Stream<QuerySnapshot> get collections{
       return collection.snapshots();
+    }
+
+    static Stream<String> getIdServico(String nome) {
+        Stream<String> id = Firestore.instance.collection("servicos").where("nome", isEqualTo: nome).snapshots().map((snapshot){
+          return snapshot.documents.map((doc){
+            return doc.data.keys;
+          }).toString();
+        });
+        return id;
     }
 }
