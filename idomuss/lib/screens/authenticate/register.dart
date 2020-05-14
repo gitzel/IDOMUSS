@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
                 ),
                 onPressed: () async{
                   if(_formKey.currentState.validate()){
-                      dynamic result = _auth.register(email, password,
+                      dynamic result = _auth.signUp(email, password,
                           Cliente('1891293',
                               '2479349739',
                               'Isabela',
@@ -75,7 +75,7 @@ class _RegisterState extends State<Register> {
                               '15/06/2003',
                               'Feminino',
                               1,
-                              'sou linda'));
+                              'sou linda', null, null));
                       if(result == null) {
                           setState(() => error = 'please support a valid email');
                       }

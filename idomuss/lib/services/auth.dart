@@ -1,62 +1,32 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:idomuss/models/cliente.dart';
-import 'package:idomuss/models/user.dart';
+import 'package:idomuss/services/baseAuth.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
+class AuthService implements BaseAuth {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    // create user obj based on FirebaseUser
-    User _userFromFirebaUser(FirebaseUser user){
-      return user != null? User(uid: user.uid) : null;
+    Future<FirebaseUser> getCurrentUser() async {
+      return _auth.currentUser();
     }
 
-    Stream<User> get user{
-      return _auth.onAuthStateChanged.map(_userFromFirebaUser);
-    }
-
-    // sign in with email & password
-    Future signIn(String email, String password, Cliente client) async{
-      try{
-        var result = await  _auth.signInWithEmailAndPassword(email: email, password: password);
-        FirebaseUser user = result.user;
-
-        await DatabaseService(uid: user.uid).updateUserData(client);
-
-        return _userFromFirebaUser(user);
-      }
-      catch(e){
-        print(e.toString());
-        return null;
-      }
-    }
-
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
-    //register with google
-    Future signInWithGoogle(Cliente client)  async {
-      final GoogleSignInAccount googleSignInAccount = await googleSignIn
-          .signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-    }
-
-    // register with email & password
-    Future register(String email, String password, Cliente client) async{
+    Future<Cliente> signIn(String email, String password) async{
         try{
-          var result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+            var result = await  _auth.signInWithEmailAndPassword(email: email, password: password);
+            FirebaseUser user = result.user;
 
-          FirebaseUser user = result.user;
-          await DatabaseService(uid: user.uid).updateUserData(client);
+            Cliente client = await DatabaseService(uid: user.uid).getCliente();
 
-          return _userFromFirebaUser(user);
+            client.email = user.email;
+            client.nome = user.displayName;
+            client.foto = user.photoUrl;
+            client.numeroCelular = user.phoneNumber;
+
+            return client;
         }
         catch(e){
             print(e.toString());
@@ -64,24 +34,123 @@ class AuthService {
         }
     }
 
-    //update email
-    Future updateEmailUser(String novoEmail) async {
+    Future<Cliente> signUp(String email, String password, Cliente client) async{
+        try{
+            var result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
 
+            _auth.verifyPhoneNumber(
+                phoneNumber: client.numeroCelular,
+                timeout:  const Duration(minutes: 2),
+                verificationCompleted: (credential) async{
+                  await (await _auth.currentUser()).updatePhoneNumberCredential(credential);
+                },
+                codeSent: (verificationId, [forceResendingToken]) async {
+                  String smsCode;
+                  final AuthCredential credential =
+                  PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
+                  await (await _auth.currentUser()).updatePhoneNumberCredential(credential);
+                }
+            );
+
+            FirebaseUser user = result.user;
+
+            UserUpdateInfo updateInfo = new UserUpdateInfo();
+
+            updateInfo.displayName = client.nome;
+            updateInfo.photoUrl = client.foto;
+
+            user.updateProfile(updateInfo);
+
+            client.email = user.email;
+
+            return client;
+        }
+        catch(e){
+            print(e.toString());
+            return null;
+        }
     }
 
-
-    // sign out
-    Future signOut() async{
+    Future updateEmail(String newEmail) async{
       try{
-          return await _auth.signOut();
-      }catch(e){
+        (await _auth.currentUser()).updateEmail(newEmail);
+      }
+      catch(e){
         print(e.toString());
         return null;
       }
     }
 
-    // sign out with google
-    void signOutGoogle() async{
-      await googleSignIn.signOut();
+    Future updatePassword(String newPassword) async{
+      try{
+        (await _auth.currentUser()).updatePassword(newPassword);
+      }
+      catch(e){
+        print(e.toString());
+        return null;
+      }
+    }
+
+    Future<void> sendEmailVerification() async {
+        FirebaseUser user = await _auth.currentUser();
+        user.sendEmailVerification();
+    }
+
+    Future<bool> isEmailVerified() async {
+        FirebaseUser user = await _auth.currentUser();
+        return user.isEmailVerified;
+    }
+
+    Future signOut() async{
+        try{
+            return await _auth.signOut();
+        }
+        catch(e){
+            print(e.toString());
+            return null;
+        }
+    }
+
+    Future deleteUser() async{
+        try{
+            FirebaseUser user = (await _auth.currentUser());
+            DatabaseService(uid: user.uid).deleteUserData();
+            user.delete();
+        }
+        catch(e){
+            print(e.toString());
+            return null;
+        }
+    }
+
+    // using google
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    Future<Cliente> signInWithGoogle()  async {
+
+        final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.getCredential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+
+        final AuthResult authResult = await _auth.signInWithCredential(credential);
+        final FirebaseUser user = authResult.user;
+
+        Cliente client = await DatabaseService(uid: user.uid).getCliente();
+
+        client.email = user.email;
+        client.nome = user.displayName;
+        client.foto = user.photoUrl;
+        client.numeroCelular = user.phoneNumber;
+
+        return client;
+    }
+
+    Future signOutGoogle() async{
+        await googleSignIn.signOut();
     }
 }

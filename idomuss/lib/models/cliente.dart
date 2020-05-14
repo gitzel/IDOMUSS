@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 class Cliente
 {
     @protected
-    String uid, _rg, _cpf, email, _nome,_numeroCelular, _dataNascimento, _genero, _descricao;
+    String  _rg, _cpf, _email, _nome,_numeroCelular, _dataNascimento, _genero, _descricao, _foto;
+
+
 
     @protected
     int _querGenero;
@@ -16,14 +18,12 @@ class Cliente
         this._genero,
         this._querGenero,
         this._descricao,
-        {this.uid, this.email});
-
+        this._email,
+        this._foto);
 
     Cliente.fromJson(Map<String, dynamic> json)
         : _rg = json['rg'],
           _cpf = json['cpf'],
-          _nome = json['nome'],
-          _numeroCelular = json['numeroCelular'],
           _dataNascimento = json['dataNascimento'],
           _genero = json['genero'],
           _querGenero = int.parse(json['querGenero']),
@@ -45,6 +45,12 @@ class Cliente
 
     set nome(value) {
         _nome = value;
+    }
+
+    get email => _email;
+
+    set email(value) {
+        _email = value;
     }
 
     get numeroCelular => _numeroCelular;
@@ -75,6 +81,12 @@ class Cliente
 
     set querGenero(int value) {
         _querGenero = value;
+    }
+
+    get foto => _foto;
+
+    set foto(value) {
+        _foto = value;
     }
 }
 

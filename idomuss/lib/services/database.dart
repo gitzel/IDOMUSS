@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
-import 'package:firebase_database/firebase_database.dart' as db;
 import 'package:idomuss/models/endereco.dart';
-
 
 class DatabaseService{
     final String uid;
@@ -15,18 +13,20 @@ class DatabaseService{
     final CollectionReference enderecos = Firestore.instance.collection("endereco");
 
 
-
     Future updateUserData(Cliente cliente) async{
+      /*
+        "foto"            : cliente.foto,
+        "nome"            : cliente.nome,
+      */
+
         return await collection.document(uid).setData({
           "rg"              : cliente.rg,
           "cpf"             : cliente.cpf,
-          "nome"            : cliente.nome,
-          "numeroCelular"   : cliente.numeroCelular,
           "dataNascimento"  : cliente.dataNascimento,
           "genero"          : cliente.genero,
           "querGenero"      : cliente.querGenero,
           "descricao"       : cliente.descricao,
-          });
+        });
     }
 
     Future updateUserAddress(Endereco endereco) async{
@@ -39,7 +39,15 @@ class DatabaseService{
       });
     }
 
-    void  deleteUserData(Cliente cliente) async{
+    Future<Cliente> getCliente() async{
+        List<Cliente> cliente =  await collection.document(uid).snapshots().map((doc){
+          return Cliente.fromJson(doc.data);
+        }).toList();
+
+        return cliente[0];
+    }
+
+    void deleteUserData() async{
         await collection.document(uid).delete();
     }
 

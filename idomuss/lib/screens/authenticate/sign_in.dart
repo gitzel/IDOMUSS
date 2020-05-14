@@ -67,15 +67,7 @@ class _SignInState extends State<SignIn> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async{
-                      dynamic result = _auth.signIn(email, password,
-                          Cliente('1891293',
-                                  '2479349739',
-                                  'Isabela',
-                                  '178237821',
-                                  '15/06/2003',
-                                  'Feminino',
-                                  1,
-                                  'sou linda'));
+                      dynamic result = _auth.signIn(email, password);
                       if(result == null) {
                         setState(() => error = 'could not sign in with those credentials');
                       }
