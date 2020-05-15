@@ -72,13 +72,13 @@ class AuthService implements BaseAuth {
     }
 
     Future updateEmail(String newEmail) async{
-      try{
-        (await _auth.currentUser()).updateEmail(newEmail);
-      }
-      catch(e){
-        print(e.toString());
-        return null;
-      }
+          try{
+                (await _auth.currentUser()).updateEmail(newEmail);
+          }
+          catch(e){
+                print(e.toString());
+                return null;
+          }
     }
 
     Future updatePassword(String newPassword) async{

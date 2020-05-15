@@ -34,4 +34,26 @@ class DatabaseService{
         });
         return id;
     }
+
+    Stream<List<String>> get enderecosFromCliente{
+      return  Firestore.instance.collection("avaliacao").where("uidProfissional", isEqualTo: uid).snapshots().map(_enderecoListFromSnapshot);
+    }
+
+    List<String> _enderecoListFromSnapshot(QuerySnapshot snapshot) {
+      return snapshot.documents.map((doc) {
+        return doc.data["texto"];
+      }).toList();
+    }
+
+    Future<Profissional> getProfissional() async{
+      List<Profissional> profissional =  await collection.document(uid).snapshots().map((doc){
+        return Profissional.fromJson(doc.data);
+      }).toList();
+
+      return profissional.first;
+    }
+
+    void deleteUserData() async{
+        await collection.document(uid).delete();
+    }
 }

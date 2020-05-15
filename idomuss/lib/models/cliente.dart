@@ -5,8 +5,6 @@ class Cliente
     @protected
     String  _rg, _cpf, _email, _nome,_numeroCelular, _dataNascimento, _genero, _descricao, _foto;
 
-
-
     @protected
     int _querGenero;
 

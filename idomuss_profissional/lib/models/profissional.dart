@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class Profissional
 {
     @protected
-    String _rg, _cpf, _cnpj, _nome, _email, _cep, _numeroCelular, _dataNascimento, _genero, _descricao;
+    String _rg, _cpf, _cnpj, _nome, _email, _cep, _numeroCelular, _dataNascimento, _genero, _descricao, _foto;
 
     @protected
     int _querGenero, _idServico;
@@ -25,7 +25,8 @@ class Profissional
         this._genero,
         this._querGenero,
         this._descricao,
-        this._idServico
+        this._idServico,
+        this._foto
         );
 
     Profissional.fromJson(Map<String, dynamic> json)
@@ -54,7 +55,7 @@ class Profissional
             "dataNascimento"  : this._dataNascimento,
             "genero"          : this._genero,
             "querGenero"      : this._querGenero,
-            "descricao"       : this._descricao,
+            "descricao"       : this._descricao
           };
     }
 
@@ -110,6 +111,12 @@ class Profissional
 
     set idServico(value) {
       _idServico = value;
+    }
+
+    get foto => _foto;
+
+    set foto(value) {
+      _foto = value;
     }
 }
 
