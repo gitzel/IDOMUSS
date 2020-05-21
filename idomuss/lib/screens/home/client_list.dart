@@ -10,16 +10,10 @@ class Client_List extends StatefulWidget {
 class _Client_ListState extends State<Client_List> {
   @override
   Widget build(BuildContext context) {
-
     final collection = Provider.of<QuerySnapshot>(context);
     print(collection.documents);
-    for (var doc in collection.documents){
+    for (var doc in collection.documents) {}
 
-    }
-
-    return Container(
-
-
-    );
+    return Container();
   }
 }

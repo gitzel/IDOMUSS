@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class Avaliacao
-{
+class Avaliacao {
   @protected
-  String  _uidProfissional, _texto;
+  String _uidProfissional, _texto;
 
   @protected
   double _nota;
 
-  Avaliacao(this._uidProfissional,
-      this._texto,
-      this._nota);
+  Avaliacao(this._uidProfissional, this._texto, this._nota);
 
   get texto => _texto;
 
@@ -30,4 +27,3 @@ class Avaliacao
     _uidProfissional = value;
   }
 }
-

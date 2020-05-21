@@ -4,7 +4,6 @@ import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/models/cliente.dart';
 
 class CadastroTelefone extends StatefulWidget {
-  
   Cliente cliente;
   CadastroTelefone({this.cliente});
 
@@ -13,7 +12,6 @@ class CadastroTelefone extends StatefulWidget {
 }
 
 class _CadastroTelefoneState extends State<CadastroTelefone> {
-
   final AuthService _auth = AuthService();
   bool valorValido;
   final _formKey = GlobalKey<FormState>();
@@ -23,6 +21,7 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
     valorValido = false;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,19 +38,22 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.arrow_back, color: ColorSys.primary,),
-                onPressed: (){
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: ColorSys.primary,
+                ),
+                onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical:24.0),
-                child: Text('Qual é o seu número de celular?',
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Text(
+                  'Qual é o seu número de celular?',
                   style: TextStyle(
-                    color: ColorSys.black,
-                    fontFamily: 'Montserrat',
-                    fontSize: 18
-                  ),
+                      color: ColorSys.black,
+                      fontFamily: 'Montserrat',
+                      fontSize: 18),
                 ),
               ),
               TextFormField(
@@ -62,14 +64,13 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
                 style: TextStyle(fontFamily: 'Montserrat'),
-                validator: (val) =>
-                    val.isEmpty ? 'Email inválido!' : null,
+                validator: (val) => val.isEmpty ? 'Email inválido!' : null,
                 onChanged: (val) {
                   setState(() {
-                    if(!val.isEmpty){
+                    if (!val.isEmpty) {
                       widget.cliente.email = val;
                       valorValido = true;
-                    }else{
+                    } else {
                       valorValido = false;
                     }
                   });
@@ -80,13 +81,14 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
         ),
       ),
       bottomNavigationBar: FlatButton(
-                      disabledColor: Colors.grey[400],
-                      padding: EdgeInsets.all(24),
-                      child: Text('Continuar', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),),
-                      color: ColorSys.primary,
-                      onPressed: valorValido? (){
-                        
-                      } : null,
+        disabledColor: Colors.grey[400],
+        padding: EdgeInsets.all(24),
+        child: Text(
+          'Continuar',
+          style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+        ),
+        color: ColorSys.primary,
+        onPressed: valorValido ? () {} : null,
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:idomuss/screens/onboarding/onboarding.dart';
 import 'package:idomuss/screens/wrapper.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:provider/provider.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,18 +15,13 @@ class MyApp extends StatelessWidget {
     return StreamProvider.value(
       value: AuthService().user,
       child: MaterialApp(
-        theme: ThemeData(
-          accentColor: ColorSys.primary,
-          primaryColor: ColorSys.primary,
-          splashColor: Colors.white10,
-          fontFamily: 'Montserrat'
-        ),
-        debugShowCheckedModeBanner: false,
-        home: Wrapper()
-       ),
+          theme: ThemeData(
+              accentColor: ColorSys.primary,
+              primaryColor: ColorSys.primary,
+              splashColor: Colors.white10,
+              fontFamily: 'Montserrat'),
+          debugShowCheckedModeBanner: false,
+          home: Wrapper()),
     );
   }
 }
-
-
-

@@ -5,9 +5,6 @@ import 'package:idomuss/screens/authenticate/register.dart';
 import 'package:idomuss/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  
-  SignIn();
-
   @override
   _SignInState createState() => _SignInState();
 }
@@ -33,153 +30,154 @@ class _SignInState extends State<SignIn> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  RichText(
-                    text: new TextSpan(
-                      style: new TextStyle(
-                          fontSize: 48.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat',
-                          color: ColorSys.black),
-                      children: <TextSpan>[
-                        TextSpan(text: 'Olá\nBem vindo'),
-                        TextSpan(
-                            text: '!', style: TextStyle(color: ColorSys.primary)),
-                      ],
-                    ),
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: TextFormField(
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.email),
-                                labelText: 'Email',
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            style: TextStyle(fontFamily: 'Montserrat'),
-                            validator: (val) =>
-                                val.isEmpty ? 'Email inválido!' : null,
-                            onChanged: (val) {
-                              setState(() => email = val);
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 48),
-                          child: TextFormField(
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: escondeSenha,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: escondeSenha
-                                      ? Icon(Icons.visibility)
-                                      : Icon(Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      escondeSenha = !escondeSenha;
-                                    });
-                                  },
-                                ),
-                                labelText: 'Senha',
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            style: TextStyle(fontFamily: 'Montserrat'),
-                            validator: (val) =>
-                                val.isEmpty ? 'Senha inválida!' : null,
-                            onChanged: (val) {
-                              setState(() => password = val);
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 32),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 60,
-                            child: RaisedButton(
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontFamily: 'Montserrat'),
-                                ),
-                                color: ColorSys.primary,
-                                onPressed: () {
-                                    AuthService auth = AuthService();
-                                    auth.signIn(email.trim(), password);
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                          ),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 60,
-                          child: RaisedButton.icon(
-                              icon: ImageIcon(
-                                AssetImage("assets/geral/google_icon.ico"),
-                                color: ColorSys.primary,
-                              ),
-                              label: Text(
-                                'Entrar com o google',
-                                style: TextStyle(
-                                    color: ColorSys.primary,
-                                    fontSize: 18,
-                                    fontFamily: 'Montserrat'),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                              color: ColorSys.gray,
-                              onPressed: () async {
-                                dynamic result = _auth.signIn(email, password);
-                                if (result == null){
-                                  setState(() => error = 'could not sign in with those credentials');
-                                }
-                              },
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  side: BorderSide(
-                                      color: ColorSys.primary, width: 2.0))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Register()),
-                              );
-                            },
-                            child: RichText(
-                              text: new TextSpan(
-                                style: new TextStyle(
-                                    fontSize: 14.0,
-                                    fontFamily: 'Montserrat',
-                                    color: ColorSys.black,
-                                    backgroundColor: ColorSys.gray),
-                                children: <TextSpan>[
-                                  TextSpan(text: 'Novo no app?'),
-                                  TextSpan(
-                                      text: ' Registre-se agora!',
-                                      style: TextStyle(color: ColorSys.primary)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              RichText(
+                text: new TextSpan(
+                  style: new TextStyle(
+                      fontSize: 48.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                      color: ColorSys.black),
+                  children: <TextSpan>[
+                    TextSpan(text: 'Olá\nBem vindo'),
+                    TextSpan(
+                        text: '!', style: TextStyle(color: ColorSys.primary)),
+                  ],
+                ),
               ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: TextFormField(
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+                            labelText: 'Email',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Email inválido!' : null,
+                        onChanged: (val) {
+                          setState(() => email = val);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 48),
+                      child: TextFormField(
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: escondeSenha,
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: escondeSenha
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  escondeSenha = !escondeSenha;
+                                });
+                              },
+                            ),
+                            labelText: 'Senha',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Senha inválida!' : null,
+                        onChanged: (val) {
+                          setState(() => password = val);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 32),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: RaisedButton(
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontFamily: 'Montserrat'),
+                            ),
+                            color: ColorSys.primary,
+                            onPressed: () {
+                              AuthService auth = AuthService();
+                              auth.signIn(email.trim(), password);
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0))),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 60,
+                      child: RaisedButton.icon(
+                          icon: ImageIcon(
+                            AssetImage("assets/geral/google_icon.ico"),
+                            color: ColorSys.primary,
+                          ),
+                          label: Text(
+                            'Entrar com o google',
+                            style: TextStyle(
+                                color: ColorSys.primary,
+                                fontSize: 18,
+                                fontFamily: 'Montserrat'),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          color: ColorSys.gray,
+                          onPressed: () async {
+                            dynamic result = _auth.signIn(email, password);
+                            if (result == null) {
+                              setState(() => error =
+                                  'could not sign in with those credentials');
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              side: BorderSide(
+                                  color: ColorSys.primary, width: 2.0))),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Register()),
+                          );
+                        },
+                        child: RichText(
+                          text: new TextSpan(
+                            style: new TextStyle(
+                                fontSize: 14.0,
+                                fontFamily: 'Montserrat',
+                                color: ColorSys.black,
+                                backgroundColor: ColorSys.gray),
+                            children: <TextSpan>[
+                              TextSpan(text: 'Novo no app?'),
+                              TextSpan(
+                                  text: ' Registre-se agora!',
+                                  style: TextStyle(color: ColorSys.primary)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

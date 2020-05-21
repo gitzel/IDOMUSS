@@ -10,10 +10,8 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
-
   List<SliderModel> paginas;
   int currentIndex = 0;
-  
 
   @override
   void initState() {
@@ -34,102 +32,100 @@ class _OnBoardingState extends State<OnBoarding> {
         children: <Widget>[
           PageView.builder(
             itemCount: paginas.length,
-            itemBuilder: (context, index){
+            itemBuilder: (context, index) {
               return SlideTile(
                 imagePath: paginas[index].imagem,
                 titulo: paginas[index].titulo,
                 descricao: paginas[index].descricao,
               );
             },
-            onPageChanged: (index){
+            onPageChanged: (index) {
               setState(() {
                 currentIndex = index;
               });
             },
           ),
-         Row(
-           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-           children: <Widget>[
-            InkWell(
-              onTap: (){},
-              child: Text("Pular"),
-            ),
-            Container(
-            child: Row(
-                children: _buildIndicator(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              InkWell(
+                onTap: () {},
+                child: Text("Pular"),
               ),
-            ),
-            InkWell(
-              onTap: (){},
-              child: Text("Pular"),
-            )
-           ],
-         ),
-         
-         
+              Container(
+                child: Row(
+                  children: _buildIndicator(),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Text("Pular"),
+              )
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget makePage({image, title, content}){
+  Widget makePage({image, title, content}) {
     return Container(
       padding: EdgeInsets.only(left: 50, right: 50),
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(horizontal:20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Image.asset(image),
           ),
-          SizedBox(height: 30,),
-          RichText(
-            text:TextSpan(
-              text: title,
-              style: TextStyle(
-                color: ColorSys.black, 
-                fontSize: 24, 
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',  // tem q instalar a fonte
-              ),
-            ),
-            textAlign: TextAlign.center
+          SizedBox(
+            height: 30,
           ),
-          SizedBox(height: 20,),
           RichText(
-            text:TextSpan(
-              text: content,
-              style: TextStyle(
-                color: ColorSys.gray, 
-                fontFamily: 'Montserrat',  // tem q instalar a fonte
+              text: TextSpan(
+                text: title,
+                style: TextStyle(
+                  color: ColorSys.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Montserrat', // tem q instalar a fonte
+                ),
               ),
-            ),
-            textAlign: TextAlign.center
+              textAlign: TextAlign.center),
+          SizedBox(
+            height: 20,
           ),
+          RichText(
+              text: TextSpan(
+                text: content,
+                style: TextStyle(
+                  color: ColorSys.gray,
+                  fontFamily: 'Montserrat', // tem q instalar a fonte
+                ),
+              ),
+              textAlign: TextAlign.center),
         ],
       ),
     );
   }
 
-  Widget _indicator(bool isActive){
+  Widget _indicator(bool isActive) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       height: 8,
       width: isActive ? 30 : 8,
-      margin: EdgeInsets.only(right:5),
+      margin: EdgeInsets.only(right: 5),
       decoration: BoxDecoration(
-        color: ColorSys.primary,
-        borderRadius: BorderRadius.circular(5)
-      ),
+          color: ColorSys.primary, borderRadius: BorderRadius.circular(5)),
     );
   }
 
-  List<Widget> _buildIndicator(){
+  List<Widget> _buildIndicator() {
     List<Widget> indicators = [];
 
-    for(int i = 0; i < paginas.length; i++){
-      if (currentIndex == i){
+    for (int i = 0; i < paginas.length; i++) {
+      if (currentIndex == i) {
         indicators.add(_indicator(true));
-      }else{
+      } else {
         indicators.add(_indicator(false));
       }
     }
@@ -137,4 +133,3 @@ class _OnBoardingState extends State<OnBoarding> {
     return indicators;
   }
 }
-

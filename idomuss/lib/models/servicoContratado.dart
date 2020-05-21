@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
-class ServicoContratado
-{
+class ServicoContratado {
   @protected
-  String  _uidServicoContratado, _descricao, _situacao, _data, _uidProfissional,_uidCliente, _uidServico;
+  String _uidServicoContratado,
+      _descricao,
+      _situacao,
+      _data,
+      _uidProfissional,
+      _uidCliente,
+      _uidServico;
 
   String get uidServicoContratado => _uidServicoContratado;
 
@@ -20,13 +25,8 @@ class ServicoContratado
   @protected
   double _preco;
 
-  ServicoContratado(this._descricao,
-      this._preco,
-      this._data,
-      this._situacao,
-      this._uidProfissional,
-      this._uidCliente,
-      this._uidServico);
+  ServicoContratado(this._descricao, this._preco, this._data, this._situacao,
+      this._uidProfissional, this._uidCliente, this._uidServico);
 
   ServicoContratado.fromJson(Map<String, dynamic> json)
       : _uidServico = json['uidServico'],
@@ -73,4 +73,3 @@ class ServicoContratado
     _preco = value;
   }
 }
-

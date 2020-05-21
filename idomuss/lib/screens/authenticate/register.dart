@@ -6,7 +6,6 @@ import 'package:idomuss/models/cliente.dart';
 import 'package:email_validator/email_validator.dart';
 
 class Register extends StatefulWidget {
-
   Register();
 
   @override
@@ -14,7 +13,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   final AuthService _auth = AuthService();
 
   Cliente cliente;
@@ -27,6 +25,7 @@ class _RegisterState extends State<Register> {
     valorValido = false;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,24 +42,27 @@ class _RegisterState extends State<Register> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.arrow_back, color: ColorSys.primary,),
-                onPressed: (){
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: ColorSys.primary,
+                ),
+                onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical:24.0),
-                child: Text('Qual é o seu email?',
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Text(
+                  'Qual é o seu email?',
                   style: TextStyle(
-                    color: ColorSys.black,
-                    fontFamily: 'Montserrat',
-                    fontSize: 18
-                  ),
+                      color: ColorSys.black,
+                      fontFamily: 'Montserrat',
+                      fontSize: 18),
                 ),
               ),
               Form(
                 key: _formKey,
-                  child: TextFormField(
+                child: TextFormField(
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email),
@@ -71,12 +73,12 @@ class _RegisterState extends State<Register> {
                       !EmailValidator.validate(val) ? 'Email inválido!' : null,
                   onChanged: (val) {
                     setState(() {
-                    if(_formKey.currentState.validate()){
-                      cliente.email = val;
-                      valorValido = true;
-                    }else{
-                      valorValido = false;
-                    }
+                      if (_formKey.currentState.validate()) {
+                        cliente.email = val;
+                        valorValido = true;
+                      } else {
+                        valorValido = false;
+                      }
                     });
                   },
                 ),
@@ -86,15 +88,24 @@ class _RegisterState extends State<Register> {
         ),
       ),
       bottomNavigationBar: FlatButton(
-                      disabledColor: Colors.grey[400],
-                      padding: EdgeInsets.all(24),
-                      child: Text('Continuar', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),),
-                      color: ColorSys.primary,
-                      onPressed: valorValido? (){
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => CadastroTelefone(cliente: cliente,),  
-                        )); 
-                      } : null,
+        disabledColor: Colors.grey[400],
+        padding: EdgeInsets.all(24),
+        child: Text(
+          'Continuar',
+          style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+        ),
+        color: ColorSys.primary,
+        onPressed: valorValido
+            ? () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CadastroTelefone(
+                        cliente: cliente,
+                      ),
+                    ));
+              }
+            : null,
       ),
     );
   }

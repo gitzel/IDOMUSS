@@ -14,33 +14,35 @@ class SlideTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(horizontal:20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Image.asset(imagePath),
           ),
-          SizedBox(height: 30,),
-          RichText(
-            text:TextSpan(
-              text: titulo,
-              style: TextStyle(
-                color: ColorSys.black, 
-                fontSize: 24, 
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',  
-              ),
-            ),
-            textAlign: TextAlign.center
+          SizedBox(
+            height: 30,
           ),
-          SizedBox(height: 20,),
           RichText(
-            text:TextSpan(
-              text: descricao,
-              style: TextStyle(
-                color: ColorSys.gray, 
-                fontFamily: 'Montserrat', 
+              text: TextSpan(
+                text: titulo,
+                style: TextStyle(
+                  color: ColorSys.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Montserrat',
+                ),
               ),
-            ),
-            textAlign: TextAlign.center
+              textAlign: TextAlign.center),
+          SizedBox(
+            height: 20,
           ),
+          RichText(
+              text: TextSpan(
+                text: descricao,
+                style: TextStyle(
+                  color: ColorSys.gray,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+              textAlign: TextAlign.center),
         ],
       ),
     );

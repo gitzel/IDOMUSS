@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
-class Endereco{
+class Endereco {
   @protected
   String _filtro, _numero, _complemento, _cep;
 
-  Endereco(this._complemento,
-           this._numero,
-           this._cep,
-           this._filtro);
+  Endereco(this._complemento, this._numero, this._cep, this._filtro);
 
   Endereco.fromJson(Map<String, dynamic> json)
       : _complemento = json['complemento'],
@@ -20,7 +17,6 @@ class Endereco{
   set filtro(value) {
     _filtro = value;
   }
-
 
   get numero => _numero;
 
