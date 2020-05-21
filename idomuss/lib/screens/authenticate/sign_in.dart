@@ -113,7 +113,10 @@ class _SignInState extends State<SignIn> {
                                       fontFamily: 'Montserrat'),
                                 ),
                                 color: ColorSys.primary,
-                                onPressed: () {},
+                                onPressed: () {
+                                    AuthService auth = AuthService();
+                                    auth.signIn(email.trim(), password);
+                                },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0))),
                           ),

@@ -10,23 +10,31 @@ class AuthService implements BaseAuth {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
+    Cliente _client;
+
     Future<FirebaseUser> getCurrentUser() async {
       return _auth.currentUser();
     }
 
-    Future<Cliente> signIn(String email, String password) async{
+    Stream<FirebaseUser> get user {
+        return _auth.onAuthStateChanged;
+    }
+
+    Stream<Cliente> get client {
+        return Stream.value(_client);
+    }
+
+    Future signIn(String email, String password) async{
         try{
             var result = await  _auth.signInWithEmailAndPassword(email: email, password: password);
             FirebaseUser user = result.user;
 
-            Cliente client = await DatabaseService(uid: user.uid).getCliente();
+            _client = await DatabaseService(uid: user.uid).getCliente();
 
-            client.email = user.email;
-            client.nome = user.displayName;
-            client.foto = user.photoUrl;
-            client.numeroCelular = user.phoneNumber;
-
-            return client;
+            _client.email = user.email;
+            _client.nome = user.displayName;
+            _client.foto = user.photoUrl;
+            _client.numeroCelular = user.phoneNumber;
         }
         catch(e){
             print(e.toString());
@@ -34,7 +42,7 @@ class AuthService implements BaseAuth {
         }
     }
 
-    Future<Cliente> signUp(String email, String password, Cliente client) async{
+    Future signUp(String email, String password, Cliente client) async{
         try{
             var result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
 
@@ -52,6 +60,8 @@ class AuthService implements BaseAuth {
                 }
             );
 
+            _client = client;
+
             FirebaseUser user = result.user;
 
             UserUpdateInfo updateInfo = new UserUpdateInfo();
@@ -61,9 +71,7 @@ class AuthService implements BaseAuth {
 
             user.updateProfile(updateInfo);
 
-            client.email = user.email;
-
-            return client;
+            _client.email = user.email;
         }
         catch(e){
             print(e.toString());
@@ -91,7 +99,7 @@ class AuthService implements BaseAuth {
       }
     }
 
-    Future<void> sendEmailVerification() async {
+    Future sendEmailVerification() async {
         FirebaseUser user = await _auth.currentUser();
         user.sendEmailVerification();
     }
@@ -126,7 +134,7 @@ class AuthService implements BaseAuth {
     // using google
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    Future<Cliente> signInWithGoogle()  async {
+    Future signInWithGoogle()  async {
 
         final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
 
@@ -140,14 +148,12 @@ class AuthService implements BaseAuth {
         final AuthResult authResult = await _auth.signInWithCredential(credential);
         final FirebaseUser user = authResult.user;
 
-        Cliente client = await DatabaseService(uid: user.uid).getCliente();
+        _client = await DatabaseService(uid: user.uid).getCliente();
 
-        client.email = user.email;
-        client.nome = user.displayName;
-        client.foto = user.photoUrl;
-        client.numeroCelular = user.phoneNumber;
-
-        return client;
+        _client.email = user.email;
+        _client.nome = user.displayName;
+        _client.foto = user.photoUrl;
+        _client.numeroCelular = user.phoneNumber;
     }
 
     Future signOutGoogle() async{
