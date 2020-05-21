@@ -19,6 +19,18 @@ class Cliente
         this._email,
         this._foto);
 
+    Cliente.empty(){
+      this._cpf = '';
+      this._nome = '';
+      this._numeroCelular = '';
+      this._dataNascimento = '';
+      this._genero = '';
+      this._querGenero = 0;
+      this._descricao = '';
+      this._email = '';
+      this._foto = '';
+    }
+
     Cliente.fromJson(Map<String, dynamic> json)
         : _rg = json['rg'],
           _cpf = json['cpf'],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/screens/authenticate/sign_in.dart';
+import 'package:idomuss/screens/onboarding/onboarding.dart';
 import 'package:idomuss/screens/wrapper.dart';
 void main() => runApp(MyApp());
 
@@ -12,8 +13,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           accentColor: ColorSys.primary,
           primaryColor: ColorSys.primary,
-          splashColor: Colors.white10
+          splashColor: Colors.white10,
+          fontFamily: 'Montserrat'
         ),
+        debugShowCheckedModeBanner: false,
         home: Wrapper()
     );
   }

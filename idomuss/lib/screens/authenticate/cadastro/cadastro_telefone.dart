@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
-import 'package:idomuss/screens/authenticate/cadastro/cadastro_telefone.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/models/cliente.dart';
-import 'package:email_validator/email_validator.dart';
 
-class Register extends StatefulWidget {
-
-  Register();
+class CadastroTelefone extends StatefulWidget {
+  
+  Cliente cliente;
+  CadastroTelefone({this.cliente});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _CadastroTelefoneState createState() => _CadastroTelefoneState();
 }
 
-class _RegisterState extends State<Register> {
+class _CadastroTelefoneState extends State<CadastroTelefone> {
 
   final AuthService _auth = AuthService();
-
-  Cliente cliente;
   bool valorValido;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    cliente = new Cliente.empty();
     valorValido = false;
     super.initState();
   }
@@ -50,7 +46,7 @@ class _RegisterState extends State<Register> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical:24.0),
-                child: Text('Qual é o seu email?',
+                child: Text('Qual é o seu número de celular?',
                   style: TextStyle(
                     color: ColorSys.black,
                     fontFamily: 'Montserrat',
@@ -58,28 +54,26 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-              Form(
-                key: _formKey,
-                  child: TextFormField(
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      labelText: 'Email',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  validator: (val) =>
-                      !EmailValidator.validate(val) ? 'Email inválido!' : null,
-                  onChanged: (val) {
-                    setState(() {
-                    if(_formKey.currentState.validate()){
-                      cliente.email = val;
+              TextFormField(
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                style: TextStyle(fontFamily: 'Montserrat'),
+                validator: (val) =>
+                    val.isEmpty ? 'Email inválido!' : null,
+                onChanged: (val) {
+                  setState(() {
+                    if(!val.isEmpty){
+                      widget.cliente.email = val;
                       valorValido = true;
                     }else{
                       valorValido = false;
                     }
-                    });
-                  },
-                ),
+                  });
+                },
               ),
             ],
           ),
@@ -91,9 +85,7 @@ class _RegisterState extends State<Register> {
                       child: Text('Continuar', style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),),
                       color: ColorSys.primary,
                       onPressed: valorValido? (){
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => CadastroTelefone(cliente: cliente,),  
-                        )); 
+                        
                       } : null,
       ),
     );

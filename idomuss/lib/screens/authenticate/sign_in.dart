@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/screens/authenticate/register.dart';
 import 'package:idomuss/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  final Function toggleView;
-  SignIn({this.toggleView});
+  
+  SignIn();
 
   @override
   _SignInState createState() => _SignInState();
@@ -148,7 +149,12 @@ class _SignInState extends State<SignIn> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: InkWell(
-                            onTap: (){},
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Register()),
+                              );
+                            },
                             child: RichText(
                               text: new TextSpan(
                                 style: new TextStyle(
