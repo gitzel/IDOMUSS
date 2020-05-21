@@ -25,7 +25,7 @@ class SlideTile extends StatelessWidget {
                 color: ColorSys.black, 
                 fontSize: 24, 
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',  // tem q instalar a fonte
+                fontFamily: 'Montserrat',  
               ),
             ),
             textAlign: TextAlign.center
@@ -36,7 +36,7 @@ class SlideTile extends StatelessWidget {
               text: descricao,
               style: TextStyle(
                 color: ColorSys.gray, 
-                fontFamily: 'Montserrat',  // tem q instalar a fonte
+                fontFamily: 'Montserrat', 
               ),
             ),
             textAlign: TextAlign.center
