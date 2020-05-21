@@ -131,7 +131,8 @@ class AuthService implements BaseAuth {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    try{
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn(); 
 
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -150,6 +151,11 @@ class AuthService implements BaseAuth {
     _client.nome = user.displayName;
     _client.foto = user.photoUrl;
     _client.numeroCelular = user.phoneNumber;
+    }
+    catch(erro){
+      print(erro);
+      return null;
+    }
   }
 
   Future signOutGoogle() async {

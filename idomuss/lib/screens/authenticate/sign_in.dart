@@ -1,5 +1,8 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/screens/authenticate/register.dart';
 import 'package:idomuss/services/auth.dart';
@@ -23,20 +26,17 @@ class _SignInState extends State<SignIn> {
       resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.topLeft,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/geral/bg.png'), fit: BoxFit.none),
-        ),
+        decoration: background,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(paddingSmall),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               RichText(
                 text: new TextSpan(
                   style: new TextStyle(
-                      fontSize: 48.0,
+                      fontSize: fontSizeTitle,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat',
                       color: ColorSys.black),
@@ -52,29 +52,22 @@ class _SignInState extends State<SignIn> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child: TextFormField(
+                      padding: EdgeInsets.only(top: paddingMedium, bottom: paddingSmall),
+                      child: TextFieldOutline(
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.email),
-                            labelText: 'Email',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        style: TextStyle(fontFamily: 'Montserrat'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Email inválido!' : null,
+                        prefixIcon: Icons.email,
+                        label: 'Email',
                         onChanged: (val) {
                           setState(() => email = val);
                         },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 48),
-                      child: TextFormField(
+                      padding: EdgeInsets.only(top: paddingTiny, bottom: paddingLarge),
+                      child: TextFieldOutline(
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: escondeSenha,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
+                            prefixIcon: Icons.lock,
                             suffixIcon: IconButton(
                               icon: escondeSenha
                                   ? Icon(Icons.visibility)
@@ -83,31 +76,24 @@ class _SignInState extends State<SignIn> {
                                 setState(() {
                                   escondeSenha = !escondeSenha;
                                 });
-                              },
-                            ),
-                            labelText: 'Senha',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        style: TextStyle(fontFamily: 'Montserrat'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Senha inválida!' : null,
+                              }),
+                            label: 'Senha',
                         onChanged: (val) {
                           setState(() => password = val);
                         },
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 32),
+                      padding: EdgeInsets.only(bottom: paddingLarge),
                       child: SizedBox(
                         width: double.infinity,
-                        height: 60,
                         child: RaisedButton(
+                          padding: EdgeInsets.all(paddingSmall),
                             child: Text(
                               'Login',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
-                                  fontFamily: 'Montserrat'),
+                                  fontSize: fontSizeRegular),
                             ),
                             color: ColorSys.primary,
                             onPressed: () {
@@ -130,16 +116,13 @@ class _SignInState extends State<SignIn> {
                             'Entrar com o google',
                             style: TextStyle(
                                 color: ColorSys.primary,
-                                fontSize: 18,
-                                fontFamily: 'Montserrat'),
+                                fontSize: fontSizeRegular,),
                           ),
-                          clipBehavior: Clip.hardEdge,
                           color: ColorSys.gray,
                           onPressed: () async {
-                            dynamic result = _auth.signIn(email, password);
+                            dynamic result = _auth.signInWithGoogle();
                             if (result == null) {
-                              setState(() => error =
-                                  'could not sign in with those credentials');
+                              // modal
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -148,7 +131,7 @@ class _SignInState extends State<SignIn> {
                                   color: ColorSys.primary, width: 2.0))),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(paddingSmall),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
@@ -159,7 +142,7 @@ class _SignInState extends State<SignIn> {
                         child: RichText(
                           text: new TextSpan(
                             style: new TextStyle(
-                                fontSize: 14.0,
+                                fontSize: fontSizeSmall,
                                 fontFamily: 'Montserrat',
                                 color: ColorSys.black,
                                 backgroundColor: ColorSys.gray),

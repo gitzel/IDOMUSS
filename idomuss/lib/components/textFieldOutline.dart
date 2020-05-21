@@ -5,24 +5,31 @@ class TextFieldOutline extends StatelessWidget {
   TextInputType keyboardType;
   IconData prefixIcon;
   String Function(String) validator;
-  void Function(String) onchange;
-  TextFieldOutline(
-      {this.label,
+  void Function(String) onChanged;
+  bool obscureText;
+  IconButton suffixIcon;
+
+  TextFieldOutline({
+      this.label,
       this.keyboardType,
       this.prefixIcon,
       this.validator,
-      this.onchange});
+      this.onChanged,
+      this.obscureText,
+      this.suffixIcon});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
+      obscureText: obscureText == null ? false : obscureText,
       decoration: InputDecoration(
           prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
           labelText: label,
+          suffixIcon: suffixIcon,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
       validator: validator,
-      onChanged: onchange,
+      onChanged: onChanged,
     );
   }
 }
