@@ -30,7 +30,18 @@ dependencies:
   flutter_spinkit: ^4.1.2
   cupertino_icons: ^0.1.2
   email_validator: ^1.0.0
-  
+  flutter_launcher_icons: ^0.7.5
+  flutter_launcher_name: "^0.0.1"
+
+flutter_launcher_name:
+  name: "Idomuss"
+
+flutter_icons:
+  image_path: "assets/geral/ic_launcher.png"
+  ios: true
+  android: true
+
+
 dev_dependencies:
 
   build_runner: ^1.0.0

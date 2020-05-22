@@ -16,7 +16,9 @@ class CadastroNome extends StatefulWidget {
 }
 
 class _CadastroNomeState extends State<CadastroNome> {
+  
   bool valorValido;
+  String sobrenomeAux;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -49,6 +51,18 @@ class _CadastroNomeState extends State<CadastroNome> {
               TextFieldOutline(
                 prefixIcon: Icons.person,
                 label: 'Nome',
+                keyboardType: TextInputType.text,
+                validator: (val) => val.length > 0 ? null : "Nome inválido!",
+                onChanged: (val){
+                  setState(() {
+                    if (_formKey.currentState.validate()) {
+                      widget.cliente.nome = val;
+                      valorValido = true;
+                    } else {
+                      valorValido = false;
+                    }
+                  });
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -62,13 +76,22 @@ class _CadastroNomeState extends State<CadastroNome> {
               TextFieldOutline(
                 prefixIcon: Icons.person,
                 label: 'Sobrenome',
+                keyboardType: TextInputType.text,
+                validator: (val) => val.length > 0 ? null : "Sobrenome inválido!",
+                onChanged: (val){
+                  setState(() {
+                    if (_formKey.currentState.validate()) {
+                      sobrenomeAux = val;
+                    }
+                  });
+                },
               ),
             ],
           ),
         ),
       ],
       labelButtonBottomBar: 'Continuar',
-      onPressed: valorValido
+      onPressed: valorValido && sobrenomeAux != null
           ? () {
               Navigator.push(
                   context,
