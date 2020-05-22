@@ -65,6 +65,8 @@ class AuthService implements BaseAuth {
 
       FirebaseUser user = result.user;
 
+      user.sendEmailVerification();
+
       UserUpdateInfo updateInfo = new UserUpdateInfo();
 
       updateInfo.displayName = client.nome;
@@ -97,16 +99,6 @@ class AuthService implements BaseAuth {
     }
   }
 
-  Future sendEmailVerification() async {
-    FirebaseUser user = await _auth.currentUser();
-    user.sendEmailVerification();
-  }
-
-  Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _auth.currentUser();
-    return user.isEmailVerified;
-  }
-
   Future signOut() async {
     try {
       return await _auth.signOut();
@@ -125,6 +117,11 @@ class AuthService implements BaseAuth {
       print(e.toString());
       return null;
     }
+  }
+
+  //forgot password
+  Future resetPassword(String email){
+    _auth.sendPasswordResetEmail(email: email);
   }
 
   // using google

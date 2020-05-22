@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
@@ -20,13 +21,10 @@ class DatabaseService {
       Firestore.instance.collection("servicoContratado");
 
   Future updateUserData(Cliente cliente) async {
-    /*
-        "foto"            : cliente.foto,
-        "nome"            : cliente.nome,
-      */
     return await collection.document(uid).setData({
       "rg": cliente.rg,
       "cpf": cliente.cpf,
+      "email":cliente.email,
       "dataNascimento": cliente.dataNascimento,
       "genero": cliente.genero,
       "querGenero": cliente.querGenero,
@@ -44,10 +42,10 @@ class DatabaseService {
     });
   }
 
-  Future addAvaliacao(String uidProfissional, String texto, double nota) async {
+  Future addAvaliacao(Profissional profissional, String texto, double nota) async {
     return await Firestore.instance.collection("avaliacao").add({
       "uidCliente": uid,
-      "uidProfissional": uidProfissional,
+      "uidProfissional":  (await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(profissional.email)).uid,
       "texto": texto,
       "nota": nota
     });
@@ -68,7 +66,7 @@ class DatabaseService {
   Future updateServicoContratado(
       String uidServicoContratado, ServicoContratado servicoContratado) async {
     return await servicosContratados.document(uidServicoContratado).updateData({
-      "uidProfissional": servicoContratado.uidProfissional,
+      "uidProfissional": (await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(servicoContratado.profissional.email)).uid,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
       "uidServico": servicoContratado.uidServico,
@@ -78,15 +76,23 @@ class DatabaseService {
     });
   }
 
-  Future getServicosContratados(ServicoContratado servicoContratado) async {
-    /*Stream<String> id = servicosContratados.where("uidProfissional", isEqualTo: nome).snapshots().map((snapshot){
-        return snapshot.documents.map((doc){
-          return doc.data.keys;
-        }).toString();
-      });
-      return id;
-        return enderecos.where("uidCliente", isEqualTo: uid).snapshots().map(_enderecoListFromSnapshot);
-     */
+  Stream<List<ServicoContratado>> get servicosContratado {
+    return servicosContratados.where("uidCliente", isEqualTo: uid).snapshots().map(_servicosContratadosFromSnapshot);
+  }
+
+  List<ServicoContratado> _servicosContratadosFromSnapshot(QuerySnapshot snapshot) {
+    List<ServicoContratado> servicos = snapshot.documents.map((doc) {
+      return ServicoContratado.fromJson(doc.data);
+    }).toList();
+
+    servicos.forEach((servico) async {
+      var prof = await FirebaseAdmin.instance.initializeApp().auth().getUser(servico.uidProfissional);
+      var cliente = await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(servico.uidCliente);
+      /*servico.profissional = prof;
+      servico.cliente = cliente;*/
+    });
+
+    return servicos;
   }
 
   List<Endereco> _servicosContratadosListFromSnapshot(QuerySnapshot snapshot) {
@@ -115,8 +121,43 @@ class DatabaseService {
     await collection.document(uid).delete();
   }
 
-  Stream<List<Profissional>> get profissionais {
+  Stream<List<Profissional>> get profissionais  {
     return prof.snapshots().map(_profissionalListFromSnapshot);
+  }
+
+  List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot)  {
+      List<Profissional> profissionais = snapshot.documents.map((doc) {
+        return Profissional.fromJson(doc.data);
+      }).toList();
+
+      profissionais.forEach((prof) async {
+          var user = await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(prof.email);
+          prof.nome = user.displayName;
+          prof.foto = user.photoUrl;
+          prof.numeroCelular = user.phoneNumber;
+      });
+
+      return profissionais;
+  }
+
+  Future<List<Profissional>> profissionalCategoriaList(String categoria) async {
+    List<Profissional> profissionais = (await prof
+        .where("categoria", isEqualTo: categoria)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents.map((doc) {
+        return Profissional.fromJson(doc.data);
+      }).toList();
+    }).toList()).first;
+
+    profissionais.forEach((prof) async {
+      var user = await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(prof.email);
+      prof.nome = user.displayName;
+      prof.foto = user.photoUrl;
+      prof.numeroCelular = user.phoneNumber;
+    });
+
+    return profissionais;
   }
 
   Stream<List<Endereco>> get enderecosFromCliente {
@@ -124,25 +165,6 @@ class DatabaseService {
         .where("uidCliente", isEqualTo: uid)
         .snapshots()
         .map(_enderecoListFromSnapshot);
-  }
-
-  List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      return Profissional.fromJson(doc.data);
-    }).toList();
-  }
-
-  Future<List<Profissional>> profissionalCategoriaList(String categoria) async {
-    List<List<Profissional>> lista = await prof
-        .where("categoria", isEqualTo: categoria)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.documents.map((doc) {
-        return Profissional.fromJson(doc.data);
-      }).toList();
-    }).toList();
-
-    return lista.first;
   }
 
   List<Endereco> _enderecoListFromSnapshot(QuerySnapshot snapshot) {

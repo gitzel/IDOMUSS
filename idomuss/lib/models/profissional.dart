@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 class Profissional {
   @protected
-  String _rg,
+  String _uid,
+      _rg,
       _cpf,
       _cnpj,
       _nome,
@@ -12,7 +13,20 @@ class Profissional {
       _dataNascimento,
       _genero,
       _descricao,
+      _foto,
       _nomeServico;
+
+  String get uid => _uid;
+
+  set uid(String value) {
+    _uid = value;
+  }
+
+  get foto => _foto;
+
+  set foto(value) {
+    _foto = value;
+  }
 
   @protected
   int _querGenero, _idServico;

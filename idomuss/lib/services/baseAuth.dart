@@ -9,13 +9,9 @@ abstract class BaseAuth {
 
   Future<FirebaseUser> getCurrentUser();
 
-  Future sendEmailVerification();
-
   Future signOut();
 
   Future deleteUser();
-
-  Future<bool> isEmailVerified();
 
   Future signInWithGoogle();
 

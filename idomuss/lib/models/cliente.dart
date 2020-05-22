@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 class Cliente {
   @protected
-  String _rg,
+  String _uid,
+      _rg,
       _cpf,
       _email,
       _nome,
@@ -11,6 +12,12 @@ class Cliente {
       _genero,
       _descricao,
       _foto;
+
+  String get uid => _uid;
+
+  set uid(String value) {
+    _uid = value;
+  }
 
   @protected
   int _querGenero;

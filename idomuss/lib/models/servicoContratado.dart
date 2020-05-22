@@ -1,6 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/models/profissional.dart';
 
 class ServicoContratado {
+
+  @protected
+    Cliente _cliente;
+
+  Cliente get cliente => _cliente;
+
+  set cliente(Cliente value) {
+    _cliente = value;
+  }
+
+  Profissional _profissional;
+
   @protected
   String _uidServicoContratado,
       _descricao,
@@ -71,5 +85,11 @@ class ServicoContratado {
 
   set preco(double value) {
     _preco = value;
+  }
+
+  Profissional get profissional => _profissional;
+
+  set profissional(Profissional value) {
+    _profissional = value;
   }
 }
