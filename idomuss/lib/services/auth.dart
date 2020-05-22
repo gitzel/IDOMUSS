@@ -131,28 +131,29 @@ class AuthService implements BaseAuth {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future signInWithGoogle() async {
-    try{
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn(); 
+    try {
+      final GoogleSignInAccount googleSignInAccount =
+          await googleSignIn.signIn();
 
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+      final AuthResult authResult =
+          await _auth.signInWithCredential(credential);
+      final FirebaseUser user = authResult.user;
 
-    _client = await DatabaseService(uid: user.uid).getCliente();
+      _client = await DatabaseService(uid: user.uid).getCliente();
 
-    _client.email = user.email;
-    _client.nome = user.displayName;
-    _client.foto = user.photoUrl;
-    _client.numeroCelular = user.phoneNumber;
-    }
-    catch(erro){
+      _client.email = user.email;
+      _client.nome = user.displayName;
+      _client.foto = user.photoUrl;
+      _client.numeroCelular = user.phoneNumber;
+    } catch (erro) {
       print(erro);
       return null;
     }

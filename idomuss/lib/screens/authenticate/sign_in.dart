@@ -1,9 +1,7 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
-import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/screens/authenticate/register.dart';
 import 'package:idomuss/services/auth.dart';
 
@@ -52,9 +50,10 @@ class _SignInState extends State<SignIn> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: paddingMedium, bottom: paddingSmall),
+                      padding: EdgeInsets.only(
+                          top: paddingMedium, bottom: paddingSmall),
                       child: TextFieldOutline(
-                        keyboardType: TextInputType.visiblePassword,
+                        keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icons.email,
                         label: 'Email',
                         onChanged: (val) {
@@ -63,21 +62,22 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: paddingTiny, bottom: paddingLarge),
+                      padding: EdgeInsets.only(
+                          top: paddingTiny, bottom: paddingLarge),
                       child: TextFieldOutline(
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: escondeSenha,
-                            prefixIcon: Icons.lock,
-                            suffixIcon: IconButton(
-                              icon: escondeSenha
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  escondeSenha = !escondeSenha;
-                                });
-                              }),
-                            label: 'Senha',
+                        prefixIcon: Icons.lock,
+                        suffixIcon: IconButton(
+                            icon: escondeSenha
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                escondeSenha = !escondeSenha;
+                              });
+                            }),
+                        label: 'Senha',
                         onChanged: (val) {
                           setState(() => password = val);
                         },
@@ -88,7 +88,7 @@ class _SignInState extends State<SignIn> {
                       child: SizedBox(
                         width: double.infinity,
                         child: RaisedButton(
-                          padding: EdgeInsets.all(paddingSmall),
+                            padding: EdgeInsets.all(paddingSmall),
                             child: Text(
                               'Login',
                               style: TextStyle(
@@ -115,8 +115,9 @@ class _SignInState extends State<SignIn> {
                           label: Text(
                             'Entrar com o google',
                             style: TextStyle(
-                                color: ColorSys.primary,
-                                fontSize: fontSizeRegular,),
+                              color: ColorSys.primary,
+                              fontSize: fontSizeRegular,
+                            ),
                           ),
                           color: ColorSys.gray,
                           onPressed: () async {
@@ -165,65 +166,4 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
-  /*@override
-              Widget build(BuildContext context) {
-              return Scaffold(
-              backgroundColor: Colors.brown[100],
-              appBar: AppBar(
-              backgroundColor: Colors.brown[400],
-              elevation: 0.0,
-              title: Text("Sign in to Idomuss"),
-              actions: <Widget>[
-                FlatButton.icon(
-                onPressed: () {
-                widget.toggleView();
-                },
-                icon: Icon(Icons.person),
-                label: Text('Register'))
-                ],
-                ),
-                body: Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-                child: Form(
-                key: _formKey,
-                child: Column(
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  TextFormField(
-                  validator: (val) => val.isEmpty? 'Enter an email':null,
-                  onChanged: (val){
-                  setState(() => email = val);
-                  },
-                  ),
-                  SizedBox(height: 20.0),
-                  TextFormField(
-                  validator: (val) => val.length < 8 ? 'Enter a password 8+ char long' :null, obscureText: true,
-                    onChanged: (val){ setState(()=> password = val);
-                    },
-                    ),
-                    SizedBox(height: 20.0),
-                    RaisedButton(
-                    color: Colors.pink[400],
-                    child: Text(
-                    'Sign in',
-                    style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async{
-                    dynamic result = _auth.signIn(email, password);
-                    if(result == null) {
-                    setState(() => error = 'could not sign in with those credentials');
-                    }
-                    },
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                    error,
-                    style: TextStyle(color: Colors.red[400], fontSize: 14.0),
-                    ),
-                    ],
-                    ),
-                    ),
-                    ),
-                    );
-                    }*/
 }

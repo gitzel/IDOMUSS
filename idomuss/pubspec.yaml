@@ -29,6 +29,7 @@ dependencies:
   flutter_spinkit: ^4.1.2
   cupertino_icons: ^0.1.2
   email_validator: ^1.0.0
+  
 dev_dependencies:
 
   build_runner: ^1.0.0
