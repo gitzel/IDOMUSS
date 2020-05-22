@@ -3,7 +3,6 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 
 class CadastroScaffold extends StatelessWidget {
-  
   List<Widget> children;
   String labelButtonBottomBar;
   void Function() onPressed;
@@ -21,6 +20,7 @@ class CadastroScaffold extends StatelessWidget {
           padding: const EdgeInsets.all(paddingSmall),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: children,
           ),
         ),

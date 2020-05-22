@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastro_nome.dart';
 import 'package:idomuss/screens/authenticate/cadastroScaffold.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:email_validator/email_validator.dart';
 
 class CadastroTelefone extends StatefulWidget {
-  
   Cliente cliente;
   CadastroTelefone({this.cliente});
 
@@ -16,7 +16,6 @@ class CadastroTelefone extends StatefulWidget {
 }
 
 class _CadastroTelefoneState extends State<CadastroTelefone> {
-
   bool valorValido;
   final _formKey = GlobalKey<FormState>();
 
@@ -44,10 +43,23 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
           key: _formKey,
           child: Row(
             children: <Widget>[
-              Expanded(child: TextFieldOutline(
+              Expanded(
+                  child: TextFieldOutline(
                 prefixIcon: Icons.phone_iphone,
                 label: 'Celular',
-                hint: '(XX) X XXXX-XXXX'
+                hint: '(XX) X XXXX-XXXX',
+                keyboardType: TextInputType.number,
+                validator: (val) => val.isEmpty ? "Número inválido!" : null,
+                onChanged: (val) {
+                  setState(() {
+                    if (_formKey.currentState.validate()) {
+                      widget.cliente.numeroCelular = val;
+                      valorValido = true;
+                    } else {
+                      valorValido = false;
+                    }
+                  });
+                },
               )),
             ],
           ),
@@ -59,7 +71,7 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroTelefone(
+                    builder: (context) => CadastroNome(
                       cliente: widget.cliente,
                     ),
                   ));
