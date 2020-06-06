@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
@@ -33,11 +34,14 @@ class DatabaseService {
   }
 
   Future addUserAddress(Endereco endereco) async {
-    return await enderecos.add({
+     return await enderecos.add({
       "uidCliente": uid,
+      "coordenada": endereco.location,
+      "cidade": endereco.cidade,
+      "rua": endereco.rua,
+      "uf" : endereco.uf,
       "complemento": endereco.complemento,
       "numero": endereco.numero,
-      "cep": endereco.cep,
       "filtro": endereco.filtro
     });
   }
@@ -121,10 +125,6 @@ class DatabaseService {
     await collection.document(uid).delete();
   }
 
-  Stream<List<Profissional>> get profissionais  {
-    return prof.snapshots().map(_profissionalListFromSnapshot);
-  }
-
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot)  {
       List<Profissional> profissionais = snapshot.documents.map((doc) {
         return Profissional.fromJson(doc.data);
@@ -171,5 +171,18 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return Endereco.fromJson(doc.data);
     }).toList();
+  }
+
+  Future<List<Profissional>> nearProfissionais(Endereco endereco, {int distance = 10000}) async {
+    var listResult = List<Profissional>();
+    prof.snapshots().map(_profissionalListFromSnapshot).forEach((profissionais) {
+      profissionais.forEach((profAtual) async {
+        double distanceInMeters = await Geolocator().distanceBetween(profAtual.location.latitude, profAtual.location.longitude, endereco.location.latitude, endereco.location.longitude);
+        if(distanceInMeters <= 10000)
+          listResult.add(profAtual);
+      });
+    });
+
+    return listResult;
   }
 }

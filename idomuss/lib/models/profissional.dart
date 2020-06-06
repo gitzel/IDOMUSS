@@ -1,6 +1,20 @@
+import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
+
 class Profissional {
+
+  @protected
+  GeoPoint _location;
+
+  GeoPoint get location => _location;
+
+  set location(GeoPoint value) {
+    _location = value;
+  }
+
   @protected
   String _uid,
       _rg,
@@ -8,7 +22,6 @@ class Profissional {
       _cnpj,
       _nome,
       _email,
-      _cep,
       _numeroCelular,
       _dataNascimento,
       _genero,
@@ -36,7 +49,6 @@ class Profissional {
       this._cpf,
       this._cnpj,
       this._nome,
-      this._cep,
       this._numeroCelular,
       this._dataNascimento,
       this._genero,
@@ -48,7 +60,6 @@ class Profissional {
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         _nome = json['nome'],
-        _cep = json['cep'],
         _numeroCelular = json['numeroCelular'],
         _dataNascimento = json['dataNascimento'],
         _genero = json['genero'],
@@ -76,12 +87,6 @@ class Profissional {
 
   set email(value) {
     _email = value;
-  }
-
-  get cep => _cep;
-
-  set cep(value) {
-    _cep = value;
   }
 
   get numeroCelular => _numeroCelular;
