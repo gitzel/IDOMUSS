@@ -1,122 +1,135 @@
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Profissional
-{
-    @protected
-    String _rg, _cpf, _cnpj, _nome, _email, _cep, _numeroCelular, _dataNascimento, _genero, _descricao, _foto;
+class Profissional {
+  @protected
+  bool _vip;
 
-    @protected
-    int _querGenero, _idServico;
+  bool get vip => _vip;
 
-    String get rg => _rg;
+  set vip(bool value) {
+    _vip = value;
+  }
 
-    set rg(String value) {
-      _rg = value;
-    }
+  @protected
+  GeoPoint _location;
 
-    Profissional(this._rg,
-        this._cpf,
-        this._cnpj,
-        this._nome,
-        this._email,
-        this._cep,
-        this._numeroCelular,
-        this._dataNascimento,
-        this._genero,
-        this._querGenero,
-        this._descricao,
-        this._idServico,
-        this._foto
-        );
+  @protected
+  String _uid,
+      _rg,
+      _cpf,
+      _cnpj,
+      _nome,
+      _email,
+      _numeroCelular,
+      _dataNascimento,
+      _genero,
+      _descricao,
+      _foto,
+      _nomeServico;
 
-    Profissional.fromJson(Map<String, dynamic> json)
-        : _rg = json['rg'],
-          _cpf = json['cpf'],
-          _cnpj = json['cnpj'],
-          _nome = json['nome'],
-          _email = json['email'],
-          _cep = json['cep'],
-          _numeroCelular = json['numeroCelular'],
-          _dataNascimento = json['dataNascimento'],
-          _genero = json['genero'],
-          _querGenero = int.parse(json['querGenero']),
-          _descricao = json['descricao'],
-          _idServico = int.parse(json['idServico']);
+  String get uid => _uid;
 
-    Map toMap()
-    {
-          return {
-            "rg"              : this._rg,
-            "cpf"             : this._cpf,
-            "cnpj"            : this._cnpj,
-            "nome"            : this._nome,
-            "cep"             : this._cep,
-            "numeroCelular"   : this._numeroCelular,
-            "dataNascimento"  : this._dataNascimento,
-            "genero"          : this._genero,
-            "querGenero"      : this._querGenero,
-            "descricao"       : this._descricao
-          };
-    }
+  set uid(String value) {
+    _uid = value;
+  }
 
-    get cpf => _cpf;
+  get foto => _foto;
 
-    get cnpj => _cnpj;
+  set foto(value) {
+    _foto = value;
+  }
 
-    get nome => _nome;
+  @protected
+  int _querGenero, _idServico;
 
-    set nome(value) {
-      _nome = value;
-    }
+  Profissional(
+      this._rg,
+      this._cpf,
+      this._cnpj,
+      this._nome,
+      this._location,
+      this._numeroCelular,
+      this._dataNascimento,
+      this._genero,
+      this._querGenero,
+      this._descricao);
 
-    get email => _email;
+  Profissional.fromJson(Map<String, dynamic> json)
+      : _rg = json['rg'],
+        _cpf = json['cpf'],
+        _cnpj = json['cnpj'],
+        _location = json['location'],
+        _dataNascimento = json['dataNascimento'],
+        _genero = json['genero'],
+        _querGenero = int.parse(json['querGenero']),
+        _descricao = json['descricao'],
+        _vip = json['vip'],
+        _idServico = int.parse(json['idServico']);
 
-    set email(value) {
-      _email = value;
-    }
+  String get rg => _rg;
 
-    get cep => _cep;
+  set rg(String value) {
+    _rg = value;
+  }
 
-    set cep(value) {
-      _cep = value;
-    }
+  get cpf => _cpf;
 
-    get numeroCelular => _numeroCelular;
+  get cnpj => _cnpj;
 
-    set numeroCelular(value) {
-      _numeroCelular = value;
-    }
+  get nome => _nome;
 
-    get dataNascimento => _dataNascimento;
+  set nome(value) {
+    _nome = value;
+  }
 
-    get genero => _genero;
+  get email => _email;
 
-    set genero(value) {
-      _genero = value;
-    }
+  set email(value) {
+    _email = value;
+  }
 
-    get descricao => _descricao;
+  GeoPoint get location => _location;
 
-    set descricao(value) {
-      _descricao = value;
-    }
+  set location(GeoPoint value) {
+    _location = value;
+  }
 
-    get querGenero => _querGenero;
+  get numeroCelular => _numeroCelular;
 
-    set querGenero(int value) {
-      _querGenero = value;
-    }
+  set numeroCelular(value) {
+    _numeroCelular = value;
+  }
 
-    get idServico => _idServico;
+  get dataNascimento => _dataNascimento;
 
-    set idServico(value) {
-      _idServico = value;
-    }
+  get genero => _genero;
 
-    get foto => _foto;
+  set genero(value) {
+    _genero = value;
+  }
 
-    set foto(value) {
-      _foto = value;
-    }
+  get descricao => _descricao;
+
+  set descricao(value) {
+    _descricao = value;
+  }
+
+  get nomeServico => _nomeServico;
+
+  set nomeServico(value) {
+    _nomeServico = value;
+  }
+
+  get querGenero => _querGenero;
+
+  set querGenero(int value) {
+    _querGenero = value;
+  }
+
+  get idServico => _idServico;
+
+  set idServico(value) {
+    _idServico = value;
+  }
 }
-

@@ -3,6 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profissional {
   @protected
+  bool _vip;
+
+  bool get vip => _vip;
+
+  set vip(bool value) {
+    _vip = value;
+  }
+
+  @protected
   GeoPoint _location;
 
   @protected
@@ -50,13 +59,12 @@ class Profissional {
       : _rg = json['rg'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
-        _nome = json['nome'],
         _location = json['location'],
-        _numeroCelular = json['numeroCelular'],
         _dataNascimento = json['dataNascimento'],
         _genero = json['genero'],
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
+        _vip = json['vip'],
         _idServico = int.parse(json['idServico']);
 
   String get rg => _rg;

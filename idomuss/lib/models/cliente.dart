@@ -57,6 +57,7 @@ class Cliente {
         _cpf = json['cpf'],
         _dataNascimento = json['dataNascimento'],
         _genero = json['genero'],
+        _email = json["email"],
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'];
 

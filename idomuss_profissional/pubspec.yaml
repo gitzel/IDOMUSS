@@ -22,6 +22,10 @@ dependencies:
   firebase_auth: ^0.14.0+5
   provider: ^3.1.0
   flutter_spinkit: ^4.1.2
+  cpfcnpj: ^1.0.3
+  image_picker: ^0.6.7+1
+  curved_navigation_bar: ^0.3.2
+  firebase_storage: ^3.1.6
   flutter:
     sdk: flutter
 

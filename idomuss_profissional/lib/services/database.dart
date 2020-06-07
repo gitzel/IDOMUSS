@@ -12,12 +12,13 @@ class DatabaseService{
         return await collection.document(uid).setData({
           "rg"              : profissional.rg,
           "cpf"             : profissional.cpf,
-          "nome"            : profissional.nome,
-          "numeroCelular"   : profissional.numeroCelular,
+          "email"           : profissional.email,
+          "vip"             : profissional.vip,
           "dataNascimento"  : profissional.dataNascimento,
           "genero"          : profissional.genero,
           "querGenero"      : profissional.querGenero,
           "descricao"       : profissional.descricao,
+          "location"        : profissional.location,
           "idServico"       : profissional.idServico,
         });
     }

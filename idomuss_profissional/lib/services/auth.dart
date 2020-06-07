@@ -1,32 +1,44 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idomussprofissional/models/profissional.dart';
 import 'package:idomussprofissional/services/baseAuth.dart';
 import 'package:idomussprofissional/services/database.dart';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService implements BaseAuth {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  Profissional _profissional;
 
   Future<FirebaseUser> getCurrentUser() async {
     return _auth.currentUser();
   }
 
-  Future<Profissional> signIn(String email, String password) async{
+  Stream<FirebaseUser> get user {
+    return _auth.onAuthStateChanged;
+  }
+
+  Stream<Profissional> get profissional {
+    return Stream.value(_profissional);
+  }
+
+  Future signIn(String email, String password) async{
     try{
-      var result = await  _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      var result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       FirebaseUser user = result.user;
 
-      Profissional profissional = await DatabaseService(uid: user.uid).getProfissional();
+      _profissional = await DatabaseService(uid: user.uid).getProfissional();
 
-      profissional.email = user.email;
-      profissional.nome = user.displayName;
-      profissional.foto = user.photoUrl;
-      profissional.numeroCelular = user.phoneNumber;
-
-      return profissional;
+      _profissional.email = user.email;
+      _profissional.nome = user.displayName;
+      _profissional.foto = user.photoUrl;
+      _profissional.numeroCelular = user.phoneNumber;
     }
     catch(e){
       print(e.toString());
@@ -34,11 +46,11 @@ class AuthService implements BaseAuth {
     }
   }
 
-  Future<Profissional> signUp(String email, String password, Profissional profissional) async{
+  Future signUp(String email, String password, Profissional profissional) async{
     try{
       var result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
 
-      _auth.verifyPhoneNumber(
+      /*_auth.verifyPhoneNumber(
           phoneNumber: profissional.numeroCelular,
           timeout:  const Duration(minutes: 2),
           verificationCompleted: (credential) async{
@@ -50,20 +62,22 @@ class AuthService implements BaseAuth {
             PhoneAuthProvider.getCredential(verificationId: verificationId, smsCode: smsCode);
             await (await _auth.currentUser()).updatePhoneNumberCredential(credential);
           }
-      );
+      );*/
+
+      _profissional = profissional;
 
       FirebaseUser user = result.user;
 
-      UserUpdateInfo updateInfo = new UserUpdateInfo();
+      user.sendEmailVerification();
 
+      //uploadPic(profissional.fotoFile);
+
+      await DatabaseService(uid: user.uid).updateUserData(profissional);
+
+      UserUpdateInfo updateInfo = new UserUpdateInfo();
       updateInfo.displayName = profissional.nome;
       updateInfo.photoUrl = profissional.foto;
-
       user.updateProfile(updateInfo);
-
-      profissional.email = user.email;
-
-      return profissional;
     }
     catch(e){
       print(e.toString());
@@ -71,86 +85,89 @@ class AuthService implements BaseAuth {
     }
   }
 
-  Future updateEmail(String newEmail) async{
-    try{
+  Future uploadPic(File image) async{
+    String fileName = basename(image.path);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
+    StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+  }
+
+  Future updateEmail(String newEmail) async {
+    try {
       (await _auth.currentUser()).updateEmail(newEmail);
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future updatePassword(String newPassword) async{
-    try{
+  Future updatePassword(String newPassword) async {
+    try {
       (await _auth.currentUser()).updatePassword(newPassword);
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _auth.currentUser();
-    user.sendEmailVerification();
-  }
-
-  Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _auth.currentUser();
-    return user.isEmailVerified;
-  }
-
-  Future signOut() async{
-    try{
+  Future signOut() async {
+    try {
       return await _auth.signOut();
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future deleteUser() async{
-    try{
+  Future deleteUser() async {
+    try {
       FirebaseUser user = (await _auth.currentUser());
       DatabaseService(uid: user.uid).deleteUserData();
       user.delete();
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
+  }
+
+  //forgot password
+  Future resetPassword(String email){
+    _auth.sendPasswordResetEmail(email: email);
   }
 
   // using google
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<Profissional> signInWithGoogle()  async {
+  Future signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount googleSignInAccount =
+      await googleSignIn.signIn();
 
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
 
-    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+      final AuthResult authResult =
+      await _auth.signInWithCredential(credential);
+      final FirebaseUser user = authResult.user;
 
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+      _profissional = await DatabaseService(uid: user.uid).getProfissional();
 
-    Profissional profissional = await DatabaseService(uid: user.uid).getProfissional();
-
-    profissional.email = user.email;
-    profissional.nome = user.displayName;
-    profissional.foto = user.photoUrl;
-    profissional.numeroCelular = user.phoneNumber;
-
-    return profissional;
+      _profissional.email = user.email;
+      _profissional.nome = user.displayName;
+      _profissional.foto = user.photoUrl;
+      _profissional.numeroCelular = user.phoneNumber;
+    } catch (erro) {
+      print(erro);
+      return null;
+    }
   }
 
-  Future signOutGoogle() async{
+  Future signOutGoogle() async {
     await googleSignIn.signOut();
   }
 }
