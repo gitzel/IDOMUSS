@@ -36,6 +36,7 @@ class _Add_AdressState extends State<Add_Adress> {
                           icon: Icon(Icons.search),
                           onPressed: () {
                             searchandNavigate();
+                            print(userLocation);
                           },
                           iconSize: 30.0)),
                   onChanged: (val) {
@@ -49,8 +50,6 @@ class _Add_AdressState extends State<Add_Adress> {
           ],
         ));
   }
-
-
 
   searchandNavigate() {
     Geolocator().placemarkFromAddress(searchAddr).then((result){
