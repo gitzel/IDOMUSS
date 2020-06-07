@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 
 class Cliente {
@@ -13,6 +15,8 @@ class Cliente {
       _descricao,
       _foto,
       senha;
+
+  File fotoFile;
 
   String get uid => _uid;
 
@@ -34,7 +38,7 @@ class Cliente {
       this._descricao,
       this._email,
       this._foto,
-      {this.senha});
+      {this.senha, this.fotoFile});
 
   Cliente.empty() {
     this._cpf = '';

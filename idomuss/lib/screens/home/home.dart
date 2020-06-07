@@ -42,10 +42,11 @@ class _HomeState extends State<Home> {
               Icon(Icons.notifications, size: 30, color: ColorSys.primary),
               Icon(Icons.person, size: 30, color: ColorSys.primary),
             ],
-            onTap: (index) {
+            onTap: (index) async{
               setState(() {
                 _index = index;
               });
+              await AuthService().signOut();
             },
           ),
         ));

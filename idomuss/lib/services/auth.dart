@@ -1,6 +1,8 @@
 import 'dart:ffi';
-
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/services/baseAuth.dart';
 import 'package:idomuss/services/database.dart';
@@ -46,7 +48,7 @@ class AuthService implements BaseAuth {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      _auth.verifyPhoneNumber(
+      /*_auth.verifyPhoneNumber(
           phoneNumber: client.numeroCelular,
           timeout: const Duration(minutes: 2),
           verificationCompleted: (credential) async {
@@ -59,26 +61,32 @@ class AuthService implements BaseAuth {
                 verificationId: verificationId, smsCode: smsCode);
             await (await _auth.currentUser())
                 .updatePhoneNumberCredential(credential);
-          });
+          });*/
 
       _client = client;
-
       FirebaseUser user = result.user;
 
-      user.sendEmailVerification();
+      //user.sendEmailVerification();
+      uploadPic(client.fotoFile);
+
+      await DatabaseService(uid: user.uid).updateUserData(client);
 
       UserUpdateInfo updateInfo = new UserUpdateInfo();
-
       updateInfo.displayName = client.nome;
       updateInfo.photoUrl = client.foto;
-
       user.updateProfile(updateInfo);
-
-      _client.email = user.email;
+  
     } catch (e) {
       print(e.toString());
       return null;
     }
+  }
+
+  Future uploadPic(File image) async{
+      String fileName = basename(image.path);
+      StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
+      StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
   }
 
   Future updateEmail(String newEmail) async {
