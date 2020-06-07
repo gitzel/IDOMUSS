@@ -66,7 +66,7 @@ class AuthService implements BaseAuth {
       _client = client;
       FirebaseUser user = result.user;
 
-      //user.sendEmailVerification();
+      user.sendEmailVerification();
       uploadPic(client.fotoFile);
 
       await DatabaseService(uid: user.uid).updateUserData(client);
@@ -75,7 +75,7 @@ class AuthService implements BaseAuth {
       updateInfo.displayName = client.nome;
       updateInfo.photoUrl = client.foto;
       user.updateProfile(updateInfo);
-  
+      _client.email = user.email;
     } catch (e) {
       print(e.toString());
       return null;

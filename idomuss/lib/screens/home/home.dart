@@ -46,7 +46,6 @@ class _HomeState extends State<Home> {
               setState(() {
                 _index = index;
               });
-              await AuthService().signOut();
             },
           ),
         ));
