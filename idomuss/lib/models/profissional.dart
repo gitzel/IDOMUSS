@@ -5,12 +5,6 @@ class Profissional {
   @protected
   bool _vip;
 
-  bool get vip => _vip;
-
-  set vip(bool value) {
-    _vip = value;
-  }
-
   @protected
   GeoPoint _location;
 
@@ -125,6 +119,12 @@ class Profissional {
 
   set querGenero(int value) {
     _querGenero = value;
+  }
+
+  bool get vip => _vip;
+
+  set vip(bool value) {
+    _vip = value;
   }
 
   get idServico => _idServico;
