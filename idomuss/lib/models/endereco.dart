@@ -14,7 +14,8 @@ class Endereco {
   @protected
   String _filtro, _numero, _complemento, _rua, _bairro, _cidade, _uf;
 
-  Endereco(this._complemento, this._numero,  this._filtro, this._rua, this._bairro, this._cidade, this._uf, this._location);
+  Endereco(this._complemento, this._numero, this._filtro, this._rua,
+      this._bairro, this._cidade, this._uf, this._location);
 
   Endereco.fromJson(Map<String, dynamic> json)
       : _complemento = json['complemento'],

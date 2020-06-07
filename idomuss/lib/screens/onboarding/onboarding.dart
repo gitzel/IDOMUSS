@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
-import 'package:idomuss/helpers/Textos.dart';
 import 'package:idomuss/screens/onboarding/slides.dart';
 import 'package:idomuss/screens/onboarding/slidetile.dart';
 

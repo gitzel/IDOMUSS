@@ -3,9 +3,8 @@ import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 
 class ServicoContratado {
-
   @protected
-    Cliente _cliente;
+  Cliente _cliente;
 
   Cliente get cliente => _cliente;
 

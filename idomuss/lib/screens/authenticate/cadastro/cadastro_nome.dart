@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:idomuss/components/textFieldOutline.dart';
+import 'package:idomuss/components/titulo_cadastro.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
-import 'package:idomuss/helpers/constantes.dart';
-import 'package:idomuss/screens/authenticate/cadastro/cadastro_telefone.dart';
-import 'package:idomuss/screens/authenticate/cadastroScaffold.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastro_genero.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastroScaffold.dart';
 import 'package:idomuss/models/cliente.dart';
-import 'package:email_validator/email_validator.dart';
 
 class CadastroNome extends StatefulWidget {
   Cliente cliente;
@@ -16,21 +16,19 @@ class CadastroNome extends StatefulWidget {
 }
 
 class _CadastroNomeState extends State<CadastroNome> {
-  
-  bool valorValido;
-  String sobrenomeAux;
+  String nome, sobrenome;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    valorValido = false;
+    nome = sobrenome = "";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return CadastroScaffold(
-      children: <Widget>[
+      <Widget>[
         BackButton(
           color: ColorSys.primary,
         ),
@@ -39,64 +37,46 @@ class _CadastroNomeState extends State<CadastroNome> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: paddingMedium, bottom: paddingSmall),
-                child: Text(
-                  'Qual é o seu nome?',
-                  style: TextStyle(
-                      color: ColorSys.black, fontSize: fontSizeRegular),
-                ),
-              ),
+              TextCadastro('Qual é o seu nome?'),
               TextFieldOutline(
-                prefixIcon: Icons.person,
-                label: 'Nome',
-                keyboardType: TextInputType.text,
-                validator: (val) => val.length > 0 ? null : "Nome inválido!",
-                onChanged: (val){
-                  setState(() {
-                    if (_formKey.currentState.validate()) {
-                      widget.cliente.nome = val;
-                      valorValido = true;
-                    } else {
-                      valorValido = false;
-                    }
-                  });
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: paddingMedium, bottom: paddingSmall),
-                child: Text(
-                  'E o seu sobrenome?',
-                  style: TextStyle(
-                      color: ColorSys.black, fontSize: fontSizeRegular),
-                ),
-              ),
+                  prefixIcon: Icons.person,
+                  label: 'Nome',
+                  keyboardType: TextInputType.text,
+                  validator: (val) => val.length > 0 ? null : "Nome inválido!",
+                  onChanged: (val) {
+                    setState(() {
+                      if (_formKey.currentState.validate() || val.isNotEmpty) {
+                        nome = val;
+                      }
+                    });
+                  },
+                  textCapitalization: TextCapitalization.words),
+              TextCadastro('E o seu sobrenome?'),
               TextFieldOutline(
-                prefixIcon: Icons.person,
-                label: 'Sobrenome',
-                keyboardType: TextInputType.text,
-                validator: (val) => val.length > 0 ? null : "Sobrenome inválido!",
-                onChanged: (val){
-                  setState(() {
-                    if (_formKey.currentState.validate()) {
-                      sobrenomeAux = val;
-                    }
-                  });
-                },
-              ),
+                  prefixIcon: Icons.person,
+                  label: 'Sobrenome',
+                  keyboardType: TextInputType.text,
+                  validator: (val) =>
+                      val.length > 0 ? null : "Sobrenome inválido!",
+                  onChanged: (val) {
+                    setState(() {
+                      if (_formKey.currentState.validate()) {
+                        sobrenome = val;
+                      }
+                    });
+                  },
+                  textCapitalization: TextCapitalization.words),
             ],
           ),
         ),
       ],
-      labelButtonBottomBar: 'Continuar',
-      onPressed: valorValido && sobrenomeAux != null
+      nome.isNotEmpty && sobrenome.isNotEmpty
           ? () {
+              widget.cliente.nome = nome + " " + sobrenome;
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroTelefone(
+                    builder: (context) => CadastroGenero(
                       cliente: widget.cliente,
                     ),
                   ));

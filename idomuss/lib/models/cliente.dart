@@ -11,7 +11,8 @@ class Cliente {
       _dataNascimento,
       _genero,
       _descricao,
-      _foto;
+      _foto,
+      senha;
 
   String get uid => _uid;
 
@@ -32,7 +33,8 @@ class Cliente {
       this._querGenero,
       this._descricao,
       this._email,
-      this._foto);
+      this._foto,
+      {this.senha});
 
   Cliente.empty() {
     this._cpf = '';

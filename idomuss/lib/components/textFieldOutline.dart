@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFieldOutline extends StatelessWidget {
   String label;
@@ -9,6 +10,9 @@ class TextFieldOutline extends StatelessWidget {
   bool obscureText;
   IconButton suffixIcon;
   String hint;
+  List<TextInputFormatter> inputFormatter;
+  TextCapitalization textCapitalization;
+  int maxLine;
 
   TextFieldOutline(
       {this.label,
@@ -18,7 +22,10 @@ class TextFieldOutline extends StatelessWidget {
       this.onChanged,
       this.obscureText,
       this.suffixIcon,
-      this.hint});
+      this.hint,
+      this.inputFormatter,
+      this.textCapitalization = TextCapitalization.none,
+      this.maxLine = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +40,9 @@ class TextFieldOutline extends StatelessWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
       validator: validator,
       onChanged: onChanged,
+      inputFormatters: inputFormatter,
+      textCapitalization: textCapitalization,
+      maxLines: maxLine,
     );
   }
 }

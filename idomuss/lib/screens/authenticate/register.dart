@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:idomuss/components/titulo_cadastro.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/screens/authenticate/cadastro/cadastro_telefone.dart';
-import 'package:idomuss/screens/authenticate/cadastroScaffold.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastroScaffold.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -26,17 +27,9 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return CadastroScaffold(
-      children: <Widget>[
-        BackButton(
-          color: ColorSys.primary,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: paddingMedium),
-          child: Text(
-            'Qual é o seu email?',
-            style: TextStyle(color: ColorSys.black, fontSize: fontSizeRegular),
-          ),
-        ),
+      <Widget>[
+        BackButton(),
+        TextCadastro('Qual é o seu email?'),
         Form(
           key: _formKey,
           child: TextFormField(
@@ -61,8 +54,7 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ],
-      labelButtonBottomBar: 'Continuar',
-      onPressed: valorValido
+      valorValido
           ? () {
               Navigator.push(
                   context,

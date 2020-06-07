@@ -2,28 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/components/titulo_cadastro.dart';
-import 'package:idomuss/screens/authenticate/cadastro/cadastro_nome.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastro_documentos.dart';
 import 'package:idomuss/screens/authenticate/cadastro/cadastroScaffold.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/screens/authenticate/cadastro/cadastro_foto.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class CadastroTelefone extends StatefulWidget {
+class CadastroDescricao extends StatefulWidget {
   Cliente cliente;
-  CadastroTelefone({this.cliente});
+  CadastroDescricao({this.cliente});
 
   @override
-  _CadastroTelefoneState createState() => _CadastroTelefoneState();
+  _CadastroDescricaoState createState() => _CadastroDescricaoState();
 }
 
-class _CadastroTelefoneState extends State<CadastroTelefone> {
-  bool valorValido;
+class _CadastroDescricaoState extends State<CadastroDescricao> {
+  String descricao;
   final _formKey = GlobalKey<FormState>();
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '(##) # ####-####', filter: {"#": RegExp(r'[0-9]')});
 
   @override
   void initState() {
-    valorValido = false;
+    descricao = "";
     super.initState();
   }
 
@@ -32,44 +31,39 @@ class _CadastroTelefoneState extends State<CadastroTelefone> {
     return CadastroScaffold(
       <Widget>[
         BackButton(),
-        TextCadastro('Qual é o seu número de celular?'),
+        TextCadastro('Tô curioso agora! Fala para mim um pouco sobre você!'),
         Form(
           key: _formKey,
           child: Row(
             children: <Widget>[
               Expanded(
                   child: TextFieldOutline(
-                prefixIcon: Icons.phone_iphone,
-                label: 'Celular',
-                hint: '(XX) X XXXX-XXXX',
-                keyboardType: TextInputType.number,
-                validator: (val) => val.length < 15 ? "Número inválido!" : null,
+                label: 'Descrição',
+                hint:
+                    'Sou uma pessoa muito organizada, gosto de trabalhar com tal coisa e assisto muita série...',
+                keyboardType: TextInputType.multiline,
+                maxLine: 12,
+                validator: (val) =>
+                    val.length < 15 ? "Escreva só um pouquinho de você!" : null,
                 onChanged: (val) {
                   setState(() {
                     if (_formKey.currentState.validate()) {
-                      widget.cliente.numeroCelular =
-                          maskFormatter.getUnmaskedText();
-                      valorValido = true;
-                    } else {
-                      valorValido = false;
+                      descricao = val;
                     }
                   });
                 },
-                inputFormatter: [
-                  maskFormatter,
-                  LengthLimitingTextInputFormatter(16)
-                ],
               )),
             ],
           ),
         ),
       ],
-      valorValido
+      descricao.isNotEmpty
           ? () {
+              widget.cliente.descricao = descricao;
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroNome(
+                    builder: (context) => CadastroFoto(
                       cliente: widget.cliente,
                     ),
                   ));

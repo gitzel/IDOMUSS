@@ -7,7 +7,8 @@ class CadastroScaffold extends StatelessWidget {
   String labelButtonBottomBar;
   void Function() onPressed;
 
-  CadastroScaffold({this.children, this.labelButtonBottomBar, this.onPressed});
+  CadastroScaffold(this.children, this.onPressed,
+      {this.labelButtonBottomBar = 'Continuar'});
 
   @override
   Widget build(BuildContext context) {

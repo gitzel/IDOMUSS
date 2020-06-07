@@ -4,7 +4,7 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 class BackButton extends StatelessWidget {
   Color color;
 
-  BackButton({this.color});
+  BackButton({this.color = ColorSys.primary});
 
   @override
   Widget build(BuildContext context) {

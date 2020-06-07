@@ -17,43 +17,45 @@ class _Add_AdressState extends State<Add_Adress> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: <Widget>[
-            Positioned(
-              top: 30.0,
-              right: 15.0,
-              left: 15.0,
-              child: Container(
-                height: 50.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0), color: Colors.white),
-                child: TextField(
-                  decoration: InputDecoration(
-                      hintText: 'Enter Address',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 15.0, top: 15.0),
-                      suffixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            searchandNavigate();
-                            print(userLocation);
-                          },
-                          iconSize: 30.0)),
-                  onChanged: (val) {
-                    setState(() {
-                      searchAddr = val;
-                    });
-                  },
-                ),
-              ),
-            )
-          ],
-        ));
+      children: <Widget>[
+        Positioned(
+          top: 30.0,
+          right: 15.0,
+          left: 15.0,
+          child: Container(
+            height: 50.0,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0), color: Colors.white),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: 'Enter Address',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 15.0, top: 15.0),
+                  suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        searchandNavigate();
+                        print(userLocation);
+                      },
+                      iconSize: 30.0)),
+              onChanged: (val) {
+                setState(() {
+                  searchAddr = val;
+                });
+              },
+            ),
+          ),
+        )
+      ],
+    ));
   }
 
   searchandNavigate() {
-    Geolocator().placemarkFromAddress(searchAddr).then((result){
-      userLocation = Position(longitude: result[0].position.longitude, latitude: result[0].position.latitude);
+    Geolocator().placemarkFromAddress(searchAddr).then((result) {
+      userLocation = Position(
+          longitude: result[0].position.longitude,
+          latitude: result[0].position.latitude);
     });
     //para o mapa
     /*
