@@ -1,16 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class Endereco {
   @protected
-  String _filtro, _numero, _complemento, _cep;
+  GeoPoint _location;
 
-  Endereco(this._complemento, this._numero, this._cep, this._filtro);
+  GeoPoint get location => _location;
+
+  set location(GeoPoint value) {
+    _location = value;
+  }
+
+  @protected
+  String _filtro, _numero, _complemento, _rua, _bairro, _cidade, _uf;
+
+  Endereco(this._complemento, this._numero,  this._filtro, this._rua, this._bairro, this._cidade, this._uf, this._location);
 
   Endereco.fromJson(Map<String, dynamic> json)
       : _complemento = json['complemento'],
         _numero = json['numero'],
-        _cep = json['cep'],
-        _filtro = json['filtro'];
+        _filtro = json['filtro'],
+        _rua = json['rua'],
+        _bairro = json['bairro'],
+        _cidade = json['cidade'],
+        _uf = json['uf'],
+        _location = json['location'];
 
   get filtro => _filtro;
 
@@ -30,9 +44,27 @@ class Endereco {
     _complemento = value;
   }
 
-  get cep => _cep;
+  get rua => _rua;
 
-  set cep(value) {
-    _cep = value;
+  set rua(value) {
+    _rua = value;
+  }
+
+  get bairro => _bairro;
+
+  set bairro(value) {
+    _bairro = value;
+  }
+
+  get cidade => _cidade;
+
+  set cidade(value) {
+    _cidade = value;
+  }
+
+  get uf => _uf;
+
+  set uf(value) {
+    _uf = value;
   }
 }

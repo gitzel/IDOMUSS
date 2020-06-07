@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/screens/authenticate/cadastro/add_adress.dart';
 import 'package:idomuss/screens/authenticate/sign_in.dart';
 import 'package:idomuss/screens/onboarding/onboarding.dart';
 import 'package:idomuss/screens/wrapper.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
               splashColor: Colors.white10,
               fontFamily: 'Montserrat'),
           debugShowCheckedModeBanner: false,
-          home: Wrapper()),
+          home: Add_Adress()),
     );
   }
 }

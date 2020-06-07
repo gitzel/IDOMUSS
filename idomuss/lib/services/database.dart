@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
@@ -37,7 +38,11 @@ class DatabaseService {
       "uidCliente": uid,
       "complemento": endereco.complemento,
       "numero": endereco.numero,
-      "cep": endereco.cep,
+      "rua":endereco.rua,
+      "bairro":endereco.bairro,
+      "cidade":endereco.cidade,
+      "uf":endereco.uf,
+      "location":endereco.location,
       "filtro": endereco.filtro
     });
   }
@@ -140,15 +145,26 @@ class DatabaseService {
       return profissionais;
   }
 
-  Future<List<Profissional>> profissionalCategoriaList(String categoria) async {
-    List<Profissional> profissionais = (await prof
-        .where("categoria", isEqualTo: categoria)
+  Future<List<Profissional>> _profissionalCategoriaList({String categoria = null}) async {
+    List<Profissional> profissionais;
+
+    if(categoria == null)
+      profissionais = (await prof
         .snapshots()
         .map((snapshot) {
       return snapshot.documents.map((doc) {
         return Profissional.fromJson(doc.data);
       }).toList();
     }).toList()).first;
+    else
+      profissionais = (await prof
+          .where("categoria", isEqualTo: categoria)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.documents.map((doc) {
+          return Profissional.fromJson(doc.data);
+        }).toList();
+      }).toList()).first;
 
     profissionais.forEach((prof) async {
       var user = await FirebaseAdmin.instance.initializeApp().auth().getUserByEmail(prof.email);
@@ -158,6 +174,19 @@ class DatabaseService {
     });
 
     return profissionais;
+  }
+
+  Future<List<Profissional>> nearProfissionais(Endereco endereco, {int distance = 10000, String categoria = null}) async {
+   List<Profissional> profissionais = List<Profissional>();
+   List<Profissional> all = await _profissionalCategoriaList(categoria: categoria);
+
+   all.forEach((prof) async{
+     double distanceInMeters = await Geolocator().distanceBetween(endereco.location.latitude, endereco.location.longitude, prof.location.latitude, prof.location.longitude);
+     if(distanceInMeters < distance)
+       profissionais.add(prof);
+   });
+
+   return profissionais;
   }
 
   Stream<List<Endereco>> get enderecosFromCliente {
