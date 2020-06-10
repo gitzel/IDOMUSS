@@ -15,7 +15,13 @@ class _HomeState extends State<Home> {
   AuthService _auth = AuthService();
   int _index;
 
-  final tabs = [];
+  Widget TabSelect(){
+    switch (_index) {
+      case 0:
+        return Feed();
+        break;
+    }
+  }
 
   @override
   void initState() {
@@ -28,7 +34,7 @@ class _HomeState extends State<Home> {
         value: AuthService().client,
         child: Scaffold(
           backgroundColor: ColorSys.gray,
-          body: Feed(),
+          body: TabSelect(),
           bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: ColorSys.gray,
             items: <Widget>[
