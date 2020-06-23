@@ -4,6 +4,7 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/screens/home/favorite.dart';
 import 'package:idomuss/screens/home/notificacoes.dart';
+import 'package:idomuss/screens/home/perfil.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:idomuss/screens/home/feed.dart';
@@ -27,6 +28,9 @@ class _HomeState extends State<Home> {
         break;
       case 3:
         return Notificacoes();
+        break;
+      case 4:
+        return Perfil();
         break;
     }
   }
