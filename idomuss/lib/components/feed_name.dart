@@ -18,8 +18,7 @@ class FeedNameShapeBorder extends ShapeBorder {
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
-  }
+  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {}
 
   @override
   ShapeBorder scale(double t) {

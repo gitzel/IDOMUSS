@@ -38,7 +38,8 @@ class Cliente {
       this._descricao,
       this._email,
       this._foto,
-      {this.senha, this.fotoFile});
+      {this.senha,
+      this.fotoFile});
 
   Cliente.empty() {
     this._cpf = '';

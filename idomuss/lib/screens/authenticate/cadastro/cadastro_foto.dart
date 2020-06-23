@@ -72,11 +72,12 @@ class _CadastroFotoState extends State<CadastroFoto> {
           ? () {
               widget.cliente.foto = foto.path;
               widget.cliente.fotoFile = foto;
-              _auth.signUp(
-                  widget.cliente.email, widget.cliente.senha, widget.cliente).then((value){
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  });
-              
+              _auth
+                  .signUp(widget.cliente.email, widget.cliente.senha,
+                      widget.cliente)
+                  .then((value) {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              });
             }
           : null,
       labelButtonBottomBar: "Finalizar",

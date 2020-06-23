@@ -10,39 +10,36 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-
-  List<int> list = [1,2,3,4,5];
+  List<int> list = [1, 2, 3, 4, 5];
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-          child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-  crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-             Padding(
-              padding: const EdgeInsets.fromLTRB(paddingSmall, paddingExtraLarge, paddingSmall, paddingMedium),
-              child: TextFormField(),
-             ),
-            Padding(
-              padding: const EdgeInsets.only(left: paddingSmall, bottom: paddingLarge),
-              child: Text('Destaques da semana', 
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                paddingSmall, paddingExtraLarge, paddingSmall, paddingMedium),
+            child: TextFormField(),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: paddingSmall, bottom: paddingLarge),
+            child: Text(
+              'Destaques da semana',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
-                  color: ColorSys.black
-              
-                ),
-                            
-              ),
+                  color: ColorSys.black),
             ),
-            CarouselSlider(
-              options: CarouselOptions(  
-                height: MediaQuery.of(context).size.width
-              ),
-              items: <Widget>[FeedCard(), FeedCard()],
-            ),
-          ],
+          ),
+          CarouselSlider(
+            options: CarouselOptions(height: MediaQuery.of(context).size.width),
+            items: <Widget>[FeedCard(), FeedCard()],
+          ),
+        ],
       ),
     );
   }

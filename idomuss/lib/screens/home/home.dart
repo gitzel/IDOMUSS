@@ -2,6 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/screens/home/favorite.dart';
+import 'package:idomuss/screens/home/notificacoes.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:idomuss/screens/home/feed.dart';
@@ -15,10 +17,16 @@ class _HomeState extends State<Home> {
   AuthService _auth = AuthService();
   int _index;
 
-  Widget TabSelect(){
+  Widget TabSelect() {
     switch (_index) {
       case 0:
         return Feed();
+        break;
+      case 1:
+        return Favorite();
+        break;
+      case 3:
+        return Notificacoes();
         break;
     }
   }
@@ -28,15 +36,17 @@ class _HomeState extends State<Home> {
     _index = 0;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<Cliente>.value(
         value: AuthService().client,
         child: Scaffold(
           backgroundColor: ColorSys.gray,
-          body: TabSelect(),
+          body: SizedBox.expand(child: TabSelect()),
           bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: ColorSys.gray,
+            index: _index,
             items: <Widget>[
               Icon(
                 Icons.home,
@@ -48,12 +58,14 @@ class _HomeState extends State<Home> {
               Icon(Icons.notifications, size: 30, color: ColorSys.primary),
               Icon(Icons.person, size: 30, color: ColorSys.primary),
             ],
-            onTap: (index) async{
-              setState(() {
-                _index = index;
-              });
-            },
+            onTap: _onItemTapped,
           ),
         ));
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _index = index;
+    });
   }
 }

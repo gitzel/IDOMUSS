@@ -26,5 +26,4 @@ class FeedClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return true;
   }
-
 }

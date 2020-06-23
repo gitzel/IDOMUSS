@@ -82,11 +82,12 @@ class AuthService implements BaseAuth {
     }
   }
 
-  Future uploadPic(File image) async{
-      String fileName = basename(image.path);
-      StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-      StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
-      StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+  Future uploadPic(File image) async {
+    String fileName = basename(image.path);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
   }
 
   Future updateEmail(String newEmail) async {
@@ -128,7 +129,7 @@ class AuthService implements BaseAuth {
   }
 
   //forgot password
-  Future resetPassword(String email){
+  Future resetPassword(String email) {
     _auth.sendPasswordResetEmail(email: email);
   }
 
