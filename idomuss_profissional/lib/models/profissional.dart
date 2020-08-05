@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profissional {
   @protected
+  double _nota;
+  
+  @protected
   bool _vip;
 
   bool get vip => _vip;
@@ -41,7 +44,7 @@ class Profissional {
   }
 
   @protected
-  int _querGenero, _idServico;
+  int _querGenero;
 
   Profissional(
       this._rg,
@@ -65,7 +68,8 @@ class Profissional {
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
         _vip = json['vip'],
-        _idServico = int.parse(json['idServico']);
+        _nomeServico = json['nomeServico'],
+        _nota = json['nota'];
 
   String get rg => _rg;
 
