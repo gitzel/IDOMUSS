@@ -38,7 +38,7 @@ class Profissional {
   }
 
   @protected
-  int _querGenero, _idServico;
+  int _querGenero;
 
   Profissional(
       this._rg,
@@ -63,7 +63,7 @@ class Profissional {
         _descricao = json['descricao'],
         _vip = json['vip'],
         _nome = json['nota'],
-        _idServico = int.parse(json['idServico']);
+        _nomeServico = json['servico'];
 
   String get rg => _rg;
 
@@ -129,11 +129,5 @@ class Profissional {
 
   set vip(bool value) {
     _vip = value;
-  }
-
-  get idServico => _idServico;
-
-  set idServico(value) {
-    _idServico = value;
   }
 }
