@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/screens/home/busca.dart';
 import 'package:idomuss/screens/home/favorite.dart';
 import 'package:idomuss/screens/home/notificacoes.dart';
 import 'package:idomuss/screens/home/perfil.dart';
@@ -25,6 +26,9 @@ class _HomeState extends State<Home> {
         break;
       case 1:
         return Favorite();
+        break;
+      case 2:
+        return Busca();
         break;
       case 3:
         return Notificacoes();

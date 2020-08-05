@@ -100,12 +100,12 @@ class DatabaseService {
   }
   
   Stream<List<String>> get ListaServicos{
-    return servico.snapshots().map(_servicosFromSnapshot);
+    return servicos.snapshots().map(_servicosFromSnapshot);
   }
   
   List<String> _servicosFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
-      return doc.data.nome;
+      return doc.data["nome"];  // antes era data.nome
     }).toList();
   }
 
@@ -164,8 +164,8 @@ class DatabaseService {
     await collection.document(uid).delete();
   }
   
-  Stream<List<String>> get ListaProfissionaisByNota{
-    return servico.orderBy(“nota”).snapshots().map(_profissionalListFromSnapshot);
+  Stream<List<Profissional>> get ListaProfissionaisByNota{ // o parametro estava como List<string>
+    return servicos.orderBy("nota").snapshots().map(_profissionalListFromSnapshot);
   }
 
   Stream<List<Profissional>> get profissionais {
@@ -204,7 +204,7 @@ class DatabaseService {
     else
       profissionais = (await prof
               .where("nomeServico", isEqualTo: categoria)
-              .oderBy("nota")
+              .orderBy("nota")
               .snapshots()
               .map((snapshot) {
         return snapshot.documents.map((doc) {
