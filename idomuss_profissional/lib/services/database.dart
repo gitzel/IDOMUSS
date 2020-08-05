@@ -19,7 +19,8 @@ class DatabaseService{
           "querGenero"      : profissional.querGenero,
           "descricao"       : profissional.descricao,
           "location"        : profissional.location,
-          "idServico"       : profissional.idServico,
+          "nomeServico"     : profissional.nomeServico,
+          "nota"            : profissional.nota
         });
     }
 
