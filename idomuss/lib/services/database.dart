@@ -20,6 +20,11 @@ class DatabaseService {
       Firestore.instance.collection("endereco");
   final CollectionReference servicosContratados =
       Firestore.instance.collection("servicoContratado");
+  final CollectionReference servicos =
+      Firestore.instance.collection("servico");
+  final CollectionReference ranking =
+      Firestore.instance.collection("ranking");
+
 
   Future updateUserData(Cliente cliente) async {
     return await collection.document(uid).setData({
@@ -49,16 +54,20 @@ class DatabaseService {
 
   Future addAvaliacao(
       Profissional profissional, String texto, double nota) async {
-    return await Firestore.instance.collection("avaliacao").add({
-      "uidCliente": uid,
-      "uidProfissional": (await FirebaseAdmin.instance
+    String uidProfissional =(await FirebaseAdmin.instance
               .initializeApp()
               .auth()
               .getUserByEmail(profissional.email))
-          .uid,
+              .uid;
+    
+    return await Firestore.instance.collection("avaliacao").add({
+      "uidCliente": uid,
+      "uidProfissional": uidProfissional,
       "texto": texto,
       "nota": nota
     });
+    
+    /*prof.document(uidProfissional).updateData({updateProf});*/
   }
 
   Future addServicoContratado(ServicoContratado servicoContratado) async {
@@ -89,6 +98,16 @@ class DatabaseService {
       "descricao": servicoContratado.descricao,
     });
   }
+  
+  Stream<List<String>> get ListaServicos{
+    return servico.snapshots().map(_servicosFromSnapshot);
+  }
+  
+  List<String> _servicosFromSnapshot(QuerySnapshot snapshot){
+    return snapshot.documents.map((doc){
+      return doc.data.nome;
+    }).toList();
+  }
 
   Stream<List<ServicoContratado>> get servicosContratado {
     return servicosContratados
@@ -96,7 +115,7 @@ class DatabaseService {
         .snapshots()
         .map(_servicosContratadosFromSnapshot);
   }
-
+ 
   List<ServicoContratado> _servicosContratadosFromSnapshot(
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
@@ -144,6 +163,10 @@ class DatabaseService {
   void deleteUserData() async {
     await collection.document(uid).delete();
   }
+  
+  Stream<List<String>> get ListaProfissionaisByNota{
+    return servico.orderBy(“nota”).snapshots().map(_profissionalListFromSnapshot);
+  }
 
   Stream<List<Profissional>> get profissionais {
     return prof.snapshots().map(_profissionalListFromSnapshot);
@@ -180,7 +203,8 @@ class DatabaseService {
           .first;
     else
       profissionais = (await prof
-              .where("categoria", isEqualTo: categoria)
+              .where("nomeServico", isEqualTo: categoria)
+              .oderBy("nota")
               .snapshots()
               .map((snapshot) {
         return snapshot.documents.map((doc) {
