@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class Profissional {
   @protected
   double _nota;
-
-  double get nota => _nota;
-
-  set nota(double value) {
-    _nota = value;
-  }
 
   @protected
   bool _vip;
@@ -17,12 +12,15 @@ class Profissional {
   @protected
   GeoPoint _location;
 
+  File fotoFile;
+
   @protected
   String _uid,
       _rg,
       _cpf,
       _cnpj,
       _nome,
+      senha,
       _email,
       _numeroCelular,
       _dataNascimento,
@@ -56,7 +54,9 @@ class Profissional {
       this._dataNascimento,
       this._genero,
       this._querGenero,
-      this._descricao);
+      this._descricao,
+      {this.senha,
+      this.fotoFile});
 
   Profissional.fromJson(Map<String, dynamic> json)
       : _rg = json['rg'],
@@ -68,8 +68,24 @@ class Profissional {
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
         _vip = json['vip'],
-        _nome = json['nota'],
+        _nota = json['nota'],
         _nomeServico = json['servico'];
+
+  Profissional.empty() {
+    this._cpf = '';
+    this._nome = '';
+    this._cnpj = '';
+    this._numeroCelular = '';
+    this._dataNascimento = '';
+    this._genero = '';
+    this._querGenero = 0;
+    this._descricao = '';
+    this._email = '';
+    this._foto = '';
+    this._nomeServico = '';
+    this._vip = false;
+    this._nota = 0;
+  }
 
   String get rg => _rg;
 
@@ -79,7 +95,15 @@ class Profissional {
 
   get cpf => _cpf;
 
+  set cpf(String value) {
+    _cpf = value;
+  }
+
   get cnpj => _cnpj;
+
+  set cnpj(String value) {
+    _cnpj = value;
+  }
 
   get nome => _nome;
 
@@ -106,6 +130,10 @@ class Profissional {
   }
 
   get dataNascimento => _dataNascimento;
+
+  set dataNascimento(value) {
+    _dataNascimento = value;
+  }
 
   get genero => _genero;
 
@@ -135,5 +163,11 @@ class Profissional {
 
   set vip(bool value) {
     _vip = value;
+  }
+
+  double get nota => _nota;
+
+  set nota(double value) {
+    _nota = value;
   }
 }

@@ -68,7 +68,7 @@ class Profissional {
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
         _vip = json['vip'],
-        _nome = json['nota'],
+        _nota = json['nota'],
         _nomeServico = json['servico'];
 
   String get rg => _rg;

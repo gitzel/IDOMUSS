@@ -10,7 +10,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService implements BaseAuth {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Profissional _profissional;
 
@@ -26,9 +25,8 @@ class AuthService implements BaseAuth {
     return Stream.value(_profissional);
   }
 
-  Future signIn(String email, String password) async{
-    try{
-
+  Future signIn(String email, String password) async {
+    try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
@@ -39,16 +37,17 @@ class AuthService implements BaseAuth {
       _profissional.nome = user.displayName;
       _profissional.foto = user.photoUrl;
       _profissional.numeroCelular = user.phoneNumber;
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future signUp(String email, String password, Profissional profissional) async{
-    try{
-      var result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+  Future signUp(
+      String email, String password, Profissional profissional) async {
+    try {
+      var result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
       /*_auth.verifyPhoneNumber(
           phoneNumber: profissional.numeroCelular,
@@ -78,18 +77,18 @@ class AuthService implements BaseAuth {
       updateInfo.displayName = profissional.nome;
       updateInfo.photoUrl = profissional.foto;
       user.updateProfile(updateInfo);
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future uploadPic(File image) async{
+  Future uploadPic(File image) async {
     String fileName = basename(image.path);
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
-    StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
   }
 
   Future updateEmail(String newEmail) async {
@@ -131,7 +130,7 @@ class AuthService implements BaseAuth {
   }
 
   //forgot password
-  Future resetPassword(String email){
+  Future resetPassword(String email) {
     _auth.sendPasswordResetEmail(email: email);
   }
 
@@ -141,10 +140,10 @@ class AuthService implements BaseAuth {
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount googleSignInAccount =
-      await googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
+          await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleSignInAuthentication.accessToken,
@@ -152,7 +151,7 @@ class AuthService implements BaseAuth {
       );
 
       final AuthResult authResult =
-      await _auth.signInWithCredential(credential);
+          await _auth.signInWithCredential(credential);
       final FirebaseUser user = authResult.user;
 
       _profissional = await DatabaseService(uid: user.uid).getProfissional();

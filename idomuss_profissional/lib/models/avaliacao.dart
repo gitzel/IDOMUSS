@@ -1,20 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class Avaliacao
-{
+class Avaliacao {
   @protected
-  String  _texto, _nomeCliente, _fotoCliente, _uidCliente,_uidProfissional;
-
-
-
+  String _texto, _nomeCliente, _fotoCliente, _uidCliente, _uidProfissional;
 
   @protected
   double _nota;
 
-  Avaliacao(this._texto,
-      this._uidProfissional,
-      this._nota
-      );
+  Avaliacao(this._texto, this._uidProfissional, this._nota);
 
   Avaliacao.fromJson(Map<String, dynamic> json)
       : _texto = json['texto'],
@@ -58,4 +51,3 @@ class Avaliacao
     _nota = value;
   }
 }
-

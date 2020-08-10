@@ -110,7 +110,7 @@ class DatabaseService {
   
   List<String> _servicosFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
-      return doc.data["nome"];  // antes era data.nome
+      return doc.data["nome"];
     }).toList();
   }
 
