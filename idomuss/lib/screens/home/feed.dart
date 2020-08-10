@@ -37,7 +37,11 @@ class _FeedState extends State<Feed> {
           ),
           CarouselSlider(
             options: CarouselOptions(height: MediaQuery.of(context).size.width),
-            items: <Widget>[FeedCard('gitzel.jpg'), FeedCard('isa.jpg'), FeedCard('amabile.jpg')],
+            items: <Widget>[
+              FeedCard('gitzel.jpg'),
+              FeedCard('isa.jpg'),
+              FeedCard('amabile.jpg')
+            ],
           ),
         ],
       ),

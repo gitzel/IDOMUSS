@@ -19,19 +19,20 @@ class _NotificacoesState extends State<Notificacoes> {
             padding: const EdgeInsets.fromLTRB(paddingSmall,
                 2 * paddingExtraLarge, paddingSmall, paddingSmall),
             child: RichText(
-                text: new TextSpan(
-                  style: new TextStyle(
-                      fontSize: fontSizeSubTitle,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                      color: Colors.white),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Serviços'),
-                    TextSpan(
-                        text: ' pendentes', style: TextStyle(fontWeight: FontWeight.normal)),
-                  ],
-                ),
+              text: new TextSpan(
+                style: new TextStyle(
+                    fontSize: fontSizeSubTitle,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white),
+                children: <TextSpan>[
+                  TextSpan(text: 'Serviços'),
+                  TextSpan(
+                      text: ' pendentes',
+                      style: TextStyle(fontWeight: FontWeight.normal)),
+                ],
               ),
+            ),
           ),
           Container(
             height: MediaQuery.of(context).size.height - 226.0,

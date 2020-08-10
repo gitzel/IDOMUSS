@@ -3,10 +3,9 @@ import 'package:idomuss/components/feed_details.dart';
 import 'package:idomuss/components/feed_name_widget.dart';
 
 class FeedCard extends StatelessWidget {
-
   String img;
 
-  FeedCard(this.img){
+  FeedCard(this.img) {
     img = this.img;
   }
 

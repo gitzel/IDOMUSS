@@ -20,11 +20,8 @@ class DatabaseService {
       Firestore.instance.collection("endereco");
   final CollectionReference servicosContratados =
       Firestore.instance.collection("servicoContratado");
-  final CollectionReference servicos =
-      Firestore.instance.collection("servico");
-  final CollectionReference ranking =
-      Firestore.instance.collection("ranking");
-
+  final CollectionReference servicos = Firestore.instance.collection("servicos");
+  final CollectionReference ranking = Firestore.instance.collection("ranking");
 
   Future updateUserData(Cliente cliente) async {
     return await collection.document(uid).setData({
@@ -54,19 +51,19 @@ class DatabaseService {
 
   Future addAvaliacao(
       Profissional profissional, String texto, double nota) async {
-    String uidProfissional =(await FirebaseAdmin.instance
-              .initializeApp()
-              .auth()
-              .getUserByEmail(profissional.email))
-              .uid;
-    
+    String uidProfissional = (await FirebaseAdmin.instance
+            .initializeApp()
+            .auth()
+            .getUserByEmail(profissional.email))
+        .uid;
+
     return await Firestore.instance.collection("avaliacao").add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
       "texto": texto,
       "nota": nota
     });
-    
+
     /*prof.document(uidProfissional).updateData({updateProf});*/
   }
 
@@ -98,14 +95,14 @@ class DatabaseService {
       "descricao": servicoContratado.descricao,
     });
   }
-  
-  Stream<List<String>> get ListaServicos{
+
+  Stream<List<String>> get ListaServicos {
     return servicos.snapshots().map(_servicosFromSnapshot);
   }
-  
-  List<String> _servicosFromSnapshot(QuerySnapshot snapshot){
-    return snapshot.documents.map((doc){
-      return doc.data["nome"];  // antes era data.nome
+
+  List<String> _servicosFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return doc.data["nome"] ?? ""; // antes era data.nome
     }).toList();
   }
 
@@ -115,7 +112,7 @@ class DatabaseService {
         .snapshots()
         .map(_servicosContratadosFromSnapshot);
   }
- 
+
   List<ServicoContratado> _servicosContratadosFromSnapshot(
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
@@ -163,9 +160,13 @@ class DatabaseService {
   void deleteUserData() async {
     await collection.document(uid).delete();
   }
-  
-  Stream<List<Profissional>> get ListaProfissionaisByNota{ // o parametro estava como List<string>
-    return servicos.orderBy("nota").snapshots().map(_profissionalListFromSnapshot);
+
+  Stream<List<Profissional>> get ListaProfissionaisByNota {
+    // o parametro estava como List<string>
+    return servicos
+        .orderBy("nota")
+        .snapshots()
+        .map(_profissionalListFromSnapshot);
   }
 
   Stream<List<Profissional>> get profissionais {

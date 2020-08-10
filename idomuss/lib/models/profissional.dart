@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Profissional {
   @protected
   double _nota;
-  
+
   @protected
   bool _vip;
 
