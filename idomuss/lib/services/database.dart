@@ -59,15 +59,20 @@ class DatabaseService {
               .auth()
               .getUserByEmail(profissional.email))
               .uid;
-    
-    return await Firestore.instance.collection("avaliacao").add({
+
+    double antigaNota =  double.parse((await prof.document(uidProfissional).snapshots().first).data["nota"].toString());
+    double novaNota = (nota + antigaNota)/2;
+
+    await prof.document(uidProfissional).updateData({
+      "nota": novaNota
+    });
+
+   return await Firestore.instance.collection("avaliacao").add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
       "texto": texto,
       "nota": nota
     });
-    
-    /*prof.document(uidProfissional).updateData({updateProf});*/
   }
 
   Future addServicoContratado(ServicoContratado servicoContratado) async {

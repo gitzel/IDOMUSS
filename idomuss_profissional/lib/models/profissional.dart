@@ -4,15 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Profissional {
   @protected
   double _nota;
-  
+
+  double get nota => _nota;
+
+  set nota(double value) {
+    _nota = value;
+  }
+
   @protected
   bool _vip;
-
-  bool get vip => _vip;
-
-  set vip(bool value) {
-    _vip = value;
-  }
 
   @protected
   GeoPoint _location;
@@ -68,8 +68,8 @@ class Profissional {
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
         _vip = json['vip'],
-        _nomeServico = json['nomeServico'],
-        _nota = json['nota'];
+        _nome = json['nota'],
+        _nomeServico = json['servico'];
 
   String get rg => _rg;
 
@@ -131,9 +131,9 @@ class Profissional {
     _querGenero = value;
   }
 
-  get idServico => _idServico;
+  bool get vip => _vip;
 
-  set idServico(value) {
-    _idServico = value;
+  set vip(bool value) {
+    _vip = value;
   }
 }

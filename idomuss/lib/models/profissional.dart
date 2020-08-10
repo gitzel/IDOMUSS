@@ -4,7 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Profissional {
   @protected
   double _nota;
-  
+
+  double get nota => _nota;
+
+  set nota(double value) {
+    _nota = value;
+  }
+
   @protected
   bool _vip;
 
