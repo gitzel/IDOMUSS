@@ -1,61 +1,82 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:idomussprofissional/models/profissional.dart';
 
-class DatabaseService{
-    final String uid;
+class DatabaseService {
+  final String uid;
 
-    DatabaseService({this.uid});
+  DatabaseService({this.uid});
 
-    final CollectionReference collection = Firestore.instance.collection("profissionais");
+  final CollectionReference collection =
+      Firestore.instance.collection("profissionais");
+  final CollectionReference servicos = Firestore.instance.collection("servico");
 
-    Future updateUserData(Profissional profissional) async{
-        return await collection.document(uid).setData({
-          "rg"              : profissional.rg,
-          "cpf"             : profissional.cpf,
-          "email"           : profissional.email,
-          "vip"             : profissional.vip,
-          "dataNascimento"  : profissional.dataNascimento,
-          "genero"          : profissional.genero,
-          "querGenero"      : profissional.querGenero,
-          "descricao"       : profissional.descricao,
-          "location"        : profissional.location,
-          "nomeServico"     : profissional.nomeServico,
-          "nota"            : profissional.nota
-        });
-    }
+  Future updateUserData(Profissional profissional) async {
+    return await collection.document(uid).setData({
+      "rg": profissional.rg,
+      "cpf": profissional.cpf,
+      "email": profissional.email,
+      "vip": profissional.vip,
+      "dataNascimento": profissional.dataNascimento,
+      "genero": profissional.genero,
+      "querGenero": profissional.querGenero,
+      "descricao": profissional.descricao,
+      "location": profissional.location,
+      "nomeServico": profissional.nomeServico,
+      "nota": profissional.nota
+    });
+  }
 
-    Stream<QuerySnapshot> get collections{
-      return collection.snapshots();
-    }
+  Stream<List<String>> get ListaServicos {
+    return servicos.snapshots().map(_servicosFromSnapshot);
+  }
 
-    static Stream<String> getIdServico(String nome) {
-        Stream<String> id = Firestore.instance.collection("servicos").where("nome", isEqualTo: nome).snapshots().map((snapshot){
-          return snapshot.documents.map((doc){
-            return doc.data.keys;
-          }).toString();
-        });
-        return id;
-    }
+  List<String> _servicosFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return doc.data["nome"];
+    }).toList();
+  }
 
-    Stream<List<String>> get enderecosFromCliente{
-      return  Firestore.instance.collection("avaliacao").where("uidProfissional", isEqualTo: uid).snapshots().map(_enderecoListFromSnapshot);
-    }
+  Stream<QuerySnapshot> get collections {
+    return collection.snapshots();
+  }
 
-    List<String> _enderecoListFromSnapshot(QuerySnapshot snapshot) {
+  static Stream<String> getIdServico(String nome) {
+    Stream<String> id = Firestore.instance
+        .collection("servicos")
+        .where("nome", isEqualTo: nome)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.documents.map((doc) {
-        return doc.data["texto"];
-      }).toList();
-    }
+        return doc.data.keys;
+      }).toString();
+    });
+    return id;
+  }
 
-    Future<Profissional> getProfissional() async{
-      List<Profissional> profissional =  await collection.document(uid).snapshots().map((doc){
-        return Profissional.fromJson(doc.data);
-      }).toList();
+  Stream<List<String>> get enderecosFromCliente {
+    return Firestore.instance
+        .collection("avaliacao")
+        .where("uidProfissional", isEqualTo: uid)
+        .snapshots()
+        .map(_enderecoListFromSnapshot);
+  }
 
-      return profissional.first;
-    }
+  List<String> _enderecoListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return doc.data["texto"];
+    }).toList();
+  }
 
-    void deleteUserData() async{
-        await collection.document(uid).delete();
-    }
+  Future<Profissional> getProfissional() async {
+    List<Profissional> profissional =
+        await collection.document(uid).snapshots().map((doc) {
+      return Profissional.fromJson(doc.data);
+    }).toList();
+
+    return profissional.first;
+  }
+
+  void deleteUserData() async {
+    await collection.document(uid).delete();
+  }
 }
