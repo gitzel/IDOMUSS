@@ -25,7 +25,7 @@ class _BuscaState extends State<Busca> {
         (size - ((_crossAxisCount - 1) * _crossAxisSpacing)) / _crossAxisCount;
     var height = width / _aspectRatio;
     final servicos = Provider.of<List<String>>(context) ?? [];
-    print(servicos[0]);
+    print(servicos);
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: ColorSys.primary),
