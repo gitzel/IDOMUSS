@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
+import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/models/servicoContratado.dart';
 
 class DatabaseService {
@@ -96,13 +97,13 @@ class DatabaseService {
     });
   }
 
-  Stream<List<String>> get ListaServicos {
+  Stream<List<Servico>> get ListaServicos {
     return servicos.snapshots().map(_servicosFromSnapshot);
   }
 
-  List<String> _servicosFromSnapshot(QuerySnapshot snapshot) {
+  List<Servico> _servicosFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      return doc.data["nome"].toString();
+      return Servico.fromJson(doc.data);
     }).toList();
   }
 

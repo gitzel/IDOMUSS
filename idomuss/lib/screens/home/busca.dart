@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/screens/home/lista.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
@@ -12,20 +14,22 @@ class Busca extends StatefulWidget {
   _BuscaState createState() => _BuscaState();
 }
 
-class _BuscaState extends State<Busca> {
+class _BuscaState extends State<Busca> with TickerProviderStateMixin {
   double _crossAxisSpacing = paddingMedium,
       _mainAxisSpacing = 12,
       _aspectRatio = 2.15;
   int _crossAxisCount = 2;
 
+  TextEditingController _controller;
+  List<Servico> list;
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
     var width =
         (size - ((_crossAxisCount - 1) * _crossAxisSpacing)) / _crossAxisCount;
     var height = width / _aspectRatio;
-    final servicos = Provider.of<List<String>>(context) ?? [];
-    print(servicos);
+    final servicos = Provider.of<List<Servico>>(context) ?? [];
+    list = servicos;
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: ColorSys.primary),
@@ -57,7 +61,7 @@ class _BuscaState extends State<Busca> {
                 color: ColorSys.gray,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
               ),
-              child: Column(
+              child: servicos.length <= 0 ? LoadPage() :Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -74,11 +78,17 @@ class _BuscaState extends State<Busca> {
                               prefixIcon: Icon(Icons.search),
                               border: InputBorder.none,
                               hintText: "Digite um nome/serviço"),
+                          controller: _controller,
+                          onChanged: (text){
+                            setState(() {
+                              list = list.where((element) => element.nome.toUpperCase().startsWith(text.toUpperCase())).toList();
+                            });
+                          },
                         ),
                       )),
                   Expanded(
                     child: GridView.builder(
-                      itemCount: 10,
+                      itemCount: list.length,
                       padding: EdgeInsets.all(paddingSmall),
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -90,7 +100,12 @@ class _BuscaState extends State<Busca> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.purple[((index) % 9 + 1) * 100],
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                    list[index].img),
+                                fit: BoxFit.cover,
+                                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+                              ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(12.0)),
                               boxShadow: [
@@ -106,7 +121,7 @@ class _BuscaState extends State<Busca> {
                             child: Align(
                               alignment: Alignment(-0.7, -0.8),
                               child: Text(
-                                "a",
+                                list[index].nome,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -127,6 +142,20 @@ class _BuscaState extends State<Busca> {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoadPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: SpinKitDoubleBounce(
+          color: ColorSys.primary,
+          size: 50.0,
         ),
       ),
     );

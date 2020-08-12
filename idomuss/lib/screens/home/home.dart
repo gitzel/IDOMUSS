@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/screens/home/busca.dart';
 import 'package:idomuss/screens/home/favorite.dart';
 import 'package:idomuss/screens/home/notificacoes.dart';
@@ -29,7 +30,7 @@ class _HomeState extends State<Home> {
         return Favorite();
         break;
       case 2:
-        return StreamProvider<List<String>>.value(value:  DatabaseService().ListaServicos,
+        return StreamProvider<List<Servico>>.value(value:  DatabaseService().ListaServicos,
             child:Busca());
         break;
       case 3:
@@ -56,6 +57,7 @@ class _HomeState extends State<Home> {
           body: SizedBox.expand(child: TabSelect()),
           bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: ColorSys.gray,
+
             index: _index,
             items: <Widget>[
               Icon(
