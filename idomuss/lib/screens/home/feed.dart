@@ -21,8 +21,30 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                paddingSmall, paddingExtraLarge, paddingSmall, paddingMedium),
-            child: TextFormField(),
+                paddingSmall, paddingLarge * 2, paddingSmall, paddingMedium),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 0.5,
+                    blurRadius: 10,
+                    offset: Offset(
+                        0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(child: Icon(Icons.location_on, color: ColorSys.primary,), flex: 1,),
+                  Expanded(child: Text("Localização atual"), flex: 6,)
+                ],
+              ),
+            ),
           ),
           Padding(
             padding:
