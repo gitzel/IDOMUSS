@@ -32,11 +32,6 @@ class AuthService implements BaseAuth {
       FirebaseUser user = result.user;
 
       _client = await DatabaseService(uid: user.uid).getCliente();
-
-      _client.email = user.email;
-      _client.nome = user.displayName;
-      _client.foto = user.photoUrl;
-      _client.numeroCelular = user.phoneNumber;
     } catch (e) {
       print(e.toString());
       return null;
@@ -69,13 +64,13 @@ class AuthService implements BaseAuth {
       user.sendEmailVerification();
       uploadPic(client.fotoFile);
 
-      await DatabaseService(uid: user.uid).updateUserData(client);
-
       UserUpdateInfo updateInfo = new UserUpdateInfo();
       updateInfo.displayName = client.nome;
       updateInfo.photoUrl = client.foto;
       user.updateProfile(updateInfo);
       _client.email = user.email;
+
+      await DatabaseService(uid: user.uid).updateUserData(client);
     } catch (e) {
       print(e.toString());
       return null;

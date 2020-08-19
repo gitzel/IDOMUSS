@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:provider/provider.dart';
 
 class Favorite extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class Favorite extends StatefulWidget {
 class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
+    final profissionais = Provider.of<List<Profissional>>(context) ?? [];
     return Container(
       decoration: BoxDecoration(color: ColorSys.primary),
       child: Column(

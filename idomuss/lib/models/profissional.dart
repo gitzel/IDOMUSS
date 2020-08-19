@@ -27,18 +27,9 @@ class Profissional {
 
   String get uid => _uid;
 
-  set uid(String value) {
-    _uid = value;
-  }
-
-  get foto => _foto;
-
-  set foto(value) {
-    _foto = value;
-  }
-
   @protected
-  int _querGenero;
+  int _querGenero, _curtidas;
+
 
   Profissional(
       this._rg,
@@ -53,16 +44,22 @@ class Profissional {
       this._descricao);
 
   Profissional.fromJson(Map<String, dynamic> json)
-      : _rg = json['rg'],
+      : _uid = json['uid'],
+        _curtidas = json['curtidas'],
+        _rg = json['rg'],
+        _email  = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         _location = json['location'],
         _dataNascimento = json['dataNascimento'],
+        _foto = json['foto'],
+        _nome = json['nome'],
+        _numeroCelular = json['numero'],
         _genero = json['genero'],
         _querGenero = int.parse(json['querGenero']),
         _descricao = json['descricao'],
         _vip = json['vip'],
-        _nome = json['nota'],
+        _nota = json['nota'],
         _nomeServico = json['servico'];
 
   String get rg => _rg;
@@ -130,4 +127,21 @@ class Profissional {
   set vip(bool value) {
     _vip = value;
   }
+
+  set uid(String value) {
+    _uid = value;
+  }
+
+  get foto => _foto;
+
+  set foto(value) {
+    _foto = value;
+  }
+
+  get curtidas => _curtidas;
+
+  set curtidas(value) {
+    _curtidas = value;
+  }
+
 }

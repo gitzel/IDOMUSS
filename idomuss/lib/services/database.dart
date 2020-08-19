@@ -21,15 +21,23 @@ class DatabaseService {
       Firestore.instance.collection("endereco");
   final CollectionReference servicosContratados =
       Firestore.instance.collection("servicoContratado");
-  final CollectionReference servicos = Firestore.instance.collection("servicos");
-  final CollectionReference ranking = Firestore.instance.collection("ranking");
+  final CollectionReference servicos =
+      Firestore.instance.collection("servicos");
+  final CollectionReference ranking =
+      Firestore.instance.collection("ranking");
+  final CollectionReference favorite =
+      Firestore.instance.collection("favoritos");
 
   Future updateUserData(Cliente cliente) async {
     return await collection.document(uid).setData({
+      "uid": uid,
       "rg": cliente.rg,
       "cpf": cliente.cpf,
       "email": cliente.email,
       "dataNascimento": cliente.dataNascimento,
+      "foto":cliente.foto,
+      "nome":cliente.nome,
+      "numero":cliente.numeroCelular,
       "genero": cliente.genero,
       "querGenero": cliente.querGenero,
       "descricao": cliente.descricao,
@@ -52,11 +60,14 @@ class DatabaseService {
 
   Future addAvaliacao(
       Profissional profissional, String texto, double nota) async {
-    String uidProfissional = (await FirebaseAdmin.instance
-            .initializeApp()
-            .auth()
-            .getUserByEmail(profissional.email))
-        .uid;
+    String uidProfissional = profissional.uid;
+
+      double antigaNota =  double.parse((await prof.document(uidProfissional).snapshots().first).data["nota"].toString());
+      double novaNota = (nota + antigaNota)/2;
+
+      await prof.document(uidProfissional).updateData({
+        "nota": novaNota
+      });
 
     return await Firestore.instance.collection("avaliacao").add({
       "uidCliente": uid,
@@ -64,8 +75,23 @@ class DatabaseService {
       "texto": texto,
       "nota": nota
     });
+  }
 
-    /*prof.document(uidProfissional).updateData({updateProf});*/
+  Future addFavoritos(
+      Profissional profissional) async {
+    String uidProfissional = profissional.uid;
+
+    double c =  double.parse((await prof.document(uidProfissional).snapshots().first).data["curtidas"].toString());
+
+    await prof.document(uidProfissional).updateData({
+      "curtidas": ++c
+    });
+
+    return await Firestore.instance.collection("favoritos").add({
+      "uidCliente": uid,
+      "uidProfissional": uidProfissional,
+    });
+
   }
 
   Future addServicoContratado(ServicoContratado servicoContratado) async {
@@ -82,12 +108,9 @@ class DatabaseService {
 
   Future updateServicoContratado(
       String uidServicoContratado, ServicoContratado servicoContratado) async {
+
     return await servicosContratados.document(uidServicoContratado).updateData({
-      "uidProfissional": (await FirebaseAdmin.instance
-              .initializeApp()
-              .auth()
-              .getUserByEmail(servicoContratado.profissional.email))
-          .uid,
+      "uidProfissional": servicoContratado.profissional.uid,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
       "uidServico": servicoContratado.uidServico,
@@ -114,26 +137,47 @@ class DatabaseService {
         .map(_servicosContratadosFromSnapshot);
   }
 
-  List<ServicoContratado> _servicosContratadosFromSnapshot(
+    List<ServicoContratado> _servicosContratadosFromSnapshot(
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
       return ServicoContratado.fromJson(doc.data);
     }).toList();
 
     servicos.forEach((servico) async {
-      var prof = await FirebaseAdmin.instance
-          .initializeApp()
-          .auth()
-          .getUser(servico.uidProfissional);
-      var cliente = await FirebaseAdmin.instance
-          .initializeApp()
-          .auth()
-          .getUserByEmail(servico.uidCliente);
-      /*servico.profissional = prof;
-      servico.cliente = cliente;*/
+      Profissional p;
+      await profissionais.listen((event) {
+          p = event.where((element) => element.uid == servico.uidProfissional).first;
+      });
+
+      servico.profissional = p;
     });
 
     return servicos;
+  }
+
+  Stream<List<Profissional>> get profissionaisPreferidos {
+    return favorite
+        .where("uidCliente", isEqualTo: uid)
+        .snapshots()
+        .map(_favoritosFromSnapshot);
+  }
+
+  List<Profissional> _favoritosFromSnapshot(
+      QuerySnapshot snapshot) {
+
+    List<String> fav = snapshot.documents.map((doc) {
+      return doc.data["uidProfissional"].toString();
+    }).toList();
+
+    List<Profissional> ret = List<Profissional>();
+
+    fav.forEach((f) async {
+    DatabaseService().profissionais.listen((event) {
+        ret.addAll(event.where((element) => element.uid == f));
+      });
+    });
+
+    return ret;
   }
 
   List<Endereco> _servicosContratadosListFromSnapshot(QuerySnapshot snapshot) {
@@ -164,7 +208,7 @@ class DatabaseService {
 
   Stream<List<Profissional>> get ListaProfissionaisByNota {
     // o parametro estava como List<string>
-    return servicos
+    return prof
         .orderBy("nota")
         .snapshots()
         .map(_profissionalListFromSnapshot);
@@ -175,21 +219,11 @@ class DatabaseService {
   }
 
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
-    List<Profissional> profissionais = snapshot.documents.map((doc) {
+    List<Profissional> p = snapshot.documents.map((doc) {
       return Profissional.fromJson(doc.data);
     }).toList();
 
-    profissionais.forEach((prof) async {
-      var user = await FirebaseAdmin.instance
-          .initializeApp()
-          .auth()
-          .getUserByEmail(prof.email);
-      prof.nome = user.displayName;
-      prof.foto = user.photoUrl;
-      prof.numeroCelular = user.phoneNumber;
-    });
-
-    return profissionais;
+    return p;
   }
 
   Future<List<Profissional>> _profissionalCategoriaList(
@@ -212,18 +246,7 @@ class DatabaseService {
         return snapshot.documents.map((doc) {
           return Profissional.fromJson(doc.data);
         }).toList();
-      }).toList())
-          .first;
-
-    profissionais.forEach((prof) async {
-      var user = await FirebaseAdmin.instance
-          .initializeApp()
-          .auth()
-          .getUserByEmail(prof.email);
-      prof.nome = user.displayName;
-      prof.foto = user.photoUrl;
-      prof.numeroCelular = user.phoneNumber;
-    });
+      }).toList()).first;
 
     return profissionais;
   }

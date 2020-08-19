@@ -4,14 +4,6 @@ import 'package:idomuss/models/profissional.dart';
 
 class ServicoContratado {
   @protected
-  Cliente _cliente;
-
-  Cliente get cliente => _cliente;
-
-  set cliente(Cliente value) {
-    _cliente = value;
-  }
-
   Profissional _profissional;
 
   @protected

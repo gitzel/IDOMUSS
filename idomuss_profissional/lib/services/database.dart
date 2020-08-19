@@ -12,11 +12,15 @@ class DatabaseService {
 
   Future updateUserData(Profissional profissional) async {
     return await collection.document(uid).setData({
+      "uid":profissional.uid,
       "rg": profissional.rg,
       "cpf": profissional.cpf,
       "email": profissional.email,
       "vip": profissional.vip,
       "dataNascimento": profissional.dataNascimento,
+      "nome":profissional.nome,
+      "numero":profissional.numeroCelular,
+      "foto":profissional.foto,
       "genero": profissional.genero,
       "querGenero": profissional.querGenero,
       "descricao": profissional.descricao,

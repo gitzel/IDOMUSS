@@ -32,11 +32,6 @@ class AuthService implements BaseAuth {
       FirebaseUser user = result.user;
 
       _profissional = await DatabaseService(uid: user.uid).getProfissional();
-
-      _profissional.email = user.email;
-      _profissional.nome = user.displayName;
-      _profissional.foto = user.photoUrl;
-      _profissional.numeroCelular = user.phoneNumber;
     } catch (e) {
       print(e.toString());
       return null;
@@ -71,12 +66,12 @@ class AuthService implements BaseAuth {
 
       //uploadPic(profissional.fotoFile);
 
-      await DatabaseService(uid: user.uid).updateUserData(profissional);
-
       UserUpdateInfo updateInfo = new UserUpdateInfo();
       updateInfo.displayName = profissional.nome;
       updateInfo.photoUrl = profissional.foto;
       user.updateProfile(updateInfo);
+
+      await DatabaseService(uid: user.uid).updateUserData(profissional);
     } catch (e) {
       print(e.toString());
       return null;
