@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/models/cliente.dart';
@@ -23,12 +24,14 @@ class _HomeState extends State<Home> {
   int _index;
 
   Widget TabSelect() {
+    final user = Provider.of<FirebaseUser>(context);
+
     switch (_index) {
       case 0:
         return Feed();
         break;
       case 1:
-         return StreamProvider<List<Profissional>>.value(value:  DatabaseService(uid: "fvMngZnZZuTTDXDzwensk8AXod22").profissionaisPreferidos,
+         return StreamProvider<List<Profissional>>.value(value:  DatabaseService(uid: user.uid).profissionaisPreferidos,
             child:Favorite());
         break;
       case 2:

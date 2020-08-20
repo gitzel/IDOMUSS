@@ -54,8 +54,7 @@ class Cliente {
   }
 
   Cliente.fromJson(Map<String, dynamic> json)
-      : _uid = json['uid'],
-        _rg = json['rg'],
+      :  _rg = json['rg'],
         _cpf = json['cpf'],
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],

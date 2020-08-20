@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/screens/authenticate/sign_in.dart';
 import 'package:idomuss/screens/home/home.dart';
 import 'package:provider/provider.dart';

@@ -49,8 +49,7 @@ class Profissional {
       this.fotoFile});
 
   Profissional.fromJson(Map<String, dynamic> json)
-      : _uid = json['uid'],
-        _rg = json['rg'],
+      :  _rg = json['rg'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         _curtidas = json['curtidas'],

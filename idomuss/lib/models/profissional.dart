@@ -44,8 +44,7 @@ class Profissional {
       this._descricao);
 
   Profissional.fromJson(Map<String, dynamic> json)
-      : _uid = json['uid'],
-        _curtidas = json['curtidas'],
+      : _curtidas = json['curtidas'],
         _rg = json['rg'],
         _email  = json['email'],
         _cpf = json['cpf'],

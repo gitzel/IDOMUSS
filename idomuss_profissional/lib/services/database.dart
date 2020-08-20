@@ -8,11 +8,11 @@ class DatabaseService {
 
   final CollectionReference collection =
       Firestore.instance.collection("profissionais");
-  final CollectionReference servicos = Firestore.instance.collection("servico");
+  final CollectionReference servicos =
+      Firestore.instance.collection("servico");
 
   Future updateUserData(Profissional profissional) async {
     return await collection.document(uid).setData({
-      "uid":profissional.uid,
       "rg": profissional.rg,
       "cpf": profissional.cpf,
       "email": profissional.email,
@@ -72,12 +72,13 @@ class DatabaseService {
   }
 
   Future<Profissional> getProfissional() async {
-    List<Profissional> profissional =
-        await collection.document(uid).snapshots().map((doc) {
-      return Profissional.fromJson(doc.data);
+    Profissional profissional;
+
+    await collection.document(uid).snapshots().map((doc) {
+          profissional =  Profissional.fromJson(doc.data);
     }).toList();
 
-    return profissional.first;
+    return profissional;
   }
 
   void deleteUserData() async {

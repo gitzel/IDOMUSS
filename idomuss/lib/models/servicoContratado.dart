@@ -13,7 +13,7 @@ class ServicoContratado {
       _data,
       _uidProfissional,
       _uidCliente,
-      _uidServico;
+      _servico;
 
   String get uidServicoContratado => _uidServicoContratado;
 
@@ -31,10 +31,10 @@ class ServicoContratado {
   double _preco;
 
   ServicoContratado(this._descricao, this._preco, this._data, this._situacao,
-      this._uidProfissional, this._uidCliente, this._uidServico);
+      this._uidProfissional, this._uidCliente, this._servico);
 
   ServicoContratado.fromJson(Map<String, dynamic> json)
-      : _uidServico = json['uidServico'],
+      : _servico = json['servico'],
         _uidCliente = json['uidCliente'],
         _uidProfissional = json['uidProfissional'],
         _data = json['data'],
@@ -66,10 +66,10 @@ class ServicoContratado {
     _uidCliente = value;
   }
 
-  get uidServico => _uidServico;
+  get servico => _servico;
 
-  set uidServico(value) {
-    _uidServico = value;
+  set servico(value) {
+    _servico = value;
   }
 
   double get preco => _preco;

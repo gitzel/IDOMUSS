@@ -30,7 +30,6 @@ class DatabaseService {
 
   Future updateUserData(Cliente cliente) async {
     return await collection.document(uid).setData({
-      "uid": uid,
       "rg": cliente.rg,
       "cpf": cliente.cpf,
       "email": cliente.email,
@@ -99,21 +98,20 @@ class DatabaseService {
       "uidProfissional": servicoContratado.uidProfissional,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
-      "uidServico": servicoContratado.uidServico,
+      "servico": servicoContratado.servico,
       "situacao": servicoContratado.situacao,
       "preco": servicoContratado.preco,
       "descricao": servicoContratado.descricao,
     });
   }
 
-  Future updateServicoContratado(
-      String uidServicoContratado, ServicoContratado servicoContratado) async {
+  Future updateServicoContratado(ServicoContratado servicoContratado) async {
 
-    return await servicosContratados.document(uidServicoContratado).updateData({
+    return await servicosContratados.document(servicoContratado.uidServicoContratado).updateData({
       "uidProfissional": servicoContratado.profissional.uid,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
-      "uidServico": servicoContratado.uidServico,
+      "servico": servicoContratado.servico,
       "situacao": servicoContratado.situacao,
       "preco": servicoContratado.preco,
       "descricao": servicoContratado.descricao,
@@ -140,16 +138,15 @@ class DatabaseService {
     List<ServicoContratado> _servicosContratadosFromSnapshot(
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
-      return ServicoContratado.fromJson(doc.data);
+      ServicoContratado ret = ServicoContratado.fromJson(doc.data);
+      ret.uidServicoContratado = doc.documentID;
+      return ret;
     }).toList();
 
     servicos.forEach((servico) async {
-      Profissional p;
-      await profissionais.listen((event) {
-          p = event.where((element) => element.uid == servico.uidProfissional).first;
+      prof.document(servico.uidProfissional).snapshots().map((event)=> (QuerySnapshot snapshot_prof){
+        snapshot_prof.documents.map((doc) => servico.uidProfissional = doc.data["uid"].toString());
       });
-
-      servico.profissional = p;
     });
 
     return servicos;
@@ -162,8 +159,7 @@ class DatabaseService {
         .map(_favoritosFromSnapshot);
   }
 
-  List<Profissional> _favoritosFromSnapshot(
-      QuerySnapshot snapshot) {
+    List<Profissional> _favoritosFromSnapshot(QuerySnapshot snapshot) {
 
     List<String> fav = snapshot.documents.map((doc) {
       return doc.data["uidProfissional"].toString();
@@ -172,8 +168,8 @@ class DatabaseService {
     List<Profissional> ret = List<Profissional>();
 
     fav.forEach((f) async {
-    DatabaseService().profissionais.listen((event) {
-        ret.addAll(event.where((element) => element.uid == f));
+      prof.document(f).snapshots().map((event)=> (QuerySnapshot snapshot_prof){
+        snapshot_prof.documents.map((doc) => ret.add(Profissional.fromJson(doc.data)));
       });
     });
 
@@ -194,12 +190,14 @@ class DatabaseService {
   }
 
   Future<Cliente> getCliente() async {
-    List<Cliente> cliente =
-        await collection.document(uid).snapshots().map((doc) {
-      return Cliente.fromJson(doc.data);
-    }).toList();
+    Cliente cliente;
 
-    return cliente.first;
+    await collection.document(uid).snapshots().map((doc) {
+        cliente = Cliente.fromJson(doc.data);
+        cliente.uid = doc.documentID;
+    });
+
+    return cliente;
   }
 
   void deleteUserData() async {
@@ -220,7 +218,9 @@ class DatabaseService {
 
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
     List<Profissional> p = snapshot.documents.map((doc) {
-      return Profissional.fromJson(doc.data);
+      Profissional ret = Profissional.fromJson(doc.data);
+      ret.uid = doc.documentID;
+      return ret;
     }).toList();
 
     return p;
@@ -239,7 +239,7 @@ class DatabaseService {
           .first;
     else
       profissionais = (await prof
-              .where("nomeServico", isEqualTo: categoria)
+              .where("servico", isEqualTo: categoria)
               .orderBy("nota")
               .snapshots()
               .map((snapshot) {
