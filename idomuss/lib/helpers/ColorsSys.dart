@@ -11,5 +11,10 @@ class ColorSys {
 }
 
 const Gradients = [
-  [Colors.red, Colors.amber]
+  [Colors.red, Colors.redAccent],
+  [Colors.purple, Colors.purpleAccent],
+  [Colors.blue, Colors.blueAccent],
+  [Colors.deepPurple, Colors.deepPurpleAccent],
+  [Colors.green, Colors.greenAccent]
+
 ];

@@ -216,6 +216,16 @@ class DatabaseService {
     return prof.snapshots().map(_profissionalListFromSnapshot);
   }
 
+  Stream<List<Profissional>> profissionaisCategoria(String categoria){
+    return prof.where("servico", isEqualTo: categoria).orderBy('nota').snapshots().map(_profissionaisCategoriaSnapshot);
+  }
+
+  List<Profissional> _profissionaisCategoriaSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Profissional.fromJson(doc.data);
+    }).toList();
+  }
+
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
     List<Profissional> p = snapshot.documents.map((doc) {
       Profissional ret = Profissional.fromJson(doc.data);

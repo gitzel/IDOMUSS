@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/screens/home/lista.dart';
 import 'package:idomuss/services/database.dart';
@@ -96,7 +97,10 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ListaPrestadores()));
+                                    builder: (context) { 
+                                      return StreamProvider<List<Profissional>>.value(value:  DatabaseService().profissionaisCategoria(list[index].nome),
+                                          child: ListaPrestadores());
+                                }));
                           },
                           child: Container(
                             decoration: BoxDecoration(
