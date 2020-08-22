@@ -64,7 +64,7 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
                         fontSize: fontSizeRegular),
                   ),
                 ),
-                Container(
+                vips.length <= 0? SizedBox.shrink() :Container(
                   height: height,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
