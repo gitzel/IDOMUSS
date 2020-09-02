@@ -21,16 +21,14 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
       _aspectRatio = 2.15;
   int _crossAxisCount = 2;
 
-  TextEditingController _controller;
-  List<Servico> list;
+  TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
     var width =
         (size - ((_crossAxisCount - 1) * _crossAxisSpacing)) / _crossAxisCount;
     var height = width / _aspectRatio;
-    final servicos = Provider.of<List<Servico>>(context) ?? [];
-    list = servicos;
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: ColorSys.primary),
@@ -62,9 +60,11 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                 color: ColorSys.gray,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
               ),
-              child: servicos.length <= 0
-                  ? LoadPage()
-                  : Column(
+              child: StreamBuilder<List<Servico>>(
+                stream: DatabaseService().ListaServicos(_controller.text),
+                builder: (context, snapshot){
+                  if(snapshot.hasData){
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -84,18 +84,14 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                 controller: _controller,
                                 onChanged: (text) {
                                   setState(() {
-                                    list = list
-                                        .where((element) => element.nome
-                                            .toUpperCase()
-                                            .startsWith(text.toUpperCase()))
-                                        .toList();
+                                    
                                   });
                                 },
                               ),
                             )),
                         Expanded(
                           child: GridView.builder(
-                            itemCount: list.length,
+                            itemCount: snapshot.data.length,
                             padding: EdgeInsets.all(paddingSmall),
                             itemBuilder: (context, index) {
                               return GestureDetector(
@@ -106,14 +102,14 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                             List<Profissional>>.value(
                                         value: DatabaseService()
                                             .profissionaisCategoria(
-                                                list[index].nome),
+                                                snapshot.data[index].nome),
                                         child: ListaPrestadores());
                                   }));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(list[index].img),
+                                      image: NetworkImage(snapshot.data[index].img),
                                       fit: BoxFit.cover,
                                       colorFilter: ColorFilter.mode(
                                           Colors.black.withOpacity(0.3),
@@ -134,7 +130,7 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                   child: Align(
                                     alignment: Alignment(-0.7, -0.8),
                                     child: Text(
-                                      list[index].nome,
+                                      snapshot.data[index].nome,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -153,7 +149,12 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                           ),
                         ),
                       ],
-                    ),
+                    );
+                  }
+
+                  return LoadPage();
+                },
+              ),
             )
           ],
         ),

@@ -137,8 +137,16 @@ class DatabaseService {
     });
   }
 
-  Stream<List<Servico>> get ListaServicos {
-    return servicos.snapshots().map(_servicosFromSnapshot);
+  Stream<List<Servico>> ListaServicos(String condicao) {
+    if(condicao.isEmpty)
+      return servicos.orderBy("nome").snapshots().map(_servicosFromSnapshot);
+    
+    condicao = condicao[0].toUpperCase() + condicao.substring(1).toLowerCase();
+    return servicos
+    .orderBy('nome')
+    .startAt([condicao])
+    .endAt([condicao + "\uf8ff"])
+    .snapshots().map(_servicosFromSnapshot);
   }
 
   List<Servico> _servicosFromSnapshot(QuerySnapshot snapshot) {
