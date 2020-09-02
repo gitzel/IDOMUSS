@@ -9,6 +9,7 @@ import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
 import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/models/servicoContratado.dart';
+import 'package:idomuss/screens/home/lista.dart';
 
 class DatabaseService {
   final String uid;
@@ -365,4 +366,41 @@ class DatabaseService {
         .child("//clientes//" + uid + ".jpg")
         .getDownloadURL();
   }
+
+
+  List<String> _nomeServicoFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return doc.data['nome'].toString();
+    }).toList();
+  }
+
+  List<Profissional> get melhoresDaSemana {
+    List<String> listaServicos = List<String>();
+
+    servicos
+        .orderBy("nome")
+        .snapshots()
+        .map((event) =>
+        (QuerySnapshot snapshot_serv) {
+          snapshot_serv.documents
+          .map((doc) => listaServicos.add(doc.data["nome"].toString()));
+    });
+
+    List<Profissional> ret = List<Profissional>();
+
+    listaServicos.forEach((s) {
+        prof
+            .where("servico", isEqualTo: s)
+            .orderBy('nota')
+            .limit(5)
+            .snapshots()
+            .map((event) =>
+            (QuerySnapshot snapshot_prof) {
+          snapshot_prof.documents
+              .map((doc) => ret.add(Profissional.fromJson(doc.data)));
+        });
+      });
+    return ret;
+  }
+  
 }
