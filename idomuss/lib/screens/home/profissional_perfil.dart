@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -10,8 +10,10 @@ import 'package:idomuss/components/radial_progress.dart';
 import 'package:idomuss/components/rounded_image.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/avaliacao.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -25,17 +27,17 @@ class PerfilPrestador extends StatefulWidget {
 }
 
 class _PerfilPrestadorState extends State<PerfilPrestador> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      body: Column(
+      body: StreamBuilder<List<Avaliacao>>(
+        stream: DatabaseService(uid:user.uid).listaAvaliacoes(widget.profissional.uid),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            return Column(
         children: <Widget>[
           Expanded(
               flex: 2,
@@ -97,7 +99,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                       icon: Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () {
-                        Navigator.pop(context, 'Yep!');
+                        Navigator.pop(context);
                       },
                     ),
                   ),
@@ -138,7 +140,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                            crossAxisAlignment: CrossAxisAlignment.center,
                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("31", style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black),),
+                              Text(3.toString(), style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black),),
                               Text("serviços", style: TextStyle(color: ColorSys.black),)
                             ],
                           ),
@@ -155,7 +157,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(Icons.favorite, color: ColorSys.primary,),
-                              Text("18")
+                              Text(widget.profissional.curtidas.toString())
                             ],
                           ),
                         )
@@ -191,7 +193,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                 Expanded(
                                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 3,
+                    itemCount: snapshot.data.length,
                     itemBuilder: (context, index){
                       return Padding(
                         padding: const EdgeInsets.all(paddingSmall),
@@ -217,11 +219,11 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text("Ótimo profissional! Realizou o trabalho com extrema eficiência e qualidade!"),
+                                  child: Text(snapshot.data[index].texto),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text("28/03/2020",
+                                  child: Text(snapshot.data[index].data,
                                   style: TextStyle(
                                     color: Colors.grey[600]
                                   ),),
@@ -252,6 +254,11 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
             ),
           )
         ],
+      );
+          }
+
+          return LoadPage();
+        },
       ),
     );
   }

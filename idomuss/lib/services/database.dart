@@ -3,6 +3,7 @@ import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:idomuss/models/avaliacao.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
@@ -27,6 +28,8 @@ class DatabaseService {
   final CollectionReference ranking = Firestore.instance.collection("ranking");
   final CollectionReference favorite =
       Firestore.instance.collection("favoritos");
+  final CollectionReference avalicao =
+      Firestore.instance.collection("avaliacao");
 
   Future updateUserData(Cliente cliente) async {
     return await collection.document(uid).setData({
@@ -69,13 +72,28 @@ class DatabaseService {
 
     await prof.document(uidProfissional).updateData({"nota": novaNota});
 
-    return await Firestore.instance.collection("avaliacao").add({
+    return await avalicao.add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
       "texto": texto,
       "nota": nota
     });
   }
+
+  Stream<List<Avaliacao>> listaAvaliacoes(String uidProfissional){
+      return avalicao
+      .where("uidCliente", isEqualTo: uid)
+      .where("uidProfissional", isEqualTo: uidProfissional)
+      .snapshots().map(_avalicaoFromSnapshot);
+  }
+
+  List<Avaliacao> _avalicaoFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Avaliacao.fromJson(doc.data);
+    }).toList();
+  }
+
+
 
   Future addFavoritos(Profissional profissional) async {
     String uidProfissional = profissional.uid;
@@ -228,6 +246,9 @@ class DatabaseService {
     return prof.orderBy("nota").snapshots().map(_profissionalListFromSnapshot);
   }
 
+
+
+
   Stream<List<Profissional>> get profissionais {
     return prof.snapshots().map(_profissionalListFromSnapshot);
   }
@@ -242,7 +263,9 @@ class DatabaseService {
 
   List<Profissional> _profissionaisCategoriaSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      return Profissional.fromJson(doc.data);
+      Profissional prof = Profissional.fromJson(doc.data);
+      prof.uid = doc.documentID;
+      return prof;
     }).toList();
   }
 
