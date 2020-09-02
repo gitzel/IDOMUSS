@@ -13,6 +13,7 @@ import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/avaliacao.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/screens/servicos/assinar_servico.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
@@ -245,7 +246,9 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                     padding: const EdgeInsets.all(paddingSmall),
                     child: Text("Feche um negócio", style: TextStyle(color: Colors.white),),
                     onPressed: (){
-
+                      Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => AssinarServico(widget.profissional.uid))
+                      );
                     },
                   ),
                 )

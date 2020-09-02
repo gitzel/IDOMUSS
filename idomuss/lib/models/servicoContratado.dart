@@ -10,10 +10,11 @@ class ServicoContratado {
   String _uidServicoContratado,
       _descricao,
       _situacao,
-      _data,
       _uidProfissional,
       _uidCliente,
       _servico;
+
+  DateTime _data;
 
   String get uidServicoContratado => _uidServicoContratado;
 

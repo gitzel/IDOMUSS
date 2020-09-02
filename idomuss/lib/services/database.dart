@@ -123,6 +123,21 @@ class DatabaseService {
     });
   }
 
+  Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime hora){
+    return servicosContratados
+    .where("uidProfissional", isEqualTo: uidProf)
+    .snapshots()
+    .map(_HorariosFromSnapshot);
+  }
+
+  List<DateTime> _HorariosFromSnapshot(QuerySnapshot snapshot){
+  
+    return snapshot.documents.map((doc) {
+      Timestamp time = doc.data["data"];
+      return DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    }).toList();
+  }
+
   Future updateServicoContratado(ServicoContratado servicoContratado) async {
     return await servicosContratados
         .document(servicoContratado.uidServicoContratado)

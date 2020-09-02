@@ -82,11 +82,6 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                     border: InputBorder.none,
                                     hintText: "Digite um nome/serviço"),
                                 controller: _controller,
-                                onChanged: (text) {
-                                  setState(() {
-                                    
-                                  });
-                                },
                               ),
                             )),
                         Expanded(
