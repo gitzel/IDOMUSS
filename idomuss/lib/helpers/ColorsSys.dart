@@ -16,5 +16,4 @@ const Gradients = [
   [Colors.blue, Colors.blueAccent],
   [Colors.deepPurple, Colors.deepPurpleAccent],
   [Colors.green, Colors.greenAccent]
-
 ];

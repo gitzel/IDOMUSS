@@ -31,18 +31,22 @@ class _HomeState extends State<Home> {
         return Feed();
         break;
       case 1:
-         return StreamProvider<List<Profissional>>.value(value:  DatabaseService(uid: user.uid).profissionaisPreferidos,
-            child:Favorite());
+        return StreamProvider<List<Profissional>>.value(
+            value: DatabaseService(uid: user.uid).profissionaisPreferidos,
+            child: Favorite());
         break;
       case 2:
-        return StreamProvider<List<Servico>>.value(value:  DatabaseService(uid: user.uid).ListaServicos,
-            child:Busca());
+        return StreamProvider<List<Servico>>.value(
+            value: DatabaseService(uid: user.uid).ListaServicos,
+            child: Busca());
         break;
       case 3:
         return Notificacoes();
         break;
       case 4:
-        return Perfil();
+        return StreamProvider<Cliente>.value(
+            value: DatabaseService(uid: user.uid).cliente,
+            child: Perfil(user.uid));
         break;
     }
   }
@@ -62,7 +66,6 @@ class _HomeState extends State<Home> {
           body: SizedBox.expand(child: TabSelect()),
           bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: ColorSys.gray,
-
             index: _index,
             items: <Widget>[
               Icon(

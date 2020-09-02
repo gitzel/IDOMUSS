@@ -33,15 +33,23 @@ class _FeedState extends State<Feed> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 0.5,
                     blurRadius: 10,
-                    offset: Offset(
-                        0, 3), // changes position of shadow
+                    offset: Offset(0, 3), // changes position of shadow
                   ),
                 ],
               ),
               child: Row(
                 children: [
-                  Expanded(child: Icon(Icons.location_on, color: ColorSys.primary,), flex: 1,),
-                  Expanded(child: Text("Localização atual"), flex: 6,)
+                  Expanded(
+                    child: Icon(
+                      Icons.location_on,
+                      color: ColorSys.primary,
+                    ),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    child: Text("Localização atual"),
+                    flex: 6,
+                  )
                 ],
               ),
             ),
@@ -60,9 +68,12 @@ class _FeedState extends State<Feed> {
           CarouselSlider(
             options: CarouselOptions(height: MediaQuery.of(context).size.width),
             items: <Widget>[
-              FeedCard('gitzel.jpg'),
-              FeedCard('isa.jpg'),
-              FeedCard('amabile.jpg')
+              FeedCard(
+                  'Gustavo', 65, 'Eletricista', [10, 70], false, 'gitzel.jpg'),
+              FeedCard(
+                  'Isabela', 64, 'Pedreiro(a)', [40, 120], false, 'isa.jpg'),
+              FeedCard('Amabile', 63, 'Jardineiro(a)', [30, 90], false,
+                  'amabile.jpg')
             ],
           ),
         ],

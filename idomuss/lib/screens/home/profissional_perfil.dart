@@ -3,44 +3,256 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:idomuss/components/profissiona_info.dart';
 import 'package:idomuss/components/profissional_item.dart';
+import 'package:idomuss/components/radial_progress.dart';
 import 'package:idomuss/components/rounded_image.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/database.dart';
+import 'package:provider/provider.dart';
 
 class PerfilPrestador extends StatefulWidget {
+  Profissional profissional;
+
+  PerfilPrestador(this.profissional);
+
   @override
   _PerfilPrestadorState createState() => _PerfilPrestadorState();
 }
 
 class _PerfilPrestadorState extends State<PerfilPrestador> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screen = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text("Gustavo Lima"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(color: ColorSys.primary),
-        child:
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: ColorSys.gray,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(75.0)),
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              flex: 2,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(widget.profissional.foto),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    color: ColorSys.primary.withOpacity(0.6),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: RadialProgress(
+                          width: 4,
+                          goalCompleted: 0.9,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(widget.profissional.foto),
+                            radius: screen.width * 0.15,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(paddingSmall),
+                            child: Text(
+                              widget.profissional.nome,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+
+                          !widget.profissional.vip ? SizedBox.shrink() :
+                          Image.asset("assets/geral/premium_white.png",)
+                        ],
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: paddingSmall, vertical: paddingLarge),
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.pop(context, 'Yep!');
+                      },
+                    ),
+                  ),
                 ],
-              ),
+              )),
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ProfissionalInfo(
+                         Row(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(widget.profissional.nota.round(),
+                                (index) {
+                              return Icon(
+                                Icons.star,
+                                color: ColorSys.primary
+                              );
+                            }),
+                          ),
+                        )
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ProfissionalInfo(
+                         Column(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("31", style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black),),
+                              Text("serviços", style: TextStyle(color: ColorSys.black),)
+                            ],
+                          ),
+                        )
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ProfissionalInfo(
+                         Row(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.favorite, color: ColorSys.primary,),
+                              Text("18")
+                            ],
+                          ),
+                        )
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(paddingSmall),
+                  child: ProfissionalInfo(
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                              Icon(
+                                Icons.monetization_on,
+                                color: ColorSys.primary,
+                              ),
+                              Text(
+                                "R\$" +
+                                    widget.profissional.limite[0].toStringAsFixed(2) +
+                                    " ~ " +
+                                    widget.profissional.limite[1].toStringAsFixed(2),
+                                style: TextStyle(
+                                    color: ColorSys.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                        ],
+                      )
+                    ),
+                ),
+                Row(), //TODO - profissional skills),
+                Expanded(
+                                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 3,
+                    itemBuilder: (context, index){
+                      return Padding(
+                        padding: const EdgeInsets.all(paddingSmall),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - paddingSmall * 2,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                          BorderRadius.all(Radius.circular(5.0)),
+                              boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 0.5,
+                                          blurRadius: 10,
+                                          offset: Offset(
+                                              0, 3), // changes position of shadow
+                                        ),
+                                      ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Ótimo profissional! Realizou o trabalho com extrema eficiência e qualidade!"),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("28/03/2020",
+                                  style: TextStyle(
+                                    color: Colors.grey[600]
+                                  ),),
+                                )
+                              ],
+                            ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(paddingMedium),
+                  child: RaisedButton(
+                    color: ColorSys.primary,
+                    shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            side: BorderSide(color: ColorSys.primary)),
+                    padding: const EdgeInsets.all(paddingSmall),
+                    child: Text("Feche um negócio", style: TextStyle(color: Colors.white),),
+                    onPressed: (){
+
+                    },
+                  ),
+                )
+              ],
+              
             ),
-    ),)
+          )
+        ],
+      ),
     );
   }
 }
-
-

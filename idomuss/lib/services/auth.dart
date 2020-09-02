@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -58,15 +59,15 @@ class AuthService implements BaseAuth {
                 .updatePhoneNumberCredential(credential);
           });*/
 
-      _client = client;
       FirebaseUser user = result.user;
 
+      _client = client;
+
       user.sendEmailVerification();
-      uploadPic(client.fotoFile);
+      uploadPic(client.fotoFile, user.uid);
 
       UserUpdateInfo updateInfo = new UserUpdateInfo();
       updateInfo.displayName = client.nome;
-      updateInfo.photoUrl = client.foto;
       user.updateProfile(updateInfo);
       _client.email = user.email;
 
@@ -77,10 +78,11 @@ class AuthService implements BaseAuth {
     }
   }
 
-  Future uploadPic(File image) async {
+  Future uploadPic(File image, String uid) async {
     String fileName = basename(image.path);
-    StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(
+        "//clientes//" + uid + fileName.substring(fileName.indexOf('.')));
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
   }

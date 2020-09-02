@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:idomuss/components/feed_clipper.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/screens/home/feed.dart';
 
 class FeedDetails extends StatelessWidget {
+  bool premium;
+  List<int> limite;
+  String servico;
+  int curtidas;
+
+  FeedDetails(this.curtidas, this.servico, this.limite, this.premium);
+
   @override
   Widget build(BuildContext context) {
     return ClipPath(
@@ -13,6 +21,7 @@ class FeedDetails extends StatelessWidget {
             left: 20.0, right: 16.0, top: 24.0, bottom: 12.0),
         color: Colors.white,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
@@ -33,11 +42,41 @@ class FeedDetails extends StatelessWidget {
                           color: ColorSys.primary,
                         )),
                       ),
-                      Text("54"),
+                      Text(curtidas.toString()),
                     ],
                   ),
                   onTap: () {},
                 )),
+            SizedBox(
+              height: 30,
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                servico,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.monetization_on,
+                    color: ColorSys.primary,
+                  ),
+                  Text(
+                    "R\$" +
+                        limite[0].toStringAsFixed(2) +
+                        " ~ " +
+                        limite[1].toStringAsFixed(2),
+                    style: TextStyle(
+                        color: ColorSys.black, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+            //Image.asset("assets/geral/premium.png")
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
@@ -23,8 +24,7 @@ class DatabaseService {
       Firestore.instance.collection("servicoContratado");
   final CollectionReference servicos =
       Firestore.instance.collection("servicos");
-  final CollectionReference ranking =
-      Firestore.instance.collection("ranking");
+  final CollectionReference ranking = Firestore.instance.collection("ranking");
   final CollectionReference favorite =
       Firestore.instance.collection("favoritos");
 
@@ -34,9 +34,9 @@ class DatabaseService {
       "cpf": cliente.cpf,
       "email": cliente.email,
       "dataNascimento": cliente.dataNascimento,
-      "foto":cliente.foto,
-      "nome":cliente.nome,
-      "numero":cliente.numeroCelular,
+      "foto": cliente.foto,
+      "nome": cliente.nome,
+      "numero": cliente.numeroCelular,
       "genero": cliente.genero,
       "querGenero": cliente.querGenero,
       "descricao": cliente.descricao,
@@ -61,12 +61,13 @@ class DatabaseService {
       Profissional profissional, String texto, double nota) async {
     String uidProfissional = profissional.uid;
 
-      double antigaNota =  double.parse((await prof.document(uidProfissional).snapshots().first).data["nota"].toString());
-      double novaNota = (nota + antigaNota)/2;
+    double antigaNota = double.parse(
+        (await prof.document(uidProfissional).snapshots().first)
+            .data["nota"]
+            .toString());
+    double novaNota = (nota + antigaNota) / 2;
 
-      await prof.document(uidProfissional).updateData({
-        "nota": novaNota
-      });
+    await prof.document(uidProfissional).updateData({"nota": novaNota});
 
     return await Firestore.instance.collection("avaliacao").add({
       "uidCliente": uid,
@@ -76,21 +77,20 @@ class DatabaseService {
     });
   }
 
-  Future addFavoritos(
-      Profissional profissional) async {
+  Future addFavoritos(Profissional profissional) async {
     String uidProfissional = profissional.uid;
 
-    double c =  double.parse((await prof.document(uidProfissional).snapshots().first).data["curtidas"].toString());
+    double c = double.parse(
+        (await prof.document(uidProfissional).snapshots().first)
+            .data["curtidas"]
+            .toString());
 
-    await prof.document(uidProfissional).updateData({
-      "curtidas": ++c
-    });
+    await prof.document(uidProfissional).updateData({"curtidas": ++c});
 
     return await Firestore.instance.collection("favoritos").add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
     });
-
   }
 
   Future addServicoContratado(ServicoContratado servicoContratado) async {
@@ -106,8 +106,9 @@ class DatabaseService {
   }
 
   Future updateServicoContratado(ServicoContratado servicoContratado) async {
-
-    return await servicosContratados.document(servicoContratado.uidServicoContratado).updateData({
+    return await servicosContratados
+        .document(servicoContratado.uidServicoContratado)
+        .updateData({
       "uidProfissional": servicoContratado.profissional.uid,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
@@ -135,7 +136,7 @@ class DatabaseService {
         .map(_servicosContratadosFromSnapshot);
   }
 
-    List<ServicoContratado> _servicosContratadosFromSnapshot(
+  List<ServicoContratado> _servicosContratadosFromSnapshot(
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
       ServicoContratado ret = ServicoContratado.fromJson(doc.data);
@@ -144,9 +145,13 @@ class DatabaseService {
     }).toList();
 
     servicos.forEach((servico) async {
-      prof.document(servico.uidProfissional).snapshots().map((event)=> (QuerySnapshot snapshot_prof){
-        snapshot_prof.documents.map((doc) => servico.uidProfissional = doc.data["uid"].toString());
-      });
+      prof
+          .document(servico.uidProfissional)
+          .snapshots()
+          .map((event) => (QuerySnapshot snapshot_prof) {
+                snapshot_prof.documents.map((doc) =>
+                    servico.uidProfissional = doc.data["uid"].toString());
+              });
     });
 
     return servicos;
@@ -159,8 +164,7 @@ class DatabaseService {
         .map(_favoritosFromSnapshot);
   }
 
-    List<Profissional> _favoritosFromSnapshot(QuerySnapshot snapshot) {
-
+  List<Profissional> _favoritosFromSnapshot(QuerySnapshot snapshot) {
     List<String> fav = snapshot.documents.map((doc) {
       return doc.data["uidProfissional"].toString();
     }).toList();
@@ -168,9 +172,13 @@ class DatabaseService {
     List<Profissional> ret = List<Profissional>();
 
     fav.forEach((f) async {
-      prof.document(f).snapshots().map((event)=> (QuerySnapshot snapshot_prof){
-        snapshot_prof.documents.map((doc) => ret.add(Profissional.fromJson(doc.data)));
-      });
+      prof
+          .document(f)
+          .snapshots()
+          .map((event) => (QuerySnapshot snapshot_prof) {
+                snapshot_prof.documents
+                    .map((doc) => ret.add(Profissional.fromJson(doc.data)));
+              });
     });
 
     return ret;
@@ -193,10 +201,21 @@ class DatabaseService {
     Cliente cliente;
 
     await collection.document(uid).snapshots().map((doc) {
-        cliente = Cliente.fromJson(doc.data);
-        cliente.uid = doc.documentID;
+      cliente = Cliente.fromJson(doc.data);
+      cliente.uid = doc.documentID;
     });
 
+    return cliente;
+  }
+
+  Stream<Cliente> get cliente {
+    return collection.document(uid).snapshots().map(_clienteFromSnapshot);
+  }
+
+  Cliente _clienteFromSnapshot(DocumentSnapshot snapshot) {
+    Cliente cliente;
+    cliente = Cliente.fromJson(snapshot.data);
+    cliente.uid = snapshot.documentID;
     return cliente;
   }
 
@@ -206,18 +225,19 @@ class DatabaseService {
 
   Stream<List<Profissional>> get ListaProfissionaisByNota {
     // o parametro estava como List<string>
-    return prof
-        .orderBy("nota")
-        .snapshots()
-        .map(_profissionalListFromSnapshot);
+    return prof.orderBy("nota").snapshots().map(_profissionalListFromSnapshot);
   }
 
   Stream<List<Profissional>> get profissionais {
     return prof.snapshots().map(_profissionalListFromSnapshot);
   }
 
-  Stream<List<Profissional>> profissionaisCategoria(String categoria){
-    return prof.where("servico", isEqualTo: categoria).orderBy('nota').snapshots().map(_profissionaisCategoriaSnapshot);
+  Stream<List<Profissional>> profissionaisCategoria(String categoria) {
+    return prof
+        .where("servico", isEqualTo: categoria)
+        .orderBy('nota')
+        .snapshots()
+        .map(_profissionaisCategoriaSnapshot);
   }
 
   List<Profissional> _profissionaisCategoriaSnapshot(QuerySnapshot snapshot) {
@@ -256,7 +276,8 @@ class DatabaseService {
         return snapshot.documents.map((doc) {
           return Profissional.fromJson(doc.data);
         }).toList();
-      }).toList()).first;
+      }).toList())
+          .first;
 
     return profissionais;
   }
@@ -290,5 +311,12 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return Endereco.fromJson(doc.data);
     }).toList();
+  }
+
+  Future getFoto() {
+    return FirebaseStorage.instance
+        .ref()
+        .child("//clientes//" + uid + ".jpg")
+        .getDownloadURL();
   }
 }

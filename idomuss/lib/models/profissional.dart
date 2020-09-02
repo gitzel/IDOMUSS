@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profissional {
-
   @protected
   List<int> _limite;
 
@@ -34,7 +33,6 @@ class Profissional {
   @protected
   int _querGenero, _curtidas;
 
-
   Profissional(
       this._rg,
       this._cpf,
@@ -50,7 +48,7 @@ class Profissional {
   Profissional.fromJson(Map<String, dynamic> json)
       : _curtidas = int.parse(json['curtidas'].toString()),
         _rg = json['rg'],
-        _email  = json['email'],
+        _email = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         //_location = GeoPoint(json['location']),
@@ -150,14 +148,13 @@ class Profissional {
 
   get nota => _nota;
 
-  set nota(value){
+  set nota(value) {
     _nota = value;
   }
 
   get limite => _limite;
 
-  set limite(value){
+  set limite(value) {
     _limite = value;
   }
-
 }

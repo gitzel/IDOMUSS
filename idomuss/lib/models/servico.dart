@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Servico{
-
+class Servico {
   @protected
   String _nome, _img;
 
@@ -22,5 +21,4 @@ class Servico{
   Servico.fromJson(Map<String, dynamic> json)
       : _nome = json['nome'],
         _img = json['image'];
-
 }

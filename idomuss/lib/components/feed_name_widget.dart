@@ -4,6 +4,10 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 
 class FeedNameWidget extends StatelessWidget {
+  String nome;
+
+  FeedNameWidget(this.nome);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -14,7 +18,7 @@ class FeedNameWidget extends StatelessWidget {
         padding: const EdgeInsets.only(
             top: 24.0, left: 20.0, right: 16.0, bottom: 5.0),
         child: Text(
-          "Pedro A",
+          nome,
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

@@ -16,7 +16,6 @@ class ListaPrestadores extends StatefulWidget {
 }
 
 class _ListaPrestadoresState extends State<ListaPrestadores> {
-
   dynamic user, favoritos;
   bool teste = false;
   static double height;
@@ -34,15 +33,16 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
     List vips = new List<Profissional>();
 
     profissionais.removeWhere((element) {
-      if(element.vip)
-        vips.add(element);
+      if (element.vip) vips.add(element);
       return element.vip;
     });
 
     print(favoritos);
     int indiceColor = 0;
     return Scaffold(
-      appBar: AppBar(elevation: 0,),
+        appBar: AppBar(
+          elevation: 0,
+        ),
         body: Container(
           color: ColorSys.primary,
           child: Container(
@@ -54,42 +54,57 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 75.0,),
-                vips.length <= 0? SizedBox.shrink() : Padding(
-                  padding: const EdgeInsets.only(left: paddingSmall),
-                  child: Text(
-                    "Premium",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: fontSizeRegular),
-                  ),
+                SizedBox(
+                  height: 75.0,
                 ),
-                vips.length <= 0? SizedBox.shrink() :Container(
-                  height: height,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: vips.length,
-                    itemBuilder: (context, index) {
-                      if(indiceColor > 5)
-                        indiceColor = 0;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: paddingMedium,
-                            vertical: paddingSmall),
-                        child: ProfissionalItem(vips[index].nome, vips[index].nota.round(), vips[index].limite, vips[index].foto ,false, true, height, colorPremium: indiceColor++,),
-                      );
-                    },
-                  ),
-                ),
+                vips.length <= 0
+                    ? SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.only(left: paddingSmall),
+                        child: Text(
+                          "Premium",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: fontSizeRegular),
+                        ),
+                      ),
+                vips.length <= 0
+                    ? SizedBox.shrink()
+                    : Container(
+                        height: height,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: vips.length,
+                          itemBuilder: (context, index) {
+                            if (indiceColor > 5) indiceColor = 0;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingMedium,
+                                  vertical: paddingSmall),
+                              child: ProfissionalItem(
+                                vips[index],
+                                false,
+                                true,
+                                height,
+                                colorPremium: indiceColor++,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                 Expanded(
                   child: ListView.builder(
                     itemCount: profissionais.length,
-                    itemBuilder: (context, index){
+                    itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: paddingMedium,
-                            vertical: paddingSmall),
-                        child: ProfissionalItem(profissionais[index].nome, profissionais[index].nota.round(), profissionais[index].limite, profissionais[index].foto ,false, false, height, ),
+                            horizontal: paddingMedium, vertical: paddingSmall),
+                        child: ProfissionalItem(
+                          profissionais[index],
+                          false,
+                          false,
+                          height,
+                        ),
                       );
                     },
                   ),
@@ -97,7 +112,6 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }

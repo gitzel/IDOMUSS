@@ -62,88 +62,98 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                 color: ColorSys.gray,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
               ),
-              child: servicos.length <= 0 ? LoadPage() :Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          75, paddingSmall, paddingSmall, paddingSmall),
-                      child: Container(
-                        decoration: new BoxDecoration(
-                          color: ColorSys.lightGray,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: new TextField(
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              border: InputBorder.none,
-                              hintText: "Digite um nome/serviço"),
-                          controller: _controller,
-                          onChanged: (text){
-                            setState(() {
-                              list = list.where((element) => element.nome.toUpperCase().startsWith(text.toUpperCase())).toList();
-                            });
-                          },
-                        ),
-                      )),
-                  Expanded(
-                    child: GridView.builder(
-                      itemCount: list.length,
-                      padding: EdgeInsets.all(paddingSmall),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) { 
-                                      return StreamProvider<List<Profissional>>.value(value:  DatabaseService().profissionaisCategoria(list[index].nome),
-                                          child: ListaPrestadores());
-                                }));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    list[index].img),
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+              child: servicos.length <= 0
+                  ? LoadPage()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                75, paddingSmall, paddingSmall, paddingSmall),
+                            child: Container(
+                              decoration: new BoxDecoration(
+                                color: ColorSys.lightGray,
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 0.5,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
+                              child: new TextField(
+                                decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.search),
+                                    border: InputBorder.none,
+                                    hintText: "Digite um nome/serviço"),
+                                controller: _controller,
+                                onChanged: (text) {
+                                  setState(() {
+                                    list = list
+                                        .where((element) => element.nome
+                                            .toUpperCase()
+                                            .startsWith(text.toUpperCase()))
+                                        .toList();
+                                  });
+                                },
+                              ),
+                            )),
+                        Expanded(
+                          child: GridView.builder(
+                            itemCount: list.length,
+                            padding: EdgeInsets.all(paddingSmall),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return StreamProvider<
+                                            List<Profissional>>.value(
+                                        value: DatabaseService()
+                                            .profissionaisCategoria(
+                                                list[index].nome),
+                                        child: ListaPrestadores());
+                                  }));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(list[index].img),
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.black.withOpacity(0.3),
+                                          BlendMode.darken),
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12.0)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 0.5,
+                                        blurRadius: 10,
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment(-0.7, -0.8),
+                                    child: Text(
+                                      list[index].nome,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: Align(
-                              alignment: Alignment(-0.7, -0.8),
-                              child: Text(
-                                list[index].nome,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              );
+                            },
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: _crossAxisCount,
+                              crossAxisSpacing: _crossAxisSpacing,
+                              mainAxisSpacing: _mainAxisSpacing,
+                              childAspectRatio: _aspectRatio,
                             ),
                           ),
-                        );
-                      },
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: _crossAxisCount,
-                        crossAxisSpacing: _crossAxisSpacing,
-                        mainAxisSpacing: _mainAxisSpacing,
-                        childAspectRatio: _aspectRatio,
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
             )
           ],
         ),

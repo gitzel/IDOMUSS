@@ -54,7 +54,7 @@ class Cliente {
   }
 
   Cliente.fromJson(Map<String, dynamic> json)
-      :  _rg = json['rg'],
+      : _rg = json['rg'],
         _cpf = json['cpf'],
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],
@@ -62,7 +62,7 @@ class Cliente {
         _numeroCelular = json['numero'],
         _genero = json['genero'],
         _email = json["email"],
-        _querGenero = int.parse(json['querGenero']),
+        _querGenero = json['querGenero'],
         _descricao = json['descricao'];
 
   get rg => _rg;

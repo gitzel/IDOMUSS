@@ -3,11 +3,13 @@ import 'package:idomuss/components/feed_details.dart';
 import 'package:idomuss/components/feed_name_widget.dart';
 
 class FeedCard extends StatelessWidget {
-  String img;
+  String img, nome, servico;
+  int curtidas;
+  List<int> limite;
+  bool premium;
 
-  FeedCard(this.img) {
-    img = this.img;
-  }
+  FeedCard(this.nome, this.curtidas, this.servico, this.limite, this.premium,
+      this.img);
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,11 @@ class FeedCard extends StatelessWidget {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: FeedDetails(),
+                child: FeedDetails(curtidas, servico, limite, premium),
               ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.28,
-                child: FeedNameWidget(),
+                child: FeedNameWidget(nome),
               )
             ],
           ),

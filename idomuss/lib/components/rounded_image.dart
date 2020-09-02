@@ -13,7 +13,7 @@ class RoundedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-      child: Image.asset(
+      child: Image.network(
         imagePath,
         width: size.width,
         height: size.width,
