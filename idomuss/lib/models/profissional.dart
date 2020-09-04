@@ -29,7 +29,10 @@ class Profissional {
       _nomeServico;
 
   String get uid => _uid;
-
+  
+  @protected
+  DateTime _melhor;
+  
   @protected
   int _querGenero, _curtidas;
 
@@ -43,7 +46,8 @@ class Profissional {
       this._dataNascimento,
       this._genero,
       this._querGenero,
-      this._descricao);
+      this._descricao,
+      this._melhor);
 
   Profissional.fromJson(Map<String, dynamic> json)
       : _curtidas = int.parse(json['curtidas'].toString()),
@@ -52,6 +56,7 @@ class Profissional {
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         //_location = GeoPoint(json['location']),
+        _melhor = json['melhor'],
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],
         _nome = json['nome'],
@@ -156,5 +161,11 @@ class Profissional {
 
   set limite(value) {
     _limite = value;
+  }
+  
+  get melhor => _melhor;
+
+  set melhor(value) {
+    _melhor = value;
   }
 }
