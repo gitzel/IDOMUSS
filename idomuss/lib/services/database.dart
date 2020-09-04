@@ -374,7 +374,7 @@ class DatabaseService {
     }).toList();
   }
 
-  List<Profissional> get melhoresDaSemana {
+  void gerarMelhoresDaSemana(DateTime monday) {
     List<String> listaServicos = List<String>();
 
     servicos
@@ -386,21 +386,52 @@ class DatabaseService {
           .map((doc) => listaServicos.add(doc.data["nome"].toString()));
     });
 
-    List<Profissional> ret = List<Profissional>();
+    List<Profissional> total = List<Profissional>();
+
+    prof
+        .orderBy('nota')
+        .snapshots()
+        .map((event) =>
+        (QuerySnapshot snapshot_prof) {
+      snapshot_prof.documents
+          .map((doc) {
+            Profissional add = Profissional.fromJson(doc.data);
+            add.uid = doc.documentID;
+            total.add(add);});
+    });
+
 
     listaServicos.forEach((s) {
-        prof
-            .where("servico", isEqualTo: s)
-            .orderBy('nota')
-            .limit(5)
-            .snapshots()
-            .map((event) =>
-            (QuerySnapshot snapshot_prof) {
-          snapshot_prof.documents
-              .map((doc) => ret.add(Profissional.fromJson(doc.data)));
-        });
-      });
-    return ret;
+        List<Profissional> possivel = total.where((prof) => prof.nomeServico == s);
+        int c = 0, indice = 0;
+
+        while(c < 5 && indice < possivel.length){
+          if(monday.difference(possivel[indice].melhor) > Duration(days: 14)){
+            c++;
+            prof.document(possivel[indice].uid).updateData({"melhor": monday});
+          }
+         indice++;
+        }
+    });
   }
-  
+
+  Stream<List<Profissional>> get melhoresDaSemana {
+      var now = new DateTime.now();
+      now = now.toUtc();
+
+      now.subtract(Duration(days: now.weekday-1));
+
+      prof
+          .where("melhor", isEqualTo: now)
+          .snapshots()
+          .map(_profissionalListFromSnapshot);
+
+      if(prof == null)
+        gerarMelhoresDaSemana(now);
+
+      return  prof
+          .where("melhor", isEqualTo: now)
+          .snapshots()
+          .map(_profissionalListFromSnapshot);
+  }
 }
