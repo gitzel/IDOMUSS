@@ -165,7 +165,10 @@ class Profissional {
   
   get melhor => _melhor;
 
-  set melhor(value) {
-    _melhor = value;
+  set melhor(dynamic value) {
+    if(value.runtimeType == DateTime)
+      _melhor = value;
+    else if(value.runtimeType == Timestamp)
+      _melhor = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
   }
 }

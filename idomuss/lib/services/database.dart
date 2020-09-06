@@ -199,14 +199,29 @@ class DatabaseService {
     return servicos;
   }
 
-  Stream<List<Profissional>> get profissionaisPreferidos {
-    return favorite
-        .where("uidCliente", isEqualTo: uid)
-        .snapshots()
-        .map(_favoritosFromSnapshot);
+  Stream<List<Profissional>> get profissionaisPreferidos async*{
+
+    final uidProfFav = await favorite
+            .snapshots()
+            .map(_favoritosFromSnapshot).first.asStream();
+
+    await for (var uidProf in uidProfFav) {
+       final ret = await prof
+            .where("uid", isEqualTo: uidProf)
+            .snapshots()
+            .map(_profissionalListFromSnapshot);
+
+       yield* ret;
+    }
   }
 
-  List<Profissional> _favoritosFromSnapshot(QuerySnapshot snapshot) {
+  List<String> _favoritosFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return doc.data['uidProfissional'].toString();
+    }).toList();
+  }
+
+  /*List<Profissional> _favoritosFromSnapshot(QuerySnapshot snapshot) {
     List<String> fav = snapshot.documents.map((doc) {
       return doc.data["uidProfissional"].toString();
     }).toList();
@@ -224,7 +239,7 @@ class DatabaseService {
     });
 
     return ret;
-  }
+  }*/
 
   List<Endereco> _servicosContratadosListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
@@ -233,10 +248,22 @@ class DatabaseService {
   }
 
   Future addFavorito(String uidProfissional) async {
-    return await Firestore.instance.collection("avaliacao").add({
+    return await favorite.add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
     });
+  }
+
+  void removerFavorito(String uidProfissional) async {
+        favorite
+        .where("uidCliente", isEqualTo: uid)
+        .where("uidProfissional", isEqualTo: uidProfissional)
+        .getDocuments().then((querySnapshot) {
+          for (var doc in querySnapshot.documents) {
+            doc.reference.delete();
+          }
+        });
+            
   }
 
   Future<Cliente> getCliente() async {
@@ -374,35 +401,23 @@ class DatabaseService {
     }).toList();
   }
 
-  void gerarMelhoresDaSemana(DateTime monday) {
-    List<String> listaServicos = List<String>();
-
-    servicos
+  void gerarMelhoresDaSemana(DateTime monday) async {
+    
+    List<String> listaServicos = await servicos
         .orderBy("nome")
         .snapshots()
-        .map((event) =>
-        (QuerySnapshot snapshot_serv) {
-          snapshot_serv.documents
-          .map((doc) => listaServicos.add(doc.data["nome"].toString()));
-    });
+        .map(_nomeServicoFromSnapshot).first;
 
-    List<Profissional> total = List<Profissional>();
-
-    prof
+    List<Profissional> total = await prof
         .orderBy('nota')
         .snapshots()
-        .map((event) =>
-        (QuerySnapshot snapshot_prof) {
-      snapshot_prof.documents
-          .map((doc) {
-            Profissional add = Profissional.fromJson(doc.data);
-            add.uid = doc.documentID;
-            total.add(add);});
-    });
+        .map(_profissionalListFromSnapshot).first;
 
+    try{
 
+    
     listaServicos.forEach((s) {
-        List<Profissional> possivel = total.where((prof) => prof.nomeServico == s);
+        List<Profissional> possivel = total.where((prof) => prof.nomeServico == s).toList();
         int c = 0, indice = 0;
 
         while(c < 5 && indice < possivel.length){
@@ -413,25 +428,33 @@ class DatabaseService {
          indice++;
         }
     });
+    }
+    catch(e){
+      print(e);
+    }
   }
 
-  Stream<List<Profissional>> get melhoresDaSemana {
+  Stream<List<Profissional>> get melhoresDaSemana async*{
+      
+      try{
       var now = new DateTime.now();
-      now = now.toUtc();
-
-      now.subtract(Duration(days: now.weekday-1));
-
-      prof
-          .where("melhor", isEqualTo: now)
+      now = now.subtract(Duration(days: now.weekday-1));
+      
+      bool vazio = await prof
+          .where("melhor", isEqualTo: Timestamp.fromDate(now))
           .snapshots()
-          .map(_profissionalListFromSnapshot);
+          .map(_profissionalListFromSnapshot).isEmpty;
 
-      if(prof == null)
+      if(vazio)
         gerarMelhoresDaSemana(now);
 
-      return  prof
+      yield*  prof
           .where("melhor", isEqualTo: now)
           .snapshots()
           .map(_profissionalListFromSnapshot);
+      }
+      catch(e){
+        print(e);
+      }
   }
 }

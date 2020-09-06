@@ -31,9 +31,7 @@ class _HomeState extends State<Home> {
         return Feed();
         break;
       case 1:
-        return StreamProvider<List<Profissional>>.value(
-            value: DatabaseService(uid: user.uid).profissionaisPreferidos,
-            child: Favorite());
+        return Favorite();
         break;
       case 2:
         return Busca();

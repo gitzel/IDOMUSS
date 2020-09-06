@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Favorite extends StatefulWidget {
@@ -12,7 +15,8 @@ class Favorite extends StatefulWidget {
 class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
-    final profissionais = Provider.of<List<Profissional>>(context) ?? [];
+
+    final user = Provider.of<FirebaseUser>(context);
     return Container(
       decoration: BoxDecoration(color: ColorSys.primary),
       child: Column(
@@ -35,28 +39,39 @@ class _FavoriteState extends State<Favorite> {
               color: ColorSys.gray,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(child: Image.asset("assets/geral/no_favorites.png")),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      paddingSmall, paddingMedium, paddingSmall, paddingSmall),
-                  child: Text(
-                    "Você ainda não favoritou algum profissional!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: paddingSmall),
-                  child: Text(
-                    "Selecione o icone central para conhecer os melhores trabalhadores perto de você!",
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ],
+            child: StreamBuilder<List<Profissional>>(
+              stream: DatabaseService(uid:user.uid).profissionaisPreferidos,
+              builder: (context, snapshot) {
+                if(!snapshot.hasData)
+                  return LoadPage();
+                
+                if(snapshot.data.isNotEmpty)
+                  return Container();
+                  
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(child: Image.asset("assets/geral/no_favorites.png")),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          paddingSmall, paddingMedium, paddingSmall, paddingSmall),
+                      child: Text(
+                        "Você ainda não favoritou algum profissional!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: paddingSmall),
+                      child: Text(
+                        "Selecione o icone central para conhecer os melhores trabalhadores perto de você!",
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                );
+              }
             ),
           )
         ],
