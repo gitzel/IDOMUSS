@@ -76,7 +76,6 @@ class FeedDetails extends StatelessWidget {
                 ],
               ),
             ),
-            //Image.asset("assets/geral/premium.png")
           ],
         ),
       ),

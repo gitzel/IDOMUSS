@@ -439,19 +439,19 @@ class DatabaseService {
       try{
       var now = new DateTime.now();
       now = now.subtract(Duration(days: now.weekday-1));
-      
-      bool vazio = await prof
+      now = DateTime(now.year, now.month, now.day);
+      await prof
           .where("melhor", isEqualTo: Timestamp.fromDate(now))
-          .snapshots()
-          .map(_profissionalListFromSnapshot).isEmpty;
-
-      if(vazio)
-        gerarMelhoresDaSemana(now);
-
-      yield*  prof
+          .getDocuments().then((value) {
+              if(value.documents.isEmpty)
+                gerarMelhoresDaSemana(now);
+          });
+          
+       yield*  prof
           .where("melhor", isEqualTo: now)
           .snapshots()
           .map(_profissionalListFromSnapshot);
+     
       }
       catch(e){
         print(e);

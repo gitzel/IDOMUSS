@@ -5,6 +5,7 @@ import 'package:idomuss/components/feed_card.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/screens/home/busca.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -21,9 +22,9 @@ class _FeedState extends State<Feed> {
       stream: DatabaseService(uid:user.uid).melhoresDaSemana,
       builder: (context, snapshot) {
 
-        if(snapshot.hasData)
-          print(snapshot.data);
-
+        if(!snapshot.hasData)
+          return LoadPage();
+        
         return SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -77,14 +78,10 @@ class _FeedState extends State<Feed> {
               ),
               CarouselSlider(
                 options: CarouselOptions(height: MediaQuery.of(context).size.width),
-                items: <Widget>[
-                  FeedCard(
-                      'Gustavo', 65, 'Eletricista', [10, 70], false, 'gitzel.jpg'),
-                  FeedCard(
-                      'Isabela', 64, 'Pedreiro(a)', [40, 120], false, 'isa.jpg'),
-                  FeedCard('Amabile', 63, 'Jardineiro(a)', [30, 90], false,
-                      'amabile.jpg')
-                ],
+                items: List.generate(snapshot.data.length, (index) {
+                  return FeedCard(
+                      snapshot.data[index].nome,  snapshot.data[index].curtidas,  snapshot.data[index].nomeServico,  snapshot.data[index].limite,  snapshot.data[index].vip,  snapshot.data[index].foto);
+                }),
               ),
             ],
           ),

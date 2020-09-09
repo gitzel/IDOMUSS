@@ -56,7 +56,6 @@ class Profissional {
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
         //_location = GeoPoint(json['location']),
-        _melhor = json['melhor'],
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],
         _nome = json['nome'],
@@ -67,7 +66,8 @@ class Profissional {
         _vip = json['vip'].toString() == 'true',
         _nota = double.parse(json['nota'].toString()),
         _nomeServico = json['servico'],
-        _limite = [json['limite'][0], json['limite'][1]];
+        _limite = [json['limite'][0], json['limite'][1]],
+        _melhor = DateTime.fromMillisecondsSinceEpoch(json['melhor'].millisecondsSinceEpoch);
 
   String get rg => _rg;
 
