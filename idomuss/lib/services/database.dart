@@ -94,19 +94,36 @@ class DatabaseService {
     }).toList();
   }
 
+  Future removerFavoritos(String uidProfissional) async {
+
+    int c = int.parse(
+        (await prof.document(uidProfissional).snapshots().first)
+            .data["curtidas"]
+            .toString());
+
+    await prof.document(uidProfissional).updateData({"curtidas": --c});
+
+    return await favorite
+                .where("uidProfissional", isEqualTo: uidProfissional)
+                .where("uidCliente", isEqualTo: uid)
+                .getDocuments().then((snapshot){
+                  snapshot.documents.forEach((element) {
+                    favorite.document(element.documentID).delete();
+                  });
+                });
+  }
 
 
-  Future addFavoritos(Profissional profissional) async {
-    String uidProfissional = profissional.uid;
+  Future addFavoritos(String uidProfissional) async {
 
-    double c = double.parse(
+    int c = int.parse(
         (await prof.document(uidProfissional).snapshots().first)
             .data["curtidas"]
             .toString());
 
     await prof.document(uidProfissional).updateData({"curtidas": ++c});
 
-    return await Firestore.instance.collection("favoritos").add({
+    return await favorite.add({
       "uidCliente": uid,
       "uidProfissional": uidProfissional,
     });
@@ -201,18 +218,19 @@ class DatabaseService {
 
   Stream<List<Profissional>> get profissionaisPreferidos async*{
 
-    final uidProfFav = await favorite
+    List<String> uidProfFav = await favorite
+            .where("uidCliente", isEqualTo: uid)
             .snapshots()
-            .map(_favoritosFromSnapshot).first.asStream();
+            .map(_favoritosFromSnapshot).first;
 
-    await for (var uidProf in uidProfFav) {
-       final ret = await prof
-            .where("uid", isEqualTo: uidProf)
-            .snapshots()
-            .map(_profissionalListFromSnapshot);
+    List<Profissional> ret = List<Profissional>();
 
-       yield* ret;
+   for(var uidProf in uidProfFav) {
+      Profissional p = await prof.document(uidProf).snapshots().map(_profissionalFromSnapshot).first;
+      ret.add(p);
     }
+
+    yield ret;
   }
 
   List<String> _favoritosFromSnapshot(QuerySnapshot snapshot) {
@@ -246,26 +264,6 @@ class DatabaseService {
       return Endereco.fromJson(doc.data);
     }).toList();
   }
-
-  Future addFavorito(String uidProfissional) async {
-    return await favorite.add({
-      "uidCliente": uid,
-      "uidProfissional": uidProfissional,
-    });
-  }
-
-  void removerFavorito(String uidProfissional) async {
-        favorite
-        .where("uidCliente", isEqualTo: uid)
-        .where("uidProfissional", isEqualTo: uidProfissional)
-        .getDocuments().then((querySnapshot) {
-          for (var doc in querySnapshot.documents) {
-            doc.reference.delete();
-          }
-        });
-            
-  }
-
   Future<Cliente> getCliente() async {
     Cliente cliente;
 
@@ -304,20 +302,26 @@ class DatabaseService {
     return prof.snapshots().map(_profissionalListFromSnapshot);
   }
 
-  Stream<List<Profissional>> profissionaisCategoria(String categoria) {
-    return prof
+  Stream<List<Profissional>> profissionaisCategoria(String categoria) async* {
+
+    List<String> profFav = await favorite.where("uidCliente", isEqualTo: uid).snapshots().map((querySnapshot){
+      return querySnapshot.documents.map((doc) {
+        return doc.data['uidProfissional'].toString();
+      }).toList();
+    }).first;
+
+    yield* prof
         .where("servico", isEqualTo: categoria)
         .orderBy('nota')
         .snapshots()
-        .map(_profissionaisCategoriaSnapshot);
-  }
-
-  List<Profissional> _profissionaisCategoriaSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      Profissional prof = Profissional.fromJson(doc.data);
-      prof.uid = doc.documentID;
-      return prof;
-    }).toList();
+        .map((querySnapshot){
+          return querySnapshot.documents.map((doc){
+              Profissional ret = Profissional.fromJson(doc.data);
+              ret.uid = doc.documentID;
+              ret.favoritado = profFav.contains(doc.documentID);
+              return ret; 
+          }).toList();
+        });
   }
 
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
@@ -327,6 +331,12 @@ class DatabaseService {
       return ret;
     }).toList();
 
+    return p;
+  }
+
+  Profissional _profissionalFromSnapshot(DocumentSnapshot snapshot) {
+    Profissional p = Profissional.fromJson(snapshot.data);
+    p.uid = snapshot.documentID;
     return p;
   }
 

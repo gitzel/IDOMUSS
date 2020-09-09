@@ -1,20 +1,24 @@
 import 'dart:math';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/screens/home/perfil.dart';
 import 'package:idomuss/screens/home/profissional_perfil.dart';
+import 'package:idomuss/services/database.dart';
 
 class ProfissionalItem extends StatefulWidget {
   Profissional prof;
-  bool favoritado, premium;
+  bool  premium;
+  bool favoritado;
   double height;
   int colorPremium;
-
-  ProfissionalItem(this.prof, this.favoritado, this.premium, this.height,
-      {this.colorPremium});
+  String uidUser;
+  Function test;
+  ProfissionalItem(this.prof, this.favoritado, this.premium, this.height, this.test,
+      {this.colorPremium, this.uidUser});
 
   @override
   _State createState() => _State();
@@ -146,9 +150,16 @@ class _State extends State<ProfissionalItem> {
                                 : ColorSys.primary,
                           ),
                           onPressed: () {
-                            setState(() {
-                              widget.favoritado = !widget.favoritado;
-                            });
+                            
+                              AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.INFO,
+                              animType: AnimType.TOPSLIDE,
+                              title: !widget.favoritado? 'Adicionar aos favoritos' : 'Remover dos favoritos',
+                              desc: !widget.favoritado? 'Deseja adicionar este profissional a sua lista de favoritos?': 'Deseja retirar este profissional da sua lista de favoritos?',
+                              btnCancelOnPress: () {},
+                              btnOkOnPress: widget.test,
+                              )..show();
                           },
                         ),
                       ],

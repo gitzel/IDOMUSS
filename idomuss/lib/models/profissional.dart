@@ -9,7 +9,7 @@ class Profissional {
   double _nota;
 
   @protected
-  bool _vip;
+  bool _vip, favoritado;
 
   @protected
   GeoPoint _location;
@@ -47,11 +47,12 @@ class Profissional {
       this._genero,
       this._querGenero,
       this._descricao,
-      this._melhor);
+      this._melhor,
+      {this.favoritado});
 
   Profissional.fromJson(Map<String, dynamic> json)
-      : _curtidas = int.parse(json['curtidas'].toString()),
-        _rg = json['rg'],
+      : _rg = json['rg'],
+      _curtidas = int.parse(json['curtidas'].toString()),
         _email = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
@@ -171,4 +172,6 @@ class Profissional {
     else if(value.runtimeType == Timestamp)
       _melhor = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
   }
+
+  
 }

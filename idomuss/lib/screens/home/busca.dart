@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
@@ -26,6 +27,7 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
+    final user = Provider.of<FirebaseUser>(context);
     var width =
         (size - ((_crossAxisCount - 1) * _crossAxisSpacing)) / _crossAxisCount;
     var height = width / _aspectRatio;
@@ -93,12 +95,7 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return StreamProvider<
-                                            List<Profissional>>.value(
-                                        value: DatabaseService()
-                                            .profissionaisCategoria(
-                                                snapshot.data[index].nome),
-                                        child: ListaPrestadores());
+                                    return ListaPrestadores(snapshot.data[index].nome);
                                   }));
                                 },
                                 child: Container(
