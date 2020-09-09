@@ -28,6 +28,17 @@ dependencies:
   firebase_storage: ^3.1.6
   mask_text_input_formatter: ^1.0.6
   email_validator: ^1.0.0
+  flutter_launcher_icons: ^0.7.5
+  flutter_launcher_name: "^0.0.1"
+
+flutter_launcher_name:
+  name: "Idomuss for Profissionais"
+
+flutter_icons:
+  image_path: "assets/geral/ic_launcher.png"
+  ios: true
+  android: true
+
   flutter:
     sdk: flutter
 
@@ -53,7 +64,13 @@ flutter:
   assets:
     - assets/geral/
 
-
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+        - asset: fonts/Montserrat-Bold.ttf
+          weight: 900
+          
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
