@@ -57,7 +57,7 @@ class _FavoriteState extends State<Favorite> {
                       padding: EdgeInsets.fromLTRB(
                           paddingSmall, paddingMedium, paddingSmall, paddingSmall),
                       child: Text(
-                        "Você ainda não favoritou algum profissional!",
+                        "Você ainda não favoritou profissional algum!",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -73,6 +73,8 @@ class _FavoriteState extends State<Favorite> {
                 );
 
                 final profissionais = snapshot.data;
+                profissionais.sort((a,b) => a.nomeServico.toString().compareTo(b.nomeServico));
+
                 List<Profissional> vips = new List<Profissional>();
                 double height = MediaQuery.of(context).size.height * 0.2;
                 int indiceColor = 0;
@@ -131,6 +133,7 @@ class _FavoriteState extends State<Favorite> {
                           },
                                 colorPremium: indiceColor++,
                                 uidUser: user.uid,
+                                servico: vips[index].nomeServico,
                               ),
                             );
                           },
@@ -163,6 +166,7 @@ class _FavoriteState extends State<Favorite> {
                                     });
                           },
                           uidUser: user.uid,
+                          servico: profissionais[index].nomeServico,
                         ),
                       );
                     },

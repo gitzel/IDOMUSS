@@ -15,10 +15,10 @@ class ProfissionalItem extends StatefulWidget {
   bool favoritado;
   double height;
   int colorPremium;
-  String uidUser;
+  String uidUser, servico;
   Function test;
   ProfissionalItem(this.prof, this.favoritado, this.premium, this.height, this.test,
-      {this.colorPremium, this.uidUser});
+      {this.colorPremium, this.uidUser, this.servico = ""});
 
   @override
   _State createState() => _State();
@@ -89,6 +89,10 @@ class _State extends State<ProfissionalItem> {
                                     : ColorSys.black,
                                 fontWeight: FontWeight.bold),
                           ),
+                          widget.servico.isEmpty? SizedBox.shrink() : Text(widget.servico,
+                          style: TextStyle(
+                            color: widget.premium? Colors.white : ColorSys.black,
+                          ),),
                           Row(
                             children: [
                               Icon(

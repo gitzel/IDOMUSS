@@ -22,7 +22,7 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
       _aspectRatio = 2.15;
   int _crossAxisCount = 2;
 
-  TextEditingController _controller = TextEditingController();
+  String filtro = "";
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0)),
               ),
               child: StreamBuilder<List<Servico>>(
-                stream: DatabaseService().ListaServicos(_controller.text),
+                stream: DatabaseService().ListaServicos(filtro),
                 builder: (context, snapshot){
                   if(snapshot.hasData){
                     return Column(
@@ -83,7 +83,11 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                     prefixIcon: Icon(Icons.search),
                                     border: InputBorder.none,
                                     hintText: "Digite um nome/serviço"),
-                                controller: _controller,
+                                onChanged: (value){
+                                  setState((){
+                                    filtro = value;
+                                  });
+                                },
                               ),
                             )),
                         Expanded(
