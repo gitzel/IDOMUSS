@@ -83,6 +83,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                               widget.profissional.nome,
                               style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: fontSizeSubTitle,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -120,14 +121,11 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                         child: ProfissionalInfo(
                          Row(
                            crossAxisAlignment: CrossAxisAlignment.center,
-                           mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(widget.profissional.nota.round(),
-                                (index) {
-                              return Icon(
-                                Icons.star,
-                                color: ColorSys.primary
-                              );
-                            }),
+                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.star, color: ColorSys.primary,),
+                              Text(widget.profissional.nota.toString(), style: TextStyle(fontSize: fontSizeRegular),)
+                            ]
                           ),
                         )
                       ),
@@ -141,8 +139,8 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                            crossAxisAlignment: CrossAxisAlignment.center,
                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(3.toString(), style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black),),
-                              Text("serviços", style: TextStyle(color: ColorSys.black),)
+                              Text(widget.profissional.servicosPrestados.toString(), style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black, fontSize: fontSizeRegular,),),
+                              Text("serviços", style: TextStyle(color: ColorSys.black,),)
                             ],
                           ),
                         )
@@ -158,7 +156,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(Icons.favorite, color: ColorSys.primary,),
-                              Text(widget.profissional.curtidas.toString())
+                              Text(widget.profissional.curtidas.toString(),  style: TextStyle(fontSize: fontSizeRegular),)
                             ],
                           ),
                         )

@@ -34,7 +34,7 @@ class Profissional {
   DateTime _melhor;
   
   @protected
-  int _querGenero, _curtidas;
+  int _querGenero, _curtidas, _servicosPrestados;
 
   Profissional(
       this._rg,
@@ -48,6 +48,7 @@ class Profissional {
       this._querGenero,
       this._descricao,
       this._melhor,
+      this._servicosPrestados,
       {this.favoritado});
 
   Profissional.fromJson(Map<String, dynamic> json)
@@ -68,7 +69,8 @@ class Profissional {
         _nota = double.parse(json['nota'].toString()),
         _nomeServico = json['servico'],
         _limite = [json['limite'][0], json['limite'][1]],
-        _melhor = DateTime.fromMillisecondsSinceEpoch(json['melhor'].millisecondsSinceEpoch);
+        _melhor = DateTime.fromMillisecondsSinceEpoch(json['melhor'].millisecondsSinceEpoch),
+        _servicosPrestados = int.parse(json['servicosPrestados'].toString());
 
   String get rg => _rg;
 
@@ -173,5 +175,10 @@ class Profissional {
       _melhor = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
   }
 
+  get servicosPrestados => _servicosPrestados;
+
+  set servicosPrestados(value) {
+    _servicosPrestados = value;
+  }
   
 }
