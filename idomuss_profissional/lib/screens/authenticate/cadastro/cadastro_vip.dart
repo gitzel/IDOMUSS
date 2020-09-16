@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idomussprofissional/components/radio_button.dart';
 import 'package:idomussprofissional/components/titulo_cadastro.dart';
 import 'package:idomussprofissional/helpers/ColorsSys.dart';
 import 'package:idomussprofissional/models/profissional.dart';
@@ -15,11 +16,14 @@ class CadastroVip extends StatefulWidget {
 
 class _CadastroVipState extends State<CadastroVip> {
   final _formKey = GlobalKey<FormState>();
-  bool _vip = false;
+  bool _vip;
+  String _vipRadio;
+  bool termos;
 
   @override
   void initState() {
-    _vip = false;
+    _vip = null;
+    termos = false;
     super.initState();
   }
 
@@ -35,13 +39,51 @@ class _CadastroVipState extends State<CadastroVip> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextCadastro('sla vip??'),
-              //saber se é vip
+              TextCadastro('Você gostaria de ser um profissional VIP??'),
+              Text("Sendo VIP você tem acesso a diversas vantagens no app!", textAlign: TextAlign.center,),
+              Container(
+                width: double.infinity,
+                child: RaisedButton(child: Text("Clique aqui para saber mais!"), onPressed: (){})),
+              TextCadastro("E aí? Quer entrar nessa jornada VIP?"),
+              RadioButton(
+                value: 'Sim! Adoraria!',
+                groupValue: _vipRadio,
+                onChanged: (String value) {
+                  setState(() {
+                    _vip = value == 'Sim! Adoraria';
+                    _vipRadio = value;
+                  });
+                },
+              ),
+              RadioButton(
+                value: 'Infelizmente não! :(',
+                groupValue: _vipRadio,
+                onChanged: (String value) {
+                  setState(() {
+                    _vip = value == 'Sim! Adoraria';
+                    _vipRadio = value;
+                  });
+                },
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: termos,
+                    onChanged: (bool value){
+                      setState((){
+                        termos = value;
+                      });
+                    },
+                  ),
+                  Flexible(child: Text("Confirmo que aceito os termos de compromisso com IDOMUSS e que tenho total conhecimento sobre!"))
+                ],
+              ),
+              
             ],
           ),
         ),
       ],
-      _vip != null
+      _vip != null && termos
           ? () {
               widget.profissional.vip = _vip;
 

@@ -71,9 +71,8 @@ class _CadastroDocumentoState extends State<CadastroDocumento> {
                     : "CPF inválido!",
                 onChanged: (val) {
                   setState(() {
-                    if (_formKey.currentState.validate()) {
-                      cpf = val;
-                    }
+                    cpf = val;
+                    _formKey.currentState.validate();
                   });
                 },
                 inputFormatter: [maskCPF],
@@ -99,7 +98,7 @@ class _CadastroDocumentoState extends State<CadastroDocumento> {
           ),
         ),
       ],
-      rg.isNotEmpty && cpf.isNotEmpty && cnpj.isNotEmpty
+      cnpj.isNotEmpty && rg.isNotEmpty && cpf.isNotEmpty
           ? () {
               widget.profissional.rg = rg;
               widget.profissional.cpf = cpf;

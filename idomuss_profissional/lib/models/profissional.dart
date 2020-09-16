@@ -1,18 +1,26 @@
-import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Profissional {
+
+  File fotoFile;
+
+  String senha;
+
+  @protected
+  List<int> _limite;
+
   @protected
   double _nota;
 
   @protected
-  bool _vip;
+  bool _vip, favoritado;
 
   @protected
   GeoPoint _location;
-
-  File fotoFile;
 
   @protected
   String _uid,
@@ -20,7 +28,6 @@ class Profissional {
       _cpf,
       _cnpj,
       _nome,
-      senha,
       _email,
       _numeroCelular,
       _dataNascimento,
@@ -30,9 +37,25 @@ class Profissional {
       _nomeServico;
 
   String get uid => _uid;
-
+  
   @protected
-  int _querGenero, _curtidas;
+  DateTime _melhor;
+  
+  @protected
+  int _querGenero, _curtidas, _servicosPrestados;
+
+  Profissional.empty() {
+    this._cpf = '';
+    this._nome = '';
+    this._numeroCelular = '';
+    this._dataNascimento = '';
+    this._genero = '';
+    this._querGenero = 0;
+    this._descricao = '';
+    this._email = '';
+    this._foto = '';
+    this._cnpj = '';
+  }
 
   Profissional(
       this._rg,
@@ -45,42 +68,30 @@ class Profissional {
       this._genero,
       this._querGenero,
       this._descricao,
-      {this.senha,
-      this.fotoFile});
+      this._melhor,
+      this._servicosPrestados,
+      {this.favoritado});
 
   Profissional.fromJson(Map<String, dynamic> json)
-      :  _rg = json['rg'],
+      : _rg = json['rg'],
+      _curtidas = int.parse(json['curtidas'].toString()),
+        _email = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
-        _curtidas = json['curtidas'],
-        _location = json['location'],
+        //_location = GeoPoint(json['location']),
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],
         _nome = json['nome'],
         _numeroCelular = json['numero'],
         _genero = json['genero'],
-        _querGenero = int.parse(json['querGenero']),
+        _querGenero = int.parse(json['querGenero'].toString()),
         _descricao = json['descricao'],
-        _vip = json['vip'],
-        _nota = json['nota'],
-        _nomeServico = json['servico'];
-
-  Profissional.empty() {
-    this._cpf = '';
-    this._curtidas = 0;
-    this._nome = '';
-    this._cnpj = '';
-    this._numeroCelular = '';
-    this._dataNascimento = '';
-    this._genero = '';
-    this._querGenero = 0;
-    this._descricao = '';
-    this._email = '';
-    this._foto = '';
-    this._nomeServico = '';
-    this._vip = false;
-    this._nota = 0;
-  }
+        _vip = json['vip'].toString() == 'true',
+        _nota = double.parse(json['nota'].toString()),
+        _nomeServico = json['servico'],
+        _limite = [json['limite'][0], json['limite'][1]],
+        _melhor = DateTime.fromMillisecondsSinceEpoch(json['melhor'].millisecondsSinceEpoch),
+        _servicosPrestados = int.parse(json['servicosPrestados'].toString());
 
   String get rg => _rg;
 
@@ -90,13 +101,13 @@ class Profissional {
 
   get cpf => _cpf;
 
-  set cpf(String value) {
+  set cpf(value) {
     _cpf = value;
   }
 
   get cnpj => _cnpj;
 
-  set cnpj(String value) {
+  set cnpj(value) {
     _cnpj = value;
   }
 
@@ -160,12 +171,6 @@ class Profissional {
     _vip = value;
   }
 
-  double get nota => _nota;
-
-  set nota(double value) {
-    _nota = value;
-  }
-
   set uid(String value) {
     _uid = value;
   }
@@ -181,4 +186,32 @@ class Profissional {
   set curtidas(value) {
     _curtidas = value;
   }
+
+  get nota => _nota;
+
+  set nota(value) {
+    _nota = value;
+  }
+
+  get limite => _limite;
+
+  set limite(value) {
+    _limite = value;
+  }
+  
+  get melhor => _melhor;
+
+  set melhor(dynamic value) {
+    if(value.runtimeType == DateTime)
+      _melhor = value;
+    else if(value.runtimeType == Timestamp)
+      _melhor = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
+  }
+
+  get servicosPrestados => _servicosPrestados;
+
+  set servicosPrestados(value) {
+    _servicosPrestados = value;
+  }
+  
 }

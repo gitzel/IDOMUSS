@@ -58,32 +58,33 @@ class AuthService implements BaseAuth {
           }
       );*/
 
-      _profissional = profissional;
-
+      
       FirebaseUser user = result.user;
-
       user.sendEmailVerification();
-
-      //uploadPic(profissional.fotoFile);
 
       UserUpdateInfo updateInfo = new UserUpdateInfo();
       updateInfo.displayName = profissional.nome;
-      updateInfo.photoUrl = profissional.foto;
-      user.updateProfile(updateInfo);
+      updateInfo.photoUrl = await uploadPic(profissional.fotoFile, result.user.uid);
 
+      user.updateProfile(updateInfo);
+      profissional.foto = updateInfo.photoUrl;
+
+      _profissional = profissional;
       await DatabaseService(uid: user.uid).updateUserData(profissional);
+
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future uploadPic(File image) async {
-    String fileName = basename(image.path);
+  Future<String> uploadPic(File image, String uid) async {
+    String fileName = uid + basename(image.path).substring(basename(image.path).indexOf('.'));
     StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+        FirebaseStorage.instance.ref().child("profissionais/" + fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    return await firebaseStorageRef.getDownloadURL();
   }
 
   Future updateEmail(String newEmail) async {

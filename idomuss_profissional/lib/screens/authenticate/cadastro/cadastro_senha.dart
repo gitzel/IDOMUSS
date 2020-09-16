@@ -70,15 +70,22 @@ class _CadastroSenhaState extends State<CadastroSenha> {
                 label: 'Confirmar senha',
                 obscureText: escondeConfirma,
                 keyboardType: TextInputType.visiblePassword,
-                validator: (val) =>
-                    senha != val ? null : "As senhas são incompatíveis!",
                 onChanged: (val) {
                   setState(() {
-                    if (_formKey.currentState.validate()) {
-                      comparaSenha = val;
-                    }
+                    comparaSenha = val;
+                    _formKey.currentState.validate();
                   });
                 },
+                validator: (val) {
+                  if(comparaSenha.isEmpty)
+                    return null;
+                  
+                  if(comparaSenha.compareTo(senha) != 0)
+                    return "As senhas são incompatíveis!";
+
+                  return null;
+                },
+                
                 suffixIcon: IconButton(
                     icon: escondeConfirma
                         ? Icon(Icons.visibility)
@@ -93,7 +100,7 @@ class _CadastroSenhaState extends State<CadastroSenha> {
           ),
         ),
       ],
-      senha.isNotEmpty && comparaSenha.isNotEmpty
+      senha.isNotEmpty && comparaSenha.isNotEmpty && senha.compareTo(comparaSenha) == 0
           ? () {
               widget.profissional.senha = senha;
               Navigator.push(

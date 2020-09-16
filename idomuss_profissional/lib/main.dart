@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
               accentColor: ColorSys.primary,
               primaryColor: ColorSys.primary,
               splashColor: Colors.white10,
+              colorScheme: ColorScheme.light(primary: ColorSys.primary),
+              buttonTheme: ButtonThemeData(
+                textTheme: ButtonTextTheme.primary
+              ),
               fontFamily: 'Montserrat'),
           debugShowCheckedModeBanner: false,
           home: Wrapper()),

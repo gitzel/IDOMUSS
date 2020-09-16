@@ -145,8 +145,7 @@ class _SignInState extends State<SignIn> {
                             style: new TextStyle(
                                 fontSize: fontSizeSmall,
                                 fontFamily: 'Montserrat',
-                                color: ColorSys.black,
-                                backgroundColor: ColorSys.gray),
+                                color: ColorSys.black),
                             children: <TextSpan>[
                               TextSpan(text: 'Novo no app?'),
                               TextSpan(

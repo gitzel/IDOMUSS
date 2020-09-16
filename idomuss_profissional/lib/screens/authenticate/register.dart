@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:idomussprofissional/components/titulo_cadastro.dart';
 import 'package:idomussprofissional/helpers/ColorsSys.dart';
 import 'package:idomussprofissional/helpers/constantes.dart';
+import 'package:idomussprofissional/screens/authenticate/cadastro/cadastro_localizacao.dart';
 import 'package:idomussprofissional/screens/authenticate/cadastro/cadastro_telefone.dart';
 import 'package:idomussprofissional/screens/authenticate/cadastro/cadastroScaffold.dart';
 import 'package:email_validator/email_validator.dart';
@@ -59,8 +60,7 @@ class _RegisterState extends State<Register> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroTelefone(
-                      profissional: profissional,
+                    builder: (context) => CadastroLocalizacao(
                     ),
                   ));
             }

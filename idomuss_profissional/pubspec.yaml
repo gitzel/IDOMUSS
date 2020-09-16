@@ -30,6 +30,11 @@ dependencies:
   email_validator: ^1.0.0
   flutter_launcher_icons: ^0.7.5
   flutter_launcher_name: "^0.0.1"
+  dropdownfield: ^1.0.3
+  flutter_range_slider: "^1.4.0"
+  location: ^1.4.1
+  google_maps_flutter: ^0.5.32
+
 
 flutter_launcher_name:
   name: "Idomuss for Profissionais"

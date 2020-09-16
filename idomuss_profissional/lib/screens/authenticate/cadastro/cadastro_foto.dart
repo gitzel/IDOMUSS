@@ -40,6 +40,7 @@ class _CadastroFotoState extends State<CadastroFoto> {
 
   @override
   Widget build(BuildContext context) {
+
     return CadastroScaffold(
       <Widget>[
         BackButton(),
@@ -75,6 +76,7 @@ class _CadastroFotoState extends State<CadastroFoto> {
                   .signUp(widget.profissional.email, widget.profissional.senha,
                       widget.profissional)
                   .then((value) {
+
                 Navigator.popUntil(context, (route) => route.isFirst);
               });
             }
