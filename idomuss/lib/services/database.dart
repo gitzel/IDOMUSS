@@ -431,7 +431,7 @@ class DatabaseService {
         int c = 0, indice = 0;
 
         while(c < 5 && indice < possivel.length){
-          if(monday.difference(possivel[indice].melhor) > Duration(days: 14)){
+          if(monday.difference(possivel[indice].melhor) >= Duration(days: 14)){
             c++;
             prof.document(possivel[indice].uid).updateData({"melhor": monday});
           }
