@@ -121,10 +121,12 @@ class _SignInState extends State<SignIn> {
                           ),
                           color: ColorSys.gray,
                           onPressed: () async {
-                            dynamic result = _auth.signInWithGoogle();
-                            if (result == null) {
-                              // modal
+                            try {
+                              dynamic result = _auth.signInWithGoogle();
+                            } catch (e) {
                             }
+                            
+                            
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),

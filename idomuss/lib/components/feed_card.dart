@@ -28,6 +28,7 @@ class FeedCard extends StatelessWidget {
               Image.network(
                 img,
                 height:MediaQuery.of(context).size.height * 0.35,
+                width:MediaQuery.of(context).size.width,
                 fit: BoxFit.cover
               ),
               Positioned(

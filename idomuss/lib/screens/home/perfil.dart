@@ -113,35 +113,47 @@ class _PerfilState extends State<Perfil> {
                   flex: 3,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(paddingMedium),
-                        child: Text(cliente.descricao),
+                      Expanded(
+                        flex: 0,
+                                              child: Padding(
+                          padding: const EdgeInsets.all(paddingMedium),
+                          child: Text(cliente.descricao, textAlign: TextAlign.center,),
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(paddingMedium),
-                        child: Container(
-                            width: double.infinity,
-                            child: ButtonProfile(
-                                "Cartões", Icons.credit_card, () {})),
+                      Expanded(
+                        flex: 1,
+                                              child: Padding(
+                          padding: const EdgeInsets.all(paddingMedium),
+                          child: Container(
+                              width: double.infinity,
+                              child: ButtonProfile(
+                                  "Cartões", Icons.credit_card, () {})),
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(paddingMedium),
-                        child: Container(
-                            width: double.infinity,
-                            child: ButtonProfile(
-                                "Endereços", Icons.edit_location, () {})),
+                      Expanded(
+                        flex: 1,
+                                              child: Padding(
+                          padding: const EdgeInsets.all(paddingMedium),
+                          child: Container(
+                              width: double.infinity,
+                              child: ButtonProfile(
+                                  "Endereços", Icons.edit_location, () {})),
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(paddingMedium),
-                        child: Container(
-                            width: double.infinity,
-                            child: ButtonProfile(
-                                "Configurações", Icons.settings, () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Configuracoes()));
-                            })),
+                      Expanded(
+                        flex: 1,
+                                              child: Padding(
+                          padding: const EdgeInsets.all(paddingMedium),
+                          child: Container(
+                              width: double.infinity,
+                              child: ButtonProfile(
+                                  "Configurações", Icons.settings, () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Configuracoes()));
+                              })),
+                        ),
                       ),
                     ],
                   ),

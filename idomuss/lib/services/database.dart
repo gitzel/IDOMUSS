@@ -83,7 +83,6 @@ class DatabaseService {
 
   Stream<List<Avaliacao>> listaAvaliacoes(String uidProfissional){
       return avalicao
-      .where("uidCliente", isEqualTo: uid)
       .where("uidProfissional", isEqualTo: uidProfissional)
       .snapshots().map(_avalicaoFromSnapshot);
   }

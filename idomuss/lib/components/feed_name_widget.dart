@@ -18,7 +18,7 @@ class FeedNameWidget extends StatelessWidget {
         padding: const EdgeInsets.only(
             top: 24.0, left: 20.0, right: 16.0, bottom: 5.0),
         child: Text(
-          nome,
+          nome.contains(" ") ? nome.substring(0, nome.indexOf(" ")) : nome,
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

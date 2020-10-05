@@ -9,6 +9,7 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/screens/home/profissional_perfil.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -89,27 +90,36 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: paddingMedium,
                                       vertical: paddingSmall),
-                                  child: ProfissionalItem(
-                                    vips[index],
-                                    vips[index].favoritado,
-                                    true,
-                                    height,
-                                    (){
-                                if(!vips[index].favoritado)
-                                        DatabaseService(uid: user.uid).addFavoritos(vips[index].uid).then((value) {
-                                          setState(() {
-                                            vips[index].favoritado = !vips[index].favoritado;
-                                          });
-                                        });
-                                      else
-                                        DatabaseService(uid: user.uid).removerFavoritos(vips[index].uid).then((value) {
-                                          setState(() {
-                                            vips[index].favoritado = !vips[index].favoritado;
-                                          });
-                                        });
+                                  child: GestureDetector(
+                                    onTap: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PerfilPrestador(vips[index]),
+                                  ));
                               },
-                                    colorPremium: indiceColor++,
-                                    uidUser: user.uid,
+                                                                      child: ProfissionalItem(
+                                      vips[index],
+                                      vips[index].favoritado,
+                                      true,
+                                      height,
+                                      (){
+                                if(!vips[index].favoritado)
+                                          DatabaseService(uid: user.uid).addFavoritos(vips[index].uid).then((value) {
+                                            setState(() {
+                                              vips[index].favoritado = !vips[index].favoritado;
+                                            });
+                                          });
+                                        else
+                                          DatabaseService(uid: user.uid).removerFavoritos(vips[index].uid).then((value) {
+                                            setState(() {
+                                              vips[index].favoritado = !vips[index].favoritado;
+                                            });
+                                          });
+                              },
+                                      colorPremium: indiceColor++,
+                                      uidUser: user.uid,
+                                    ),
                                   ),
                                 );
                               },
@@ -122,26 +132,35 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: paddingMedium, vertical: paddingSmall),
-                            child: ProfissionalItem(
-                              profissionais[index],
-                              profissionais[index].favoritado,
-                              false,
-                              height,
-                              (){
-                                if(!profissionais[index].favoritado)
-                                        DatabaseService(uid: user.uid).addFavoritos(profissionais[index].uid).then((value) {
-                                          setState(() {
-                                            profissionais[index].favoritado = !profissionais[index].favoritado;
-                                          });
-                                        });
-                                      else
-                                        DatabaseService(uid: user.uid).removerFavoritos(profissionais[index].uid).then((value) {
-                                          setState(() {
-                                            profissionais[index].favoritado = !profissionais[index].favoritado;
-                                          });
-                                        });
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PerfilPrestador(profissionais[index]),
+                                  ));
                               },
-                              uidUser: user.uid,
+                                                          child: ProfissionalItem(
+                                profissionais[index],
+                                profissionais[index].favoritado,
+                                false,
+                                height,
+                                (){
+                                  if(!profissionais[index].favoritado)
+                                          DatabaseService(uid: user.uid).addFavoritos(profissionais[index].uid).then((value) {
+                                            setState(() {
+                                              profissionais[index].favoritado = !profissionais[index].favoritado;
+                                            });
+                                          });
+                                        else
+                                          DatabaseService(uid: user.uid).removerFavoritos(profissionais[index].uid).then((value) {
+                                            setState(() {
+                                              profissionais[index].favoritado = !profissionais[index].favoritado;
+                                            });
+                                          });
+                                },
+                                uidUser: user.uid,
+                              ),
                             ),
                           );
                         },

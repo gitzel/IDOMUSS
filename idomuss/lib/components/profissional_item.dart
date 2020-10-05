@@ -27,15 +27,7 @@ class ProfissionalItem extends StatefulWidget {
 class _State extends State<ProfissionalItem> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PerfilPrestador(widget.prof),
-            ));
-      },
-      child: Container(
+    return Container(
         height: widget.height * 0.8,
         width: MediaQuery.of(context).size.width - paddingMedium * 2,
         decoration: BoxDecoration(
@@ -114,7 +106,8 @@ class _State extends State<ProfissionalItem> {
                               ),
                             ],
                           ),
-                          Row(
+                          widget.prof.nota == -1?
+                         Text("Não avaliado") :Row(
                             children: List.generate(widget.prof.nota.round(),
                                 (index) {
                               return Icon(
@@ -174,7 +167,6 @@ class _State extends State<ProfissionalItem> {
             ),
           ],
         ),
-      ),
     );
   }
 }

@@ -79,12 +79,14 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(paddingSmall),
-                            child: Text(
-                              widget.profissional.nome,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: fontSizeSubTitle,
-                                  fontWeight: FontWeight.bold),
+                            child: Container(
+                                                          child: Text(
+                                widget.profissional.nome,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fontSizeSubTitle,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
 
@@ -119,6 +121,8 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ProfissionalInfo(
+                         widget.profissional.nota == -1?
+                         Align(alignment: Alignment.center,child: Text("Não avaliado")) :
                          Row(
                            crossAxisAlignment: CrossAxisAlignment.center,
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,

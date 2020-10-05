@@ -6,6 +6,8 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/screens/home/perfil.dart';
+import 'package:idomuss/screens/home/profissional_perfil.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -79,8 +81,17 @@ class _FeedState extends State<Feed> {
               CarouselSlider(
                 options: CarouselOptions(height: MediaQuery.of(context).size.width),
                 items: List.generate(snapshot.data.length, (index) {
-                  return FeedCard(
-                      snapshot.data[index].nome,  snapshot.data[index].curtidas,  snapshot.data[index].nomeServico,  snapshot.data[index].limite,  snapshot.data[index].vip,  snapshot.data[index].foto);
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PerfilPrestador(snapshot.data[index]),
+                                  ));
+                    },
+                      child: FeedCard(
+                        snapshot.data[index].nome,  snapshot.data[index].curtidas,  snapshot.data[index].nomeServico,  snapshot.data[index].limite,  snapshot.data[index].vip,  snapshot.data[index].foto),
+                  );
                 }),
               ),
             ],
