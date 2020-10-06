@@ -57,7 +57,7 @@ class Profissional {
         _email = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
-        //_location = GeoPoint(json['location']),
+        _location = json['location'],
         _dataNascimento = json['dataNascimento'],
         _foto = json['foto'],
         _nome = json['nome'],

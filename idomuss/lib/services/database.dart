@@ -372,12 +372,12 @@ class DatabaseService {
         await _profissionalCategoriaList(categoria: categoria);
 
     all.forEach((prof) async {
-      double distanceInMeters = await Geolocator().distanceBetween(
+      double distanceInMeters = await distanceBetween(
           endereco.location.latitude,
           endereco.location.longitude,
           prof.location.latitude,
           prof.location.longitude);
-      if (distanceInMeters < distance) profissionais.add(prof);
+      if (distanceInMeters <= distance) profissionais.add(prof);
     });
 
     return profissionais;
@@ -443,7 +443,7 @@ class DatabaseService {
     }
   }
 
-  Stream<List<Profissional>> get melhoresDaSemana async*{
+  Stream<List<Profissional>> melhoresDaSemana(double lat, double lng) async*{
       
       try{
       var now = new DateTime.now();
@@ -455,12 +455,26 @@ class DatabaseService {
               if(value.documents.isEmpty)
                 gerarMelhoresDaSemana(now);
           });
-          
-       yield*  prof
+      
+       List<Profissional> all = await prof
           .where("melhor", isEqualTo: now)
           .snapshots()
-          .map(_profissionalListFromSnapshot);
-     
+          .map(_profissionalListFromSnapshot).first;
+
+        List<Profissional> ret = new List<Profissional>();
+
+        for (Profissional profissional in all) {
+            double distanceInMeters = await distanceBetween(
+          lat,
+          lng,
+          profissional.location.latitude,
+          profissional.location.longitude);
+          if (distanceInMeters <= 10000) 
+            ret.add(profissional);
+        }
+
+        yield ret;
+
       }
       catch(e){
         print(e);

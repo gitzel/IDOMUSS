@@ -8,9 +8,6 @@ class Add_Adress extends StatefulWidget {
 
 class _Add_AdressState extends State<Add_Adress> {
   String searchAddr;
-
-  Geolocator geolocator = Geolocator();
-
   Position userLocation;
 
   @override
@@ -52,11 +49,11 @@ class _Add_AdressState extends State<Add_Adress> {
   }
 
   searchandNavigate() {
-    Geolocator().placemarkFromAddress(searchAddr).then((result) {
+    /*placemarkFromAddress(searchAddr).then((result) {
       userLocation = Position(
           longitude: result[0].position.longitude,
           latitude: result[0].position.latitude);
-    });
+    });*/
     //para o mapa
     /*
       mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
