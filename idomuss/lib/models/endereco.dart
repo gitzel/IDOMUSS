@@ -11,6 +11,14 @@ class Endereco {
     _location = value;
   }
 
+  Endereco.empty(){
+    _numero = "";
+    _rua = "";
+    _bairro = "";
+  }
+
+  Endereco.Localizacao(this._rua, this._bairro, this._numero, this._complemento);
+
   @protected
   String _filtro, _numero, _complemento, _rua, _bairro, _cidade, _uf;
 

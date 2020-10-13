@@ -47,7 +47,6 @@ dependencies:
   geocoding: ^1.0.3+1
   search_cep: ^3.0.0+2
 
-
 flutter_launcher_name:
   name: "Idomuss"
 
