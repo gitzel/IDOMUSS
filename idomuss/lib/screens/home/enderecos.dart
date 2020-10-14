@@ -9,6 +9,7 @@ import 'package:idomuss/components/titulo_cadastro.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/endereco.dart';
+import 'package:idomuss/screens/configuracoes/listaEnderecos.dart';
 import 'package:idomuss/screens/home/busca.dart';
 import 'package:idomuss/screens/home/mapaLocalizacao.dart';
 import 'package:idomuss/services/database.dart';
@@ -56,23 +57,12 @@ class _EnderecosState extends State<Enderecos> {
                                     MaterialPageRoute(
                                       builder: (context) => MapaLocalizacao(),
                                     ));
-                        
-                        _getNumero(context, result[0], result[1]);
+                                    
+                        if(result != null)
+                          _getNumero(context, result[0], result[1]);
                       },
-                      decoration: InputDecoration(
-                        hintText: "Digite seu endereço e número",
-                        prefixIcon: Icon(Icons.search),
-                        fillColor: ColorSys.lightGray,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              width: 0, 
-                              style: BorderStyle.none,
-                          ),
-                                               
-                      ),
-                    ),
+                      decoration: textFilled.copyWith( hintText: "Digite seu endereço e número",
+                        prefixIcon: Icon(Icons.search),),
                   ),
                 ),
                 FutureBuilder<Position>(
@@ -128,7 +118,7 @@ class _EnderecosState extends State<Enderecos> {
                   ),
                   )
                 ),  
-                ListaEnderecos(snapshot.data)
+                ListaEnderecos(snapshot.data, user.uid)
               ],
             ),
           );
@@ -229,68 +219,3 @@ class _EnderecosState extends State<Enderecos> {
 
 }
 
-class ListaEnderecos extends StatelessWidget {
-  
-  List<Endereco> list;
-
-  ListaEnderecos(this.list);
-
-  @override
-  Widget build(BuildContext context) {
-    if(list == null || list.isEmpty)
-      return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //TODO add img
-            Padding(
-              padding: const EdgeInsets.all(paddingSmall),
-              child: Text("Infelizmente você ainda não adicionou nenhum endereço!", textAlign: TextAlign.center,),
-            ),
-            RaisedButton(
-                onPressed: (){
-
-                },
-                child: Text("Você pode adicioná-los clicando aqui!"),
-              ),
-    
-          ],
-        ),
-      );
-    
-    return  Container(
-       height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-          itemCount: list.length,
-          shrinkWrap: true,
-          itemBuilder: (ctx, index){
-            return Padding(
-                      padding: const EdgeInsets.all(paddingSmall),
-                      child: RaisedButton(
-                        color: ColorSys.lightGray,
-                        onPressed: (){
-                          
-                        },
-                        padding: EdgeInsets.all(paddingSmall),
-                        child: 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                             Icon(Icons.home, color: ColorSys.primary,),
-                               Column(children: [
-                                  Text(list[index].filtro, style: TextStyle(fontWeight: FontWeight.bold),),
-                                  Text(list[index].rua + ", " + list[index].bairro)
-                                ],
-                              )
-                            ],
-                          )
-                      ),
-            );
-          },
-        ),
-
-    );
-  }
-}

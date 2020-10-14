@@ -61,6 +61,17 @@ class DatabaseService {
     });
   }
 
+  Future removeUserAddress(GeoPoint location) async {
+    return await enderecos
+                .where("location", isEqualTo: location)
+                .where("uidCliente", isEqualTo: uid)
+                .getDocuments().then((snapshot){
+                  snapshot.documents.forEach((element) {
+                    enderecos.document(element.documentID).delete();
+                  });
+                });
+  }
+
   Future addAvaliacao(
       Profissional profissional, String texto, double nota) async {
     String uidProfissional = profissional.uid;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
 
 const background = BoxDecoration(
   image: DecorationImage(
@@ -31,3 +32,16 @@ final BoxDecoration box = BoxDecoration(
                                       ),
                                     ],
                           );
+
+final InputDecoration textFilled = InputDecoration(
+                        fillColor: ColorSys.lightGray,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              width: 0, 
+                              style: BorderStyle.none,
+                          ),
+                                               
+                      ),
+                    );

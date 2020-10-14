@@ -11,6 +11,7 @@ import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/screens/configuracoes/configuracoes.dart';
+import 'package:idomuss/screens/configuracoes/menuEnderecos.dart';
 import 'package:idomuss/screens/home/busca.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/services/database.dart';
@@ -137,7 +138,14 @@ class _PerfilState extends State<Perfil> {
                           child: Container(
                               width: double.infinity,
                               child: ButtonProfile(
-                                  "Endereços", Icons.edit_location, () {})),
+                                  "Endereços", Icons.edit_location, () {
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MenuEnderecos(),
+                                    ));
+
+                                  })),
                         ),
                       ),
                       Expanded(

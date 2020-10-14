@@ -13,7 +13,7 @@ class TextFieldOutline extends StatelessWidget {
   List<TextInputFormatter> inputFormatter;
   TextCapitalization textCapitalization;
   int maxLine;
-
+  TextEditingController controller;
   TextFieldOutline(
       {this.label,
       this.keyboardType,
@@ -25,12 +25,14 @@ class TextFieldOutline extends StatelessWidget {
       this.hint,
       this.inputFormatter,
       this.textCapitalization = TextCapitalization.none,
-      this.maxLine = 1});
+      this.maxLine = 1,
+      this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
+      controller: controller,
       obscureText: obscureText == null ? false : obscureText,
       decoration: InputDecoration(
           prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),

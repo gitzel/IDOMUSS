@@ -88,9 +88,10 @@ class _FeedState extends State<Feed> {
                                         builder: (context) => Enderecos(LatLng(pos.latitude, pos.longitude)),
                                       ));
                                       setState(() {
-                                        if(result != null)
+                                        if(result != null){
                                           pos = result[0];
                                           numero = result[1];
+                                        }
                                       });
                                       
                                   },
