@@ -10,7 +10,6 @@ import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
 class AdicionarComplemento extends StatefulWidget {
-
   Endereco novo;
 
   AdicionarComplemento(this.novo);
@@ -20,9 +19,8 @@ class AdicionarComplemento extends StatefulWidget {
 }
 
 class _AdicionarComplementoState extends State<AdicionarComplemento> {
-
   String numero, complemento, filtro;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,19 +33,21 @@ class _AdicionarComplementoState extends State<AdicionarComplemento> {
     final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(elevation: 0,),
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
-              child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(paddingSmall),
-              child: Text("Digite o número da residência",
+              child: Text(
+                "Digite o número da residência",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSizeRegular,
-                  color: ColorSys.black
-                ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSizeRegular,
+                    color: ColorSys.black),
               ),
             ),
             Padding(
@@ -56,17 +56,19 @@ class _AdicionarComplementoState extends State<AdicionarComplemento> {
                 hint: "Ex. 999",
                 label: "Número",
                 keyboardType: TextInputType.datetime,
-                onChanged: (value) {setState(() => numero = value);},
+                onChanged: (value) {
+                  setState(() => numero = value);
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(paddingSmall),
-              child: Text("Caso tenha algum complemento, por favor, informe!",
+              child: Text(
+                "Caso tenha algum complemento, por favor, informe!",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSizeRegular,
-                  color: ColorSys.black
-                ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSizeRegular,
+                    color: ColorSys.black),
               ),
             ),
             Padding(
@@ -74,17 +76,19 @@ class _AdicionarComplementoState extends State<AdicionarComplemento> {
               child: TextFieldOutline(
                 hint: "Ex. Torre 9 Ap 9",
                 label: "Complemento",
-                  onChanged: (value) {setState(() => complemento = value);},
+                onChanged: (value) {
+                  setState(() => complemento = value);
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(paddingSmall),
-              child: Text("Por último, dê um apelido!",
+              child: Text(
+                "Por último, dê um apelido!",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSizeRegular,
-                  color: ColorSys.black
-                ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSizeRegular,
+                    color: ColorSys.black),
               ),
             ),
             Padding(
@@ -92,30 +96,35 @@ class _AdicionarComplementoState extends State<AdicionarComplemento> {
               child: TextFieldOutline(
                 hint: "Ex. Minha casa",
                 label: "Apelido",
-                  onChanged: (value) {setState(() => filtro = value);},
+                onChanged: (value) {
+                  setState(() => filtro = value);
+                },
               ),
             ),
-            
           ],
         ),
       ),
       bottomNavigationBar: FlatButton(
-        disabledColor: ColorSys.secundarygray,
-        padding: EdgeInsets.all(paddingLarge),
-        child: Text(
-          "Salvar",
-          style: TextStyle(color: Colors.white),
-        ),
-        color: ColorSys.primary,
-        onPressed: numero.isEmpty  || filtro.isEmpty ? null:  () async{
-          widget.novo.complemento = complemento;
-          widget.novo.numero = numero;
-          widget.novo.filtro = filtro;
-          List<Location> locations = await locationFromAddress("${widget.novo.rua}, ${widget.novo.bairro}, ${widget.novo.cidade}, ${widget.novo.numero}");
-          widget.novo.location = GeoPoint(locations.first.latitude, locations.first.longitude);
-          DatabaseService(uid:user.uid).addUserAddress(widget.novo);
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }),
+          disabledColor: ColorSys.secundarygray,
+          padding: EdgeInsets.all(paddingLarge),
+          child: Text(
+            "Salvar",
+            style: TextStyle(color: Colors.white),
+          ),
+          color: ColorSys.primary,
+          onPressed: numero.isEmpty || filtro.isEmpty
+              ? null
+              : () async {
+                  widget.novo.complemento = complemento;
+                  widget.novo.numero = numero;
+                  widget.novo.filtro = filtro;
+                  List<Location> locations = await locationFromAddress(
+                      "${widget.novo.rua}, ${widget.novo.bairro}, ${widget.novo.cidade}, ${widget.novo.numero}");
+                  widget.novo.location = GeoPoint(
+                      locations.first.latitude, locations.first.longitude);
+                  DatabaseService(uid: user.uid).addUserAddress(widget.novo);
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                }),
     );
   }
 }

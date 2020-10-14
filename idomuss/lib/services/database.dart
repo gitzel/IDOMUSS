@@ -63,13 +63,14 @@ class DatabaseService {
 
   Future removeUserAddress(GeoPoint location) async {
     return await enderecos
-                .where("location", isEqualTo: location)
-                .where("uidCliente", isEqualTo: uid)
-                .getDocuments().then((snapshot){
-                  snapshot.documents.forEach((element) {
-                    enderecos.document(element.documentID).delete();
-                  });
-                });
+        .where("location", isEqualTo: location)
+        .where("uidCliente", isEqualTo: uid)
+        .getDocuments()
+        .then((snapshot) {
+      snapshot.documents.forEach((element) {
+        enderecos.document(element.documentID).delete();
+      });
+    });
   }
 
   Future addAvaliacao(
@@ -92,10 +93,11 @@ class DatabaseService {
     });
   }
 
-  Stream<List<Avaliacao>> listaAvaliacoes(String uidProfissional){
-      return avalicao
-      .where("uidProfissional", isEqualTo: uidProfissional)
-      .snapshots().map(_avalicaoFromSnapshot);
+  Stream<List<Avaliacao>> listaAvaliacoes(String uidProfissional) {
+    return avalicao
+        .where("uidProfissional", isEqualTo: uidProfissional)
+        .snapshots()
+        .map(_avalicaoFromSnapshot);
   }
 
   List<Avaliacao> _avalicaoFromSnapshot(QuerySnapshot snapshot) {
@@ -105,31 +107,27 @@ class DatabaseService {
   }
 
   Future removerFavoritos(String uidProfissional) async {
-
-    int c = int.parse(
-        (await prof.document(uidProfissional).snapshots().first)
-            .data["curtidas"]
-            .toString());
+    int c = int.parse((await prof.document(uidProfissional).snapshots().first)
+        .data["curtidas"]
+        .toString());
 
     await prof.document(uidProfissional).updateData({"curtidas": --c});
 
     return await favorite
-                .where("uidProfissional", isEqualTo: uidProfissional)
-                .where("uidCliente", isEqualTo: uid)
-                .getDocuments().then((snapshot){
-                  snapshot.documents.forEach((element) {
-                    favorite.document(element.documentID).delete();
-                  });
-                });
+        .where("uidProfissional", isEqualTo: uidProfissional)
+        .where("uidCliente", isEqualTo: uid)
+        .getDocuments()
+        .then((snapshot) {
+      snapshot.documents.forEach((element) {
+        favorite.document(element.documentID).delete();
+      });
+    });
   }
 
-
   Future addFavoritos(String uidProfissional) async {
-
-    int c = int.parse(
-        (await prof.document(uidProfissional).snapshots().first)
-            .data["curtidas"]
-            .toString());
+    int c = int.parse((await prof.document(uidProfissional).snapshots().first)
+        .data["curtidas"]
+        .toString());
 
     await prof.document(uidProfissional).updateData({"curtidas": ++c});
 
@@ -151,15 +149,14 @@ class DatabaseService {
     });
   }
 
-  Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime hora){
+  Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime hora) {
     return servicosContratados
-    .where("uidProfissional", isEqualTo: uidProf)
-    .snapshots()
-    .map(_HorariosFromSnapshot);
+        .where("uidProfissional", isEqualTo: uidProf)
+        .snapshots()
+        .map(_HorariosFromSnapshot);
   }
 
-  List<DateTime> _HorariosFromSnapshot(QuerySnapshot snapshot){
-  
+  List<DateTime> _HorariosFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       Timestamp time = doc.data["data"];
       return DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
@@ -181,15 +178,16 @@ class DatabaseService {
   }
 
   Stream<List<Servico>> ListaServicos(String condicao) {
-    if(condicao.isEmpty)
+    if (condicao.isEmpty)
       return servicos.orderBy("nome").snapshots().map(_servicosFromSnapshot);
-    
+
     condicao = condicao[0].toUpperCase() + condicao.substring(1).toLowerCase();
     return servicos
-    .orderBy('nome')
-    .startAt([condicao])
-    .endAt([condicao + "\uf8ff"])
-    .snapshots().map(_servicosFromSnapshot);
+        .orderBy('nome')
+        .startAt([condicao])
+        .endAt([condicao + "\uf8ff"])
+        .snapshots()
+        .map(_servicosFromSnapshot);
   }
 
   List<Servico> _servicosFromSnapshot(QuerySnapshot snapshot) {
@@ -226,17 +224,21 @@ class DatabaseService {
     return servicos;
   }
 
-  Stream<List<Profissional>> get profissionaisPreferidos async*{
-
+  Stream<List<Profissional>> get profissionaisPreferidos async* {
     List<String> uidProfFav = await favorite
-            .where("uidCliente", isEqualTo: uid)
-            .snapshots()
-            .map(_favoritosFromSnapshot).first;
+        .where("uidCliente", isEqualTo: uid)
+        .snapshots()
+        .map(_favoritosFromSnapshot)
+        .first;
 
     List<Profissional> ret = List<Profissional>();
 
-   for(var uidProf in uidProfFav) {
-      Profissional p = await prof.document(uidProf).snapshots().map(_profissionalFromSnapshot).first;
+    for (var uidProf in uidProfFav) {
+      Profissional p = await prof
+          .document(uidProf)
+          .snapshots()
+          .map(_profissionalFromSnapshot)
+          .first;
       ret.add(p);
     }
 
@@ -274,6 +276,7 @@ class DatabaseService {
       return Endereco.fromJson(doc.data);
     }).toList();
   }
+
   Future<Cliente> getCliente() async {
     Cliente cliente;
 
@@ -305,16 +308,15 @@ class DatabaseService {
     return prof.orderBy("nota").snapshots().map(_profissionalListFromSnapshot);
   }
 
-
-
-
   Stream<List<Profissional>> get profissionais {
     return prof.snapshots().map(_profissionalListFromSnapshot);
   }
 
   Stream<List<Profissional>> profissionaisCategoria(String categoria) async* {
-
-    List<String> profFav = await favorite.where("uidCliente", isEqualTo: uid).snapshots().map((querySnapshot){
+    List<String> profFav = await favorite
+        .where("uidCliente", isEqualTo: uid)
+        .snapshots()
+        .map((querySnapshot) {
       return querySnapshot.documents.map((doc) {
         return doc.data['uidProfissional'].toString();
       }).toList();
@@ -324,14 +326,14 @@ class DatabaseService {
         .where("servico", isEqualTo: categoria)
         .orderBy('nota')
         .snapshots()
-        .map((querySnapshot){
-          return querySnapshot.documents.map((doc){
-              Profissional ret = Profissional.fromJson(doc.data);
-              ret.uid = doc.documentID;
-              ret.favoritado = profFav.contains(doc.documentID);
-              return ret; 
-          }).toList();
-        });
+        .map((querySnapshot) {
+      return querySnapshot.documents.map((doc) {
+        Profissional ret = Profissional.fromJson(doc.data);
+        ret.uid = doc.documentID;
+        ret.favoritado = profFav.contains(doc.documentID);
+        return ret;
+      }).toList();
+    });
   }
 
   List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
@@ -414,7 +416,6 @@ class DatabaseService {
         .getDownloadURL();
   }
 
-
   List<String> _nomeServicoFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return doc.data['nome'].toString();
@@ -422,73 +423,67 @@ class DatabaseService {
   }
 
   void gerarMelhoresDaSemana(DateTime monday) async {
-    
     List<String> listaServicos = await servicos
         .orderBy("nome")
         .snapshots()
-        .map(_nomeServicoFromSnapshot).first;
+        .map(_nomeServicoFromSnapshot)
+        .first;
 
     List<Profissional> total = await prof
         .orderBy('nota')
         .snapshots()
-        .map(_profissionalListFromSnapshot).first;
+        .map(_profissionalListFromSnapshot)
+        .first;
 
-    try{
-
-    
-    listaServicos.forEach((s) {
-        List<Profissional> possivel = total.where((prof) => prof.nomeServico == s).toList();
+    try {
+      listaServicos.forEach((s) {
+        List<Profissional> possivel =
+            total.where((prof) => prof.nomeServico == s).toList();
         int c = 0, indice = 0;
 
-        while(c < 5 && indice < possivel.length){
-          if(monday.difference(possivel[indice].melhor) >= Duration(days: 14)){
+        while (c < 5 && indice < possivel.length) {
+          if (monday.difference(possivel[indice].melhor) >=
+              Duration(days: 14)) {
             c++;
             prof.document(possivel[indice].uid).updateData({"melhor": monday});
           }
-         indice++;
+          indice++;
         }
-    });
-    }
-    catch(e){
+      });
+    } catch (e) {
       print(e);
     }
   }
 
-  Stream<List<Profissional>> melhoresDaSemana(double lat, double lng) async*{
-      
-      try{
+  Stream<List<Profissional>> melhoresDaSemana(double lat, double lng) async* {
+    try {
       var now = new DateTime.now();
-      now = now.subtract(Duration(days: now.weekday-1));
+      now = now.subtract(Duration(days: now.weekday - 1));
       now = DateTime(now.year, now.month, now.day);
       await prof
           .where("melhor", isEqualTo: Timestamp.fromDate(now))
-          .getDocuments().then((value) {
-              if(value.documents.isEmpty)
-                gerarMelhoresDaSemana(now);
-          });
-      
-       List<Profissional> all = await prof
+          .getDocuments()
+          .then((value) {
+        if (value.documents.isEmpty) gerarMelhoresDaSemana(now);
+      });
+
+      List<Profissional> all = await prof
           .where("melhor", isEqualTo: now)
           .snapshots()
-          .map(_profissionalListFromSnapshot).first;
+          .map(_profissionalListFromSnapshot)
+          .first;
 
-        List<Profissional> ret = new List<Profissional>();
+      List<Profissional> ret = new List<Profissional>();
 
-        for (Profissional profissional in all) {
-            double distanceInMeters = await distanceBetween(
-          lat,
-          lng,
-          profissional.location.latitude,
-          profissional.location.longitude);
-          if (distanceInMeters <= 10000) 
-            ret.add(profissional);
-        }
-
-        yield ret;
-
+      for (Profissional profissional in all) {
+        double distanceInMeters = await distanceBetween(lat, lng,
+            profissional.location.latitude, profissional.location.longitude);
+        if (distanceInMeters <= 10000) ret.add(profissional);
       }
-      catch(e){
-        print(e);
-      }
+
+      yield ret;
+    } catch (e) {
+      print(e);
+    }
   }
 }

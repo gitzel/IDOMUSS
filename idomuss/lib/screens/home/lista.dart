@@ -14,7 +14,6 @@ import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
 class ListaPrestadores extends StatefulWidget {
-
   String nomeServico;
 
   ListaPrestadores(this.nomeServico);
@@ -24,7 +23,6 @@ class ListaPrestadores extends StatefulWidget {
 }
 
 class _ListaPrestadoresState extends State<ListaPrestadores> {
-  
   static double height;
 
   @override
@@ -46,130 +44,147 @@ class _ListaPrestadoresState extends State<ListaPrestadores> {
               borderRadius: BorderRadius.vertical(top: Radius.circular(75.0)),
             ),
             child: StreamBuilder<List<Profissional>>(
-              stream: DatabaseService(uid:user.uid).profissionaisCategoria(widget.nomeServico),
-              builder: (context, snapshot) {
+                stream: DatabaseService(uid: user.uid)
+                    .profissionaisCategoria(widget.nomeServico),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return LoadPage();
 
-                if(!snapshot.hasData) 
-                  return LoadPage();
-                
-                List<Profissional> vips = new List<Profissional>();
-                List<Profissional> profissionais = snapshot.data;
-                if(profissionais.isNotEmpty)
-                profissionais.removeWhere((element) {
-                  if (element.vip) vips.add(element);
-                  return element.vip;
-                }); 
+                  List<Profissional> vips = new List<Profissional>();
+                  List<Profissional> profissionais = snapshot.data;
+                  if (profissionais.isNotEmpty)
+                    profissionais.removeWhere((element) {
+                      if (element.vip) vips.add(element);
+                      return element.vip;
+                    });
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 75.0,
-                    ),
-                    vips.length <= 0
-                        ? SizedBox.shrink()
-                        : Padding(
-                            padding: const EdgeInsets.only(left: paddingSmall),
-                            child: Text(
-                              "Premium",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSizeRegular),
-                            ),
-                          ),
-                    vips.length <= 0
-                        ? SizedBox.shrink()
-                        : Container(
-                            height: height,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: vips.length,
-                              itemBuilder: (context, index) {
-                                if (indiceColor > 5) indiceColor = 0;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: paddingMedium,
-                                      vertical: paddingSmall),
-                                  child: GestureDetector(
-                                    onTap: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PerfilPrestador(vips[index]),
-                                  ));
-                              },
-                                                                      child: ProfissionalItem(
-                                      vips[index],
-                                      vips[index].favoritado,
-                                      true,
-                                      height,
-                                      (){
-                                if(!vips[index].favoritado)
-                                          DatabaseService(uid: user.uid).addFavoritos(vips[index].uid).then((value) {
-                                            setState(() {
-                                              vips[index].favoritado = !vips[index].favoritado;
-                                            });
-                                          });
-                                        else
-                                          DatabaseService(uid: user.uid).removerFavoritos(vips[index].uid).then((value) {
-                                            setState(() {
-                                              vips[index].favoritado = !vips[index].favoritado;
-                                            });
-                                          });
-                              },
-                                      colorPremium: indiceColor++,
-                                      uidUser: user.uid,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: profissionais.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: paddingMedium, vertical: paddingSmall),
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PerfilPrestador(profissionais[index]),
-                                  ));
-                              },
-                                                          child: ProfissionalItem(
-                                profissionais[index],
-                                profissionais[index].favoritado,
-                                false,
-                                height,
-                                (){
-                                  if(!profissionais[index].favoritado)
-                                          DatabaseService(uid: user.uid).addFavoritos(profissionais[index].uid).then((value) {
-                                            setState(() {
-                                              profissionais[index].favoritado = !profissionais[index].favoritado;
-                                            });
-                                          });
-                                        else
-                                          DatabaseService(uid: user.uid).removerFavoritos(profissionais[index].uid).then((value) {
-                                            setState(() {
-                                              profissionais[index].favoritado = !profissionais[index].favoritado;
-                                            });
-                                          });
-                                },
-                                uidUser: user.uid,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 75.0,
+                      ),
+                      vips.length <= 0
+                          ? SizedBox.shrink()
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.only(left: paddingSmall),
+                              child: Text(
+                                "Premium",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSizeRegular),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              }
-            ),
+                      vips.length <= 0
+                          ? SizedBox.shrink()
+                          : Container(
+                              height: height,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: vips.length,
+                                itemBuilder: (context, index) {
+                                  if (indiceColor > 5) indiceColor = 0;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: paddingMedium,
+                                        vertical: paddingSmall),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PerfilPrestador(vips[index]),
+                                            ));
+                                      },
+                                      child: ProfissionalItem(
+                                        vips[index],
+                                        vips[index].favoritado,
+                                        true,
+                                        height,
+                                        () {
+                                          if (!vips[index].favoritado)
+                                            DatabaseService(uid: user.uid)
+                                                .addFavoritos(vips[index].uid)
+                                                .then((value) {
+                                              setState(() {
+                                                vips[index].favoritado =
+                                                    !vips[index].favoritado;
+                                              });
+                                            });
+                                          else
+                                            DatabaseService(uid: user.uid)
+                                                .removerFavoritos(
+                                                    vips[index].uid)
+                                                .then((value) {
+                                              setState(() {
+                                                vips[index].favoritado =
+                                                    !vips[index].favoritado;
+                                              });
+                                            });
+                                        },
+                                        colorPremium: indiceColor++,
+                                        uidUser: user.uid,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: profissionais.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingMedium,
+                                  vertical: paddingSmall),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PerfilPrestador(
+                                            profissionais[index]),
+                                      ));
+                                },
+                                child: ProfissionalItem(
+                                  profissionais[index],
+                                  profissionais[index].favoritado,
+                                  false,
+                                  height,
+                                  () {
+                                    if (!profissionais[index].favoritado)
+                                      DatabaseService(uid: user.uid)
+                                          .addFavoritos(
+                                              profissionais[index].uid)
+                                          .then((value) {
+                                        setState(() {
+                                          profissionais[index].favoritado =
+                                              !profissionais[index].favoritado;
+                                        });
+                                      });
+                                    else
+                                      DatabaseService(uid: user.uid)
+                                          .removerFavoritos(
+                                              profissionais[index].uid)
+                                          .then((value) {
+                                        setState(() {
+                                          profissionais[index].favoritado =
+                                              !profissionais[index].favoritado;
+                                        });
+                                      });
+                                  },
+                                  uidUser: user.uid,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                }),
           ),
         ));
   }

@@ -7,7 +7,8 @@ class Avaliacao {
   @protected
   double _nota;
 
-  Avaliacao(this._uidCliente, this._uidProfissional, this._texto, this._nota, this._data);
+  Avaliacao(this._uidCliente, this._uidProfissional, this._texto, this._nota,
+      this._data);
 
   get texto => _texto;
 

@@ -25,12 +25,10 @@ class FeedCard extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           child: Stack(
             children: <Widget>[
-              Image.network(
-                img,
-                height:MediaQuery.of(context).size.height * 0.35,
-                width:MediaQuery.of(context).size.width,
-                fit: BoxFit.cover
-              ),
+              Image.network(img,
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover),
               Positioned(
                 left: 0,
                 right: 0,

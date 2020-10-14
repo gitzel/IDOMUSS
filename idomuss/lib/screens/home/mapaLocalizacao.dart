@@ -9,15 +9,13 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:search_cep/search_cep.dart';
 
 class MapaLocalizacao extends StatefulWidget {
-  
   @override
   _MapaLocalizacaoState createState() => _MapaLocalizacaoState();
 }
 
 class _MapaLocalizacaoState extends State<MapaLocalizacao> {
-
   Set<Marker> markers = new Set<Marker>();
-  
+
   String rua, bairro, numero;
   LatLng latLng;
 
@@ -26,44 +24,47 @@ class _MapaLocalizacaoState extends State<MapaLocalizacao> {
     super.initState();
     rua = bairro = numero = "";
   }
-  void getAdress(pos) async{
-    var placemarkers = await placemarkFromCoordinates(pos.latitude, pos.longitude);
+
+  void getAdress(pos) async {
+    var placemarkers =
+        await placemarkFromCoordinates(pos.latitude, pos.longitude);
     setState(() {
-        rua = placemarkers.first.street;
-        bairro = placemarkers.first.subLocality;
-        numero = placemarkers.first.name;
+      rua = placemarkers.first.street;
+      bairro = placemarkers.first.subLocality;
+      numero = placemarkers.first.name;
     });
-   
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(elevation: 0,),
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: FutureBuilder<Position>(
-        future: getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
-        builder: (context, pos) {
-          if(!pos.hasData)
-            return LoadPage();
+          future: getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
+          builder: (context, pos) {
+            if (!pos.hasData) return LoadPage();
 
-          return FutureBuilder<List<Placemark>>(
-            future: placemarkFromCoordinates(pos.data.latitude,pos.data.longitude),
-            builder: (context, placemarks) {
+            return FutureBuilder<List<Placemark>>(
+                future: placemarkFromCoordinates(
+                    pos.data.latitude, pos.data.longitude),
+                builder: (context, placemarks) {
+                  if (!placemarks.hasData) return LoadPage();
 
-              if(!placemarks.hasData)
-                return LoadPage();
+                  if (rua.isEmpty) {
+                    rua = placemarks.data[0].street;
+                    bairro = placemarks.data[0].subLocality;
+                  }
 
-              if(rua.isEmpty){
-                rua = placemarks.data[0].street;
-                bairro = placemarks.data[0].subLocality;
-              }
-                
-
-              return Column(children: [
-                 Expanded(
+                  return Column(
+                    children: [
+                      Expanded(
                         flex: -1,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal:paddingSmall, vertical:paddingTiny),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: paddingSmall, vertical: paddingTiny),
                           child: Container(
                             width: double.infinity,
                             decoration: box,
@@ -71,7 +72,10 @@ class _MapaLocalizacaoState extends State<MapaLocalizacao> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.location_on, color: ColorSys.primary,),
+                                  child: Icon(
+                                    Icons.location_on,
+                                    color: ColorSys.primary,
+                                  ),
                                 ),
                                 Flexible(child: Text(rua + " - " + bairro))
                               ],
@@ -79,44 +83,44 @@ class _MapaLocalizacaoState extends State<MapaLocalizacao> {
                           ),
                         ),
                       ),
-                Expanded(
-                  child: GoogleMap(
-                            myLocationEnabled: true,
-                            tiltGesturesEnabled: false,
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(pos.data.latitude, pos.data.longitude),
-                              zoom: 15.0
-                            ),
-                            onTap: (LatLng pos){
-                              final Marker marker = Marker(
-                                markerId: MarkerId("position"),
-                                position: pos,
-                              );
-                               setState(() {
-                                markers.add(marker);
-                                latLng = LatLng(pos.latitude, pos.longitude);
-                                getAdress(pos);
-                              });
+                      Expanded(
+                        child: GoogleMap(
+                          myLocationEnabled: true,
+                          tiltGesturesEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                              target:
+                                  LatLng(pos.data.latitude, pos.data.longitude),
+                              zoom: 15.0),
+                          onTap: (LatLng pos) {
+                            final Marker marker = Marker(
+                              markerId: MarkerId("position"),
+                              position: pos,
+                            );
+                            setState(() {
+                              markers.add(marker);
+                              latLng = LatLng(pos.latitude, pos.longitude);
+                              getAdress(pos);
+                            });
+                          },
+                          markers: markers,
+                        ),
+                      ),
+                      Expanded(
+                        flex: -1,
+                        child: Padding(
+                          padding: EdgeInsets.all(paddingSmall),
+                          child: RaisedButton(
+                            child: Text("Salvar"),
+                            onPressed: () {
+                              Navigator.pop(context, [latLng, numero]);
                             },
-                            markers: markers,
-                            
                           ),
-                ),
-                Expanded(
-                  flex: -1,
-                  child: Padding(padding: EdgeInsets.all(paddingSmall),
-                  child: RaisedButton(
-                    child: Text("Salvar"),
-                    onPressed: (){
-                      Navigator.pop(context, [latLng, numero]);
-                    },
-                  ),),
-                )
-              ],);
-            }
-          );
-        }
-      ),
+                        ),
+                      )
+                    ],
+                  );
+                });
+          }),
     );
   }
 }

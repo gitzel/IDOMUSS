@@ -33,14 +33,14 @@ class Configuracoes extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(paddingMedium),
             child: Container(
-                width: double.infinity,
-                child: RaisedButton(
-                  child: Text("Sair"),
-                  onPressed: (){
-                    AuthService().signOut();
-                    Navigator.pop(context);
-                  },
-                ),
+              width: double.infinity,
+              child: RaisedButton(
+                child: Text("Sair"),
+                onPressed: () {
+                  AuthService().signOut();
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ),
         ],

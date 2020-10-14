@@ -116,14 +116,17 @@ class _PerfilState extends State<Perfil> {
                     children: [
                       Expanded(
                         flex: 0,
-                                              child: Padding(
+                        child: Padding(
                           padding: const EdgeInsets.all(paddingMedium),
-                          child: Text(cliente.descricao, textAlign: TextAlign.center,),
+                          child: Text(
+                            cliente.descricao,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                       Expanded(
                         flex: 1,
-                                              child: Padding(
+                        child: Padding(
                           padding: const EdgeInsets.all(paddingMedium),
                           child: Container(
                               width: double.infinity,
@@ -133,24 +136,23 @@ class _PerfilState extends State<Perfil> {
                       ),
                       Expanded(
                         flex: 1,
-                                              child: Padding(
+                        child: Padding(
                           padding: const EdgeInsets.all(paddingMedium),
                           child: Container(
                               width: double.infinity,
                               child: ButtonProfile(
                                   "Endereços", Icons.edit_location, () {
-                                    Navigator.push(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => MenuEnderecos(),
                                     ));
-
-                                  })),
+                              })),
                         ),
                       ),
                       Expanded(
                         flex: 1,
-                                              child: Padding(
+                        child: Padding(
                           padding: const EdgeInsets.all(paddingMedium),
                           child: Container(
                               width: double.infinity,

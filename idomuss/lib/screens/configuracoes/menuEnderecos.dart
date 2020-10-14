@@ -15,32 +15,31 @@ class MenuEnderecos extends StatefulWidget {
 class _MenuEnderecosState extends State<MenuEnderecos> {
   @override
   Widget build(BuildContext context) {
-     final user = Provider.of<FirebaseUser>(context);
+    final user = Provider.of<FirebaseUser>(context);
     return Scaffold(
-      appBar: AppBar(elevation: 0,),
-      body: StreamBuilder<List<Endereco>>(
-        stream: DatabaseService(uid: user.uid).enderecosFromCliente,
-        builder: (context, snapshot) {
-          return SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(paddingSmall),
-                  child: Text("Endereços salvos",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18
-                  ),
-                  )
-                ),  
-                ListaEnderecos(snapshot.data, user.uid)
-              ],
-            ),
-          );
-        }
+      appBar: AppBar(
+        elevation: 0,
       ),
+      body: StreamBuilder<List<Endereco>>(
+          stream: DatabaseService(uid: user.uid).enderecosFromCliente,
+          builder: (context, snapshot) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(paddingSmall),
+                      child: Text(
+                        "Endereços salvos",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      )),
+                  ListaEnderecos(snapshot.data, user.uid)
+                ],
+              ),
+            );
+          }),
     );
   }
 }

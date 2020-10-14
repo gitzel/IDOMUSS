@@ -29,10 +29,10 @@ class Profissional {
       _nomeServico;
 
   String get uid => _uid;
-  
+
   @protected
   DateTime _melhor;
-  
+
   @protected
   int _querGenero, _curtidas, _servicosPrestados;
 
@@ -53,7 +53,7 @@ class Profissional {
 
   Profissional.fromJson(Map<String, dynamic> json)
       : _rg = json['rg'],
-      _curtidas = int.parse(json['curtidas'].toString()),
+        _curtidas = int.parse(json['curtidas'].toString()),
         _email = json['email'],
         _cpf = json['cpf'],
         _cnpj = json['cnpj'],
@@ -69,7 +69,8 @@ class Profissional {
         _nota = double.parse(json['nota'].toString()),
         _nomeServico = json['servico'],
         _limite = [json['limite'][0], json['limite'][1]],
-        _melhor = DateTime.fromMillisecondsSinceEpoch(json['melhor'].millisecondsSinceEpoch),
+        _melhor = DateTime.fromMillisecondsSinceEpoch(
+            json['melhor'].millisecondsSinceEpoch),
         _servicosPrestados = int.parse(json['servicosPrestados'].toString());
 
   String get rg => _rg;
@@ -165,14 +166,15 @@ class Profissional {
   set limite(value) {
     _limite = value;
   }
-  
+
   get melhor => _melhor;
 
   set melhor(dynamic value) {
-    if(value.runtimeType == DateTime)
+    if (value.runtimeType == DateTime)
       _melhor = value;
-    else if(value.runtimeType == Timestamp)
-      _melhor = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
+    else if (value.runtimeType == Timestamp)
+      _melhor =
+          DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
   }
 
   get servicosPrestados => _servicosPrestados;
@@ -180,5 +182,4 @@ class Profissional {
   set servicosPrestados(value) {
     _servicosPrestados = value;
   }
-  
 }

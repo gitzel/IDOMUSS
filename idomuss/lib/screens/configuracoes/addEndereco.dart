@@ -14,7 +14,6 @@ class AdicionarEndereco extends StatefulWidget {
 }
 
 class _AdicionarEnderecoState extends State<AdicionarEndereco> {
-  
   Endereco novo;
   var maskCEP = new MaskTextInputFormatter(
       mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
@@ -33,19 +32,21 @@ class _AdicionarEnderecoState extends State<AdicionarEndereco> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(elevation: 0,),
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
-              child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(paddingSmall),
-              child: Text("Para facilitar, digite apenas o seu CEP",
+              child: Text(
+                "Para facilitar, digite apenas o seu CEP",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: fontSizeRegular,
-                  color: ColorSys.black
-                ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: fontSizeRegular,
+                    color: ColorSys.black),
               ),
             ),
             Padding(
@@ -54,16 +55,20 @@ class _AdicionarEnderecoState extends State<AdicionarEndereco> {
                 label: "CEP",
                 keyboardType: TextInputType.datetime,
                 inputFormatter: [maskCEP],
-                onChanged: (value) {setState(() => cep = value);},
+                onChanged: (value) {
+                  setState(() => cep = value);
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(paddingSmall),
               child: TextFormField(
                 controller: enderecoController,
-                decoration: textFilled.copyWith(hintText: "Endereço",
-                          prefixIcon: Icon(Icons.map),),
-                readOnly: true,   
+                decoration: textFilled.copyWith(
+                  hintText: "Endereço",
+                  prefixIcon: Icon(Icons.map),
+                ),
+                readOnly: true,
               ),
             ),
             Padding(
@@ -73,9 +78,11 @@ class _AdicionarEnderecoState extends State<AdicionarEndereco> {
                 child: RaisedButton(
                   child: Text("Calcular endereço"),
                   padding: EdgeInsets.all(paddingSmall),
-                  onPressed: cep.length < 9 ? null : () {
-                    getEndereco(cep, context);
-                  },
+                  onPressed: cep.length < 9
+                      ? null
+                      : () {
+                          getEndereco(cep, context);
+                        },
                 ),
               ),
             ),
@@ -83,50 +90,50 @@ class _AdicionarEnderecoState extends State<AdicionarEndereco> {
         ),
       ),
       bottomNavigationBar: FlatButton(
-        disabledColor: ColorSys.secundarygray,
-        padding: EdgeInsets.all(paddingLarge),
-        child: Text(
-          "Avançar",
-          style: TextStyle(color: Colors.white),
-        ),
-        color: ColorSys.primary,
-        onPressed: enderecoController.text.isEmpty? null : (){
-          Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AdicionarComplemento(novo),
-                                    ));
-        }),
+          disabledColor: ColorSys.secundarygray,
+          padding: EdgeInsets.all(paddingLarge),
+          child: Text(
+            "Avançar",
+            style: TextStyle(color: Colors.white),
+          ),
+          color: ColorSys.primary,
+          onPressed: enderecoController.text.isEmpty
+              ? null
+              : () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdicionarComplemento(novo),
+                      ));
+                }),
     );
   }
-  
-  getEndereco(String cep, BuildContext ctx) async{
+
+  getEndereco(String cep, BuildContext ctx) async {
     cep = cep.replaceAll('-', "");
     var endereco = await ViaCepSearchCep().searchInfoByCep(cep: cep);
-   
-    endereco.fold(
-    (exception) {
-      if(exception.errorMessage.isNotEmpty)
-         AwesomeDialog(
-                              context: ctx,
-                              dialogType: DialogType.ERROR,
-                              animType: AnimType.TOPSLIDE,
-                              title: "CEP Inválido",
-                              desc: "Eita! Você digitou um CEP inválido. Por favor, tente novamente!",
-                              btnOkOnPress: (){},
-                              )..show();
-    }, 
-    (tokenModel) {
-      
+
+    endereco.fold((exception) {
+      if (exception.errorMessage.isNotEmpty)
+        AwesomeDialog(
+          context: ctx,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.TOPSLIDE,
+          title: "CEP Inválido",
+          desc:
+              "Eita! Você digitou um CEP inválido. Por favor, tente novamente!",
+          btnOkOnPress: () {},
+        )..show();
+    }, (tokenModel) {
       setState(() {
-        enderecoController.text = "${tokenModel.logradouro}, ${tokenModel.localidade}";
+        enderecoController.text =
+            "${tokenModel.logradouro}, ${tokenModel.localidade}";
       });
-      
-       novo.cidade = tokenModel.localidade;
-       novo.bairro = tokenModel.bairro;
-       novo.rua = tokenModel.logradouro;
-       novo.uf = tokenModel.uf;
-    }
-    );
+
+      novo.cidade = tokenModel.localidade;
+      novo.bairro = tokenModel.bairro;
+      novo.rua = tokenModel.logradouro;
+      novo.uf = tokenModel.uf;
+    });
   }
 }

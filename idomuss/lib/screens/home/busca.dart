@@ -64,8 +64,8 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
               ),
               child: StreamBuilder<List<Servico>>(
                 stream: DatabaseService().ListaServicos(filtro),
-                builder: (context, snapshot){
-                  if(snapshot.hasData){
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -83,8 +83,8 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                     prefixIcon: Icon(Icons.search),
                                     border: InputBorder.none,
                                     hintText: "Digite um nome/serviço"),
-                                onChanged: (value){
-                                  setState((){
+                                onChanged: (value) {
+                                  setState(() {
                                     filtro = value;
                                   });
                                 },
@@ -99,13 +99,15 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return ListaPrestadores(snapshot.data[index].nome);
+                                    return ListaPrestadores(
+                                        snapshot.data[index].nome);
                                   }));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(snapshot.data[index].img),
+                                      image: NetworkImage(
+                                          snapshot.data[index].img),
                                       fit: BoxFit.cover,
                                       colorFilter: ColorFilter.mode(
                                           Colors.black.withOpacity(0.3),

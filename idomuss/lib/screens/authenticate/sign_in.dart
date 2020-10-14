@@ -123,10 +123,7 @@ class _SignInState extends State<SignIn> {
                           onPressed: () async {
                             try {
                               dynamic result = _auth.signInWithGoogle();
-                            } catch (e) {
-                            }
-                            
-                            
+                            } catch (e) {}
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
