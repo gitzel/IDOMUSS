@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idomussprofissional/helpers/ColorsSys.dart';
 
 const background = BoxDecoration(
   image: DecorationImage(
@@ -17,18 +18,27 @@ const fontSizeSubTitle = 32.0;
 const fontSizeRegular = 18.0;
 const fontSizeSmall = 14.0;
 
-
 final BoxDecoration box = BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0)),
-                            boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 0.5,
-                                        blurRadius: 10,
-                                        offset: Offset(
-                                            0, 3), // changes position of shadow
-                                      ),
-                                    ],
-                          );
+  color: Colors.white,
+  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.grey.withOpacity(0.5),
+      spreadRadius: 0.5,
+      blurRadius: 10,
+      offset: Offset(0, 3), // changes position of shadow
+    ),
+  ],
+);
+
+final InputDecoration textFilled = InputDecoration(
+  fillColor: ColorSys.lightGray,
+  filled: true,
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(5),
+    borderSide: BorderSide(
+      width: 0,
+      style: BorderStyle.none,
+    ),
+  ),
+);

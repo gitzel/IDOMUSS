@@ -40,10 +40,15 @@ class _CadastroVipState extends State<CadastroVip> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextCadastro('Você gostaria de ser um profissional VIP??'),
-              Text("Sendo VIP você tem acesso a diversas vantagens no app!", textAlign: TextAlign.center,),
+              Text(
+                "Sendo VIP você tem acesso a diversas vantagens no app!",
+                textAlign: TextAlign.center,
+              ),
               Container(
-                width: double.infinity,
-                child: RaisedButton(child: Text("Clique aqui para saber mais!"), onPressed: (){})),
+                  width: double.infinity,
+                  child: RaisedButton(
+                      child: Text("Clique aqui para saber mais!"),
+                      onPressed: () {})),
               TextCadastro("E aí? Quer entrar nessa jornada VIP?"),
               RadioButton(
                 value: 'Sim! Adoraria!',
@@ -69,16 +74,17 @@ class _CadastroVipState extends State<CadastroVip> {
                 children: [
                   Checkbox(
                     value: termos,
-                    onChanged: (bool value){
-                      setState((){
+                    onChanged: (bool value) {
+                      setState(() {
                         termos = value;
                       });
                     },
                   ),
-                  Flexible(child: Text("Confirmo que aceito os termos de compromisso com IDOMUSS e que tenho total conhecimento sobre!"))
+                  Flexible(
+                      child: Text(
+                          "Confirmo que aceito os termos de compromisso com IDOMUSS e que tenho total conhecimento sobre!"))
                 ],
               ),
-              
             ],
           ),
         ),

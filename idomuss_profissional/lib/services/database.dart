@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:idomussprofissional/models/profissional.dart';
+import 'package:idomussprofissional/screens/home/ranking.dart';
 
 class DatabaseService {
   final String uid;
@@ -19,9 +24,9 @@ class DatabaseService {
       "email": profissional.email,
       "vip": profissional.vip,
       "dataNascimento": profissional.dataNascimento,
-      "nome":profissional.nome,
-      "numero":profissional.numeroCelular,
-      "foto":profissional.foto,
+      "nome": profissional.nome,
+      "numero": profissional.numeroCelular,
+      "foto": profissional.foto,
       "genero": profissional.genero,
       "descricao": profissional.descricao,
       "location": profissional.location,
@@ -31,7 +36,11 @@ class DatabaseService {
       "curtidas": 0,
       "limite": profissional.limite,
       "uid": uid,
-      "melhor": Timestamp.fromDate(DateTime(2020, 9, 7,))
+      "melhor": Timestamp.fromDate(DateTime(
+        2020,
+        9,
+        7,
+      ))
     });
   }
 
@@ -77,24 +86,63 @@ class DatabaseService {
   }
 
   Future<Profissional> getProfissional() async {
-    Profissional profissional;
+  
+    return await profissionais.document(uid).snapshots().map((doc) {
+      Profissional prof = Profissional.fromJson(doc.data);
+      prof.uid = doc.documentID;
+      return prof;
+    }).first;
 
-    await profissionais.document(uid).snapshots().map((doc) {
-          profissional =  Profissional.fromJson(doc.data);
-    }).toList();
+  }
 
-    return profissional;
+  Stream<List<Profissional>> ranking(Profissional atual, {int distance = 10000, PrimitiveWrapper posicao}) async* {
+
+    List<Profissional> all = await profissionais
+          .where("servico", isEqualTo: atual.nomeServico)
+          .orderBy("nota", descending: true)
+          .snapshots()
+          .map(_profissionalListFromSnapshot)
+          .first;
+
+      List<Profissional> ret = new List<Profissional>();
+      int i = 1;
+      for (Profissional profissional in all) {
+        double distanceInMeters = await distanceBetween(atual.location.latitude, atual.location.longitude,
+            profissional.location.latitude, profissional.location.longitude);
+        if (distanceInMeters <= distance) {
+          ret.add(profissional);
+          if(profissional.uid == atual.uid)
+            posicao.value = i;
+          else
+            i++;
+        }
+      }
+
+      yield ret.sublist(0, min(ret.length, 10));
   }
 
   Stream<Profissional> get profissional {
-    return profissionais.document(uid).snapshots().map(_ProfissionalFromSnapshot);
+    return profissionais
+        .document(uid)
+        .snapshots()
+        .map(_profissionalFromSnapshot);
   }
 
-  Profissional _ProfissionalFromSnapshot(DocumentSnapshot snapshot) {
+  Profissional _profissionalFromSnapshot (DocumentSnapshot snapshot) {
     Profissional prof;
     prof = Profissional.fromJson(snapshot.data);
     prof.uid = snapshot.documentID;
     return prof;
+  }
+
+  List<Profissional> _profissionalListFromSnapshot(QuerySnapshot snapshot) {
+    List<Profissional> p = snapshot.documents.map((doc) {
+      Profissional ret = Profissional.fromJson(doc.data);
+      ret.uid = doc.documentID;
+      return ret;
+    }).toList();
+
+    return p;
   }
 
   void deleteUserData() async {

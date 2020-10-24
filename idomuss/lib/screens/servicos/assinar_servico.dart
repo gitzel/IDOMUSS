@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
 import 'package:idomuss/helpers/constantes.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:idomuss/models/servicoContratado.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +24,14 @@ class _AssinarServicoState extends State<AssinarServico> {
   DateTime horaSelecionada;
   List<DateTime> horariosOcupados;
 
+  String descricao;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     dataSelecionada = DateTime.now();
-
+    descricao = "";
     DateTime now = DateTime.now();
     int minutes = 30;
     int hour = now.hour;
@@ -194,7 +198,21 @@ class _AssinarServicoState extends State<AssinarServico> {
                                             Icons.check,
                                             color: Colors.white,
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.WARNING,
+                                              animType: AnimType.TOPSLIDE,
+                                              title: "Deseja mesmo contatar este profissional?",
+                                              desc:
+                                                  "Ao pressionar ok, o profissional entrará em contato contigo!",
+                                              btnCancelOnPress: () {},
+                                              btnOkOnPress: () {
+                                                DatabaseService(uid: user.uid)
+                                                   .addServicoContratado(ServicoContratado(_descricao, _preco, _data, _situacao, _uidProfissional, _uidCliente, _servico))
+                                              },
+                                            )..show();
+                                          },
                                         ),
                                       ),
                                     ),

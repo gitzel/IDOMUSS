@@ -60,8 +60,7 @@ class _RegisterState extends State<Register> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroLocalizacao(
-                    ),
+                    builder: (context) => CadastroLocalizacao(),
                   ));
             }
           : null,

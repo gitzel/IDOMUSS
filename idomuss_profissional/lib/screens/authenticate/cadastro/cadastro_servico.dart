@@ -31,57 +31,57 @@ class _CadastroServicoState extends State<CadastroServico> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<String>>(
-      stream: DatabaseService().ListaServicos,
-      builder: (context, snapshot) {
+        stream: DatabaseService().ListaServicos,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return Scaffold(
+              body: LoadPage(),
+            );
 
-        if(!snapshot.hasData)
-          return Scaffold(body: LoadPage(),);
+          snapshot.data.sort();
+          return CadastroScaffold(
+            <Widget>[
+              BackButton(
+                color: ColorSys.primary,
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextCadastro('Você trabalha com que tipo de serviço?'),
 
-        snapshot.data.sort();
-        return CadastroScaffold(
-          <Widget>[
-            BackButton(
-              color: ColorSys.primary,
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextCadastro('Você trabalha com que tipo de serviço?'),
-                  
-                   DropDownField(
-                onValueChanged: (dynamic value) {
-                  setState(() {
-                    _servico = value;
-                  });
-                  
-                },
-                value: _servico,
-                required: true,
-                hintText: 'Escolha um tipo de serviço',
-                labelText: 'Serviços',
-                items: snapshot.data,
+                    DropDownField(
+                      onValueChanged: (dynamic value) {
+                        setState(() {
+                          _servico = value;
+                        });
+                      },
+                      value: _servico,
+                      required: true,
+                      hintText: 'Escolha um tipo de serviço',
+                      labelText: 'Serviços',
+                      items: snapshot.data,
+                    ),
+
+                    ///botar uma lista pra escolher
+                  ],
+                ),
               ),
-                  ///botar uma lista pra escolher
-                ],
-              ),
-            ),
-          ],
-          _servico.isNotEmpty
-              ? () {
-                  widget.profissional.nomeServico = _servico;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CadastroLimite(
-                          profissional: widget.profissional,
-                        ),
-                      ));
-                }
-              : null,
-        );
-      }
-    );
+            ],
+            _servico.isNotEmpty
+                ? () {
+                    widget.profissional.nomeServico = _servico;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CadastroLimite(
+                            profissional: widget.profissional,
+                          ),
+                        ));
+                  }
+                : null,
+          );
+        });
   }
 }

@@ -15,7 +15,6 @@ class TextFieldOutline extends StatelessWidget {
   TextCapitalization textCapitalization;
   int maxLine;
   TextEditingController controller;
-  
 
   TextFieldOutline(
       {this.label,
@@ -35,21 +34,21 @@ class TextFieldOutline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: keyboardType,
-      obscureText: obscureText == null ? false : obscureText,
-      decoration: InputDecoration(
-          prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
-          labelText: label,
-          suffixIcon: suffixIcon,
-          hintText: hint,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-      validator: validator,
-      onChanged: onChanged,
-      inputFormatters: inputFormatter,
-      textCapitalization: textCapitalization,
-      maxLines: maxLine,
-      controller: controller,
-      onSaved: onSaved
-    );
+        keyboardType: keyboardType,
+        obscureText: obscureText == null ? false : obscureText,
+        decoration: InputDecoration(
+            prefixIcon: prefixIcon == null ? null : Icon(prefixIcon),
+            labelText: label,
+            suffixIcon: suffixIcon,
+            hintText: hint,
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+        validator: validator,
+        onChanged: onChanged,
+        inputFormatters: inputFormatter,
+        textCapitalization: textCapitalization,
+        maxLines: maxLine,
+        controller: controller,
+        onSaved: onSaved);
   }
 }

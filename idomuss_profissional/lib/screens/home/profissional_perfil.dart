@@ -15,26 +15,22 @@ import 'package:idomussprofissional/services/database.dart';
 import 'package:provider/provider.dart';
 
 class PerfilPrestador extends StatefulWidget {
-  
   @override
   _PerfilPrestadorState createState() => _PerfilPrestadorState();
 }
 
 class _PerfilPrestadorState extends State<PerfilPrestador> {
-
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     final user = Provider.of<FirebaseUser>(context);
 
     return StreamBuilder<Profissional>(
-          stream: DatabaseService(uid: user.uid).profissional,
-      builder: (context, snapshot) {
+        stream: DatabaseService(uid: user.uid).profissional,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return LoadPage();
 
-        if(!snapshot.hasData)
-          return LoadPage();
-
-        return Column(
+          return Column(
             children: <Widget>[
               Expanded(
                   flex: 2,
@@ -83,9 +79,11 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-
-                              !snapshot.data.vip ? SizedBox.shrink() :
-                              Image.asset("assets/geral/premium_white.png",)
+                              !snapshot.data.vip
+                                  ? SizedBox.shrink()
+                                  : Image.asset(
+                                      "assets/geral/premium_white.png",
+                                    )
                             ],
                           ),
                         ],
@@ -113,85 +111,107 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ProfissionalInfo(
-                             Row(
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.star, color: ColorSys.primary,),
-                                  Text(snapshot.data.nota.toString(), style: TextStyle(fontSize: fontSizeRegular),)
-                                ]
-                              ),
-                            )
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: ProfissionalInfo(
+                                Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: ColorSys.primary,
+                                      ),
+                                      Text(
+                                        snapshot.data.nota.toString(),
+                                        style: TextStyle(
+                                            fontSize: fontSizeRegular),
+                                      )
+                                    ]),
+                              )),
                         ),
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ProfissionalInfo(
-                             Column(
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(snapshot.data.servicosPrestados.toString(), style: TextStyle(fontWeight: FontWeight.bold, color: ColorSys.black, fontSize: fontSizeRegular,),),
-                                  Text("serviços", style: TextStyle(color: ColorSys.black,),)
-                                ],
-                              ),
-                            )
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: ProfissionalInfo(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      snapshot.data.servicosPrestados
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorSys.black,
+                                        fontSize: fontSizeRegular,
+                                      ),
+                                    ),
+                                    Text(
+                                      "serviços",
+                                      style: TextStyle(
+                                        color: ColorSys.black,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )),
                         ),
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ProfissionalInfo(
-                             Row(
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.favorite, color: ColorSys.primary,),
-                                  Text(snapshot.data.curtidas.toString(),  style: TextStyle(fontSize: fontSizeRegular),)
-                                ],
-                              ),
-                            )
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: ProfissionalInfo(
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      Icons.favorite,
+                                      color: ColorSys.primary,
+                                    ),
+                                    Text(
+                                      snapshot.data.curtidas.toString(),
+                                      style:
+                                          TextStyle(fontSize: fontSizeRegular),
+                                    )
+                                  ],
+                                ),
+                              )),
                         ),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(paddingSmall),
-                      child: ProfissionalInfo(
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                                  Icon(
-                                    Icons.monetization_on,
-                                    color: ColorSys.primary,
-                                  ),
-                                  Text(
-                                    "R\$" +
-                                        snapshot.data.limite[0].toStringAsFixed(2) +
-                                        " ~ " +
-                                        snapshot.data.limite[1].toStringAsFixed(2),
-                                    style: TextStyle(
-                                        color: ColorSys.black,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                            ],
-                          )
-                        ),
+                      child: ProfissionalInfo(Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Icon(
+                            Icons.monetization_on,
+                            color: ColorSys.primary,
+                          ),
+                          Text(
+                            "R\$" +
+                                snapshot.data.limite[0].toStringAsFixed(2) +
+                                " ~ " +
+                                snapshot.data.limite[1].toStringAsFixed(2),
+                            style: TextStyle(
+                                color: ColorSys.black,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      )),
                     ),
                     Row(), //TODO - profissional skills),
                   ],
-                  
                 ),
               )
             ],
           );
-      }
-    );
+        });
   }
 }

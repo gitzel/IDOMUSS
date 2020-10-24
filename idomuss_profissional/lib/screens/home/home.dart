@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:idomussprofissional/helpers/ColorsSys.dart';
 import 'package:idomussprofissional/models/profissional.dart';
+import 'package:idomussprofissional/screens/home/feed.dart';
 import 'package:idomussprofissional/screens/home/profissional_perfil.dart';
+import 'package:idomussprofissional/screens/home/ranking.dart';
 import 'package:idomussprofissional/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -13,19 +15,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int _index;
 
   Widget TabSelect() {
     final user = Provider.of<FirebaseUser>(context);
-      
+
     switch (_index) {
       case 0:
+        return Ranking();
         break;
       case 1:
-        return RaisedButton(onPressed: (){
-          AuthService().signOut();
-        },);
+        return Feed();
       case 2:
         return PerfilPrestador();
     }
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
             backgroundColor: ColorSys.gray,
             index: _index,
             items: <Widget>[
-              Icon(Icons.score, size: 30, color: ColorSys.primary),
+              Icon(Icons.assessment, size: 30, color: ColorSys.primary),
               Icon(Icons.home, size: 30, color: ColorSys.primary),
               Icon(Icons.person, size: 30, color: ColorSys.primary),
             ],
