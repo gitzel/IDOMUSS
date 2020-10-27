@@ -59,8 +59,13 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                               width: 4,
                               goalCompleted: 0.9,
                               child: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(snapshot.data.foto),
+                                backgroundImage: snapshot.data.foto != null
+                                    ? NetworkImage(snapshot.data.foto)
+                                    : null,
+                                backgroundColor: Colors.white,
+                                child: snapshot.data.foto == null
+                                    ? LoadPage()
+                                    : null,
                                 radius: screen.width * 0.15,
                               ),
                             ),
