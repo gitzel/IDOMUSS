@@ -136,6 +136,16 @@ class _DataServicoState extends State<DataServico> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal:paddingSmall),
+                                child: Text("Selecione a data e hora pretendida",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,                                  
+                                  fontSize: fontSizeRegular
+                                ),
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   dialogData();
