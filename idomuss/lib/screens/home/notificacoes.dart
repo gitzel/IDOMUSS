@@ -20,7 +20,7 @@ class _NotificacoesState extends State<Notificacoes> {
                 2 * paddingExtraLarge, paddingSmall, paddingSmall),
             child: RichText(
               text: TextSpan(
-                style:  TextStyle(
+                style: TextStyle(
                     fontSize: fontSizeSubTitle,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Montserrat',

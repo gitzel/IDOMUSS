@@ -4,10 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Cliente {
-
   @protected
-  String 
-      _rg,
+  String _rg,
       _cpf,
       _nome,
       _email,
@@ -29,13 +27,14 @@ class Cliente {
   }
 
   Cliente(
-      this._rg,
-      this._cpf,
-      this._nome,
-      this._numeroCelular,
-      this._dataNascimento,
-      this._genero,
-      this._descricao,);
+    this._rg,
+    this._cpf,
+    this._nome,
+    this._numeroCelular,
+    this._dataNascimento,
+    this._genero,
+    this._descricao,
+  );
 
   Cliente.fromJson(Map<String, dynamic> json)
       : _rg = json['rg'],
@@ -101,5 +100,4 @@ class Cliente {
   set foto(value) {
     _foto = value;
   }
-  
 }

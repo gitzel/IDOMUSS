@@ -37,15 +37,14 @@ class _FeedState extends State<Feed> {
   }
 
   _getLocalizacaoFromSharedPreferences() async {
-    
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    numero = prefs.getString("numero")??"";
-    complemento = prefs.getString("complemento")??"";
-    pos = LatLng(prefs.getDouble("latitude"), prefs.getDouble("longitude"))??null;
-
+    numero = prefs.getString("numero") ?? "";
+    complemento = prefs.getString("complemento") ?? "";
+    pos = LatLng(prefs.getDouble("latitude"), prefs.getDouble("longitude")) ??
+        null;
   }
 
-  _requestPermission() async{
+  _requestPermission() async {
     LocationPermission status = await checkPermission();
     if (status.index == 0)
       LocationPermission permission = await requestPermission();
@@ -53,148 +52,156 @@ class _FeedState extends State<Feed> {
 
   _guardarLocalizacao(result) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("numero",  result[1]);
-    await prefs.setString("complemento",  result[2]);
+    await prefs.setString("numero", result[1]);
+    await prefs.setString("complemento", result[2]);
     await prefs.setDouble("latitude", pos.latitude);
     await prefs.setDouble("longitude", pos.longitude);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
     return FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
-      builder: (context, sharedPreferences) {
-        return FutureBuilder<Position>(
-          future: getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
-          builder: (context, position) {
-            if (!position.hasData) return LoadPage();
+        future: SharedPreferences.getInstance(),
+        builder: (context, sharedPreferences) {
+          return FutureBuilder<Position>(
+            future: getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
+            builder: (context, position) {
+              if (!position.hasData) return LoadPage();
 
-            if (pos == null){
-              pos = LatLng(position.data.latitude, position.data.longitude);
-            }
+              if (pos == null) {
+                pos = LatLng(position.data.latitude, position.data.longitude);
+              }
 
-            return FutureBuilder<List<Placemark>>(
-              future: placemarkFromCoordinates(pos.latitude, pos.longitude),
-              builder: (context, address) {
-                return StreamBuilder<List<Profissional>>(
-                    stream: DatabaseService(uid: user.uid)
-                        .melhoresDaSemana(pos.latitude, pos.longitude),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return LoadPage();
+              return FutureBuilder<List<Placemark>>(
+                future: placemarkFromCoordinates(pos.latitude, pos.longitude),
+                builder: (context, address) {
+                  return StreamBuilder<List<Profissional>>(
+                      stream: DatabaseService(uid: user.uid)
+                          .melhoresDaSemana(pos.latitude, pos.longitude),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return LoadPage();
 
-                      return SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(paddingSmall,
-                                  paddingLarge * 2, paddingSmall, paddingMedium),
-                              child: Container(
-                                height: MediaQuery.of(context).size.height * 0.08,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12.0)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0.5,
-                                      blurRadius: 10,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    var result = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Enderecos(
-                                              LatLng(pos.latitude, pos.longitude)),
-                                        ));
-                                    setState(() {
-                                      if (result != null) {
-                                        pos = result[0];
-                                        numero = result[1];
-                                        complemento = result[2];
-                                        _guardarLocalizacao(result);
-                                      }
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.location_on,
-                                          color: ColorSys.primary,
-                                        ),
-                                        flex: 1,
+                        return SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    paddingSmall,
+                                    paddingLarge * 2,
+                                    paddingSmall,
+                                    paddingMedium),
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.08,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12.0)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 0.5,
+                                        blurRadius: 10,
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
                                       ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: paddingSmall),
-                                          child: Text(address.data.first.street +
-                                              ", " +
-                                              address.data.first.subLocality +
-                                              " - " +
-                                              (numero.isEmpty
-                                                  ? address.data.first.name
-                                                  : numero)),
-                                        ),
-                                        flex: 6,
-                                      )
                                     ],
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      var result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Enderecos(
+                                                LatLng(pos.latitude,
+                                                    pos.longitude)),
+                                          ));
+                                      setState(() {
+                                        if (result != null) {
+                                          pos = result[0];
+                                          numero = result[1];
+                                          complemento = result[2];
+                                          _guardarLocalizacao(result);
+                                        }
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Icon(
+                                            Icons.location_on,
+                                            color: ColorSys.primary,
+                                          ),
+                                          flex: 1,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: paddingSmall),
+                                            child: Text(address
+                                                    .data.first.street +
+                                                ", " +
+                                                address.data.first.subLocality +
+                                                " - " +
+                                                (numero.isEmpty
+                                                    ? address.data.first.name
+                                                    : numero)),
+                                          ),
+                                          flex: 6,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: paddingSmall, bottom: paddingLarge),
-                              child: Text(
-                                'Destaques da semana',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    color: ColorSys.black),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: paddingSmall, bottom: paddingLarge),
+                                child: Text(
+                                  'Destaques da semana',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                      color: ColorSys.black),
+                                ),
                               ),
-                            ),
-                            CarouselSlider(
-                              options: CarouselOptions(
-                                  height: MediaQuery.of(context).size.width),
-                              items: List.generate(snapshot.data.length, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PerfilPrestador(snapshot.data[index]),
-                                        ));
-                                  },
-                                  child: FeedCard(
-                                      snapshot.data[index].nome,
-                                      snapshot.data[index].curtidas,
-                                      snapshot.data[index].nomeServico,
-                                      snapshot.data[index].limite,
-                                      snapshot.data[index].vip,
-                                      snapshot.data[index].foto),
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              },
-            );
-          },
-        );
-      }
-    );
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                    height: MediaQuery.of(context).size.width),
+                                items: List.generate(snapshot.data.length,
+                                    (index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PerfilPrestador(
+                                                    snapshot.data[index]),
+                                          ));
+                                    },
+                                    child: FeedCard(
+                                        snapshot.data[index].nome,
+                                        snapshot.data[index].curtidas,
+                                        snapshot.data[index].nomeServico,
+                                        snapshot.data[index].limite,
+                                        snapshot.data[index].vip,
+                                        snapshot.data[index].foto),
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
+              );
+            },
+          );
+        });
   }
 }

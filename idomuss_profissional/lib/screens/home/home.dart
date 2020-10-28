@@ -45,41 +45,43 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-      final user = Provider.of<FirebaseUser>(context);
+    final user = Provider.of<FirebaseUser>(context);
     return StreamProvider<Profissional>.value(
         value: AuthService().profissional,
         child: FutureBuilder<bool>(
-          future: DatabaseService(uid: user.uid).temNotificacao,
-          builder: (context, temNotificacao) {
-            if(!temNotificacao.hasData)
-              return Scaffold(
-                body: LoadPage());
+            future: DatabaseService(uid: user.uid).temNotificacao,
+            builder: (context, temNotificacao) {
+              if (!temNotificacao.hasData) return Scaffold(body: LoadPage());
 
-            return Scaffold(
-              backgroundColor: ColorSys.gray,
-              body: TabSelect(),
-              bottomNavigationBar: CurvedNavigationBar(
+              return Scaffold(
                 backgroundColor: ColorSys.gray,
-                index: _index,
-                items: <Widget>[
-                  Icon(Icons.assessment, size: 30, color: ColorSys.primary),
-                  Icon(Icons.home, size: 30, color: ColorSys.primary),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-  color: !temNotificacao.data? Colors.white : Color(0xFFb71540),
-  shape: BoxShape.circle,
-                    ),
-                    child:Icon(Icons.assignment, size: 30, color: !temNotificacao.data? ColorSys.primary : Colors.white)),
-                      
-                  Icon(Icons.person, size: 30, color: ColorSys.primary),
-                ],
-                onTap: _onItemTapped,
-              ),
-            );
-          }
-        ));
+                body: TabSelect(),
+                bottomNavigationBar: CurvedNavigationBar(
+                  backgroundColor: ColorSys.gray,
+                  index: _index,
+                  items: <Widget>[
+                    Icon(Icons.assessment, size: 30, color: ColorSys.primary),
+                    Icon(Icons.home, size: 30, color: ColorSys.primary),
+                    Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: !temNotificacao.data
+                              ? Colors.white
+                              : Color(0xFFb71540),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.assignment,
+                            size: 30,
+                            color: !temNotificacao.data
+                                ? ColorSys.primary
+                                : Colors.white)),
+                    Icon(Icons.person, size: 30, color: ColorSys.primary),
+                  ],
+                  onTap: _onItemTapped,
+                ),
+              );
+            }));
   }
 
   void _onItemTapped(int index) {

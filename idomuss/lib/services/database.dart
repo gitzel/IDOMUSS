@@ -153,14 +153,13 @@ class DatabaseService {
   }
 
   Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime data) {
-
     var min = Timestamp.fromDate(DateTime(data.year, data.month, data.day));
-    var max = Timestamp.fromDate(DateTime.now().add(Duration(days:1)));
+    var max = Timestamp.fromDate(DateTime.now().add(Duration(days: 1)));
 
     return servicosContratados
         .where("uidProfissional", isEqualTo: uidProf)
         .where("data", isGreaterThanOrEqualTo: min)
-      .where("data",  isLessThanOrEqualTo: max)
+        .where("data", isLessThanOrEqualTo: max)
         .snapshots()
         .map(_horariosFromSnapshot);
   }

@@ -2,12 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class ServicoContratado {
-
   @protected
   GeoPoint _localizacao;
 
   @protected
-  String _uid, _uidCliente, _uidProfissional, _descricao, _situacao, _complemento, _numero;
+  String _uid,
+      _uidCliente,
+      _uidProfissional,
+      _descricao,
+      _situacao,
+      _complemento,
+      _numero;
 
   @protected
   double _preco;
@@ -18,16 +23,26 @@ class ServicoContratado {
   @protected
   bool _visualizado;
 
-  ServicoContratado.empty(){
+  ServicoContratado.empty() {
     _localizacao = null;
     _situacao = "Solicitando";
-    _uid = _uidCliente = _uidProfissional = _descricao = _complemento = _numero = "";
+    _uid = _uidCliente =
+        _uidProfissional = _descricao = _complemento = _numero = "";
     _preco = -1;
     _data = null;
     _visualizado = false;
   }
-  ServicoContratado(this._descricao, this._preco, this._data, this._uidCliente,
-      this._uidProfissional, this._localizacao, this._situacao, this._complemento, this._numero, this._visualizado);
+  ServicoContratado(
+      this._descricao,
+      this._preco,
+      this._data,
+      this._uidCliente,
+      this._uidProfissional,
+      this._localizacao,
+      this._situacao,
+      this._complemento,
+      this._numero,
+      this._visualizado);
 
   ServicoContratado.fromJson(Map<String, dynamic> json)
       : _descricao = json['descricao'],
@@ -72,8 +87,6 @@ class ServicoContratado {
     _uidProfissional = value;
   }
 
-  
-
   double get preco => _preco;
 
   set preco(double value) {
@@ -86,8 +99,7 @@ class ServicoContratado {
     if (value.runtimeType == DateTime)
       _data = value;
     else if (value.runtimeType == Timestamp)
-      _data =
-          DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
+      _data = DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
   }
 
   GeoPoint get localizacao => _localizacao;

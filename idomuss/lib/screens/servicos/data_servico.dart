@@ -9,7 +9,6 @@ import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
 class DataServico extends StatefulWidget {
-
   ServicoContratado servicoContratado;
   String nomeProfissional;
   DataServico(this.servicoContratado, this.nomeProfissional);
@@ -19,7 +18,6 @@ class DataServico extends StatefulWidget {
 }
 
 class _DataServicoState extends State<DataServico> {
-  
   DateTime dataSelecionada;
   DateTime horaSelecionada;
 
@@ -63,45 +61,45 @@ class _DataServicoState extends State<DataServico> {
     return "${hora.hour.toString().padLeft(2, '0')}:${hora.minute.toString().padLeft(2, '0')}";
   }
 
-  List<Widget> gerarLista(List<DateTime> excecoes){
-
-    var original = DateTime(dataSelecionada.year, dataSelecionada.month, dataSelecionada.day, 8, 0, 0);
-    var aux = DateTime(dataSelecionada.year, dataSelecionada.month, dataSelecionada.day, 8, 0, 0);
+  List<Widget> gerarLista(List<DateTime> excecoes) {
+    var original = DateTime(dataSelecionada.year, dataSelecionada.month,
+        dataSelecionada.day, 8, 0, 0);
+    var aux = DateTime(dataSelecionada.year, dataSelecionada.month,
+        dataSelecionada.day, 8, 0, 0);
     return List.generate(24, (index) {
-    bool disponivel = DateTime.now().difference(aux).isNegative && excecoes.where((hora) {
-                                                    return hora.hour == aux.hour && hora.minute == aux.minute;
-                                                  }).isEmpty;
-    Widget ret =  GestureDetector(
-      onTap: !disponivel? null : (){
-        widget.servicoContratado.data = original.add(Duration(minutes: 30 * index));
-            Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ConfirmarServico(
-                                                widget.servicoContratado,
-                                                widget.nomeProfissional
-                                              ),
-                                            ));
-      },
-          child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: disponivel ? Colors.deepPurple : Colors.grey,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  boxShadow: shadow
-                                                ),
-                                                child: Center(child: Text(horaToString(aux),
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold
-                                                ),
-                                                ))
-                                              ),
-    );
-       
-        aux = aux.add(Duration(minutes:30));
-      return ret;
+      bool disponivel = DateTime.now().difference(aux).isNegative &&
+          excecoes.where((hora) {
+            return hora.hour == aux.hour && hora.minute == aux.minute;
+          }).isEmpty;
+      Widget ret = GestureDetector(
+        onTap: !disponivel
+            ? null
+            : () {
+                widget.servicoContratado.data =
+                    original.add(Duration(minutes: 30 * index));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ConfirmarServico(
+                          widget.servicoContratado, widget.nomeProfissional),
+                    ));
+              },
+        child: Container(
+            decoration: BoxDecoration(
+                color: disponivel ? Colors.deepPurple : Colors.grey,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: shadow),
+            child: Center(
+                child: Text(
+              horaToString(aux),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ))),
+      );
 
-      });
+      aux = aux.add(Duration(minutes: 30));
+      return ret;
+    });
   }
 
   @override
@@ -113,12 +111,10 @@ class _DataServicoState extends State<DataServico> {
           elevation: 0,
         ),
         body: StreamBuilder<List<DateTime>>(
-            stream: DatabaseService(uid: user.uid)
-                .horarioDisponivel(widget.servicoContratado.uidProfissional, dataSelecionada),
+            stream: DatabaseService(uid: user.uid).horarioDisponivel(
+                widget.servicoContratado.uidProfissional, dataSelecionada),
             builder: (context, snapshot) {
-              
-              if(!snapshot.hasData)
-                return LoadPage();
+              if (!snapshot.hasData) return LoadPage();
 
               return Container(
                 decoration: BoxDecoration(color: ColorSys.primary),
@@ -140,48 +136,49 @@ class _DataServicoState extends State<DataServico> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              
-                                    GestureDetector(
-                                      onTap: (){
-                                        dialogData();
-                                      },
-                                                                          child: Padding(
-                                        padding: const EdgeInsets.all(paddingSmall),
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(paddingSmall),
-                                          decoration: BoxDecoration(
-                                            color: ColorSys.lightGray,
-                                            boxShadow: shadow
+                              GestureDetector(
+                                onTap: () {
+                                  dialogData();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(paddingSmall),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(paddingSmall),
+                                    decoration: BoxDecoration(
+                                        color: ColorSys.lightGray,
+                                        boxShadow: shadow),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.calendar_today,
+                                            color: ColorSys.primary),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: paddingSmall),
+                                          child: Text(
+                                            DataToString(),
+                                            style: TextStyle(
+                                                color: ColorSys.black,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Icon(Icons.calendar_today, color: ColorSys.primary),
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: paddingSmall),
-                                                child: Text(DataToString(), style: TextStyle(
-                                                  color: ColorSys.black,
-                                                  fontWeight: FontWeight.bold
-                                                ),),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                        )
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: GridView.count(
-                                        padding: EdgeInsets.all(paddingSmall),
-                                        crossAxisCount: 4,
-                                        childAspectRatio: 1.1,
-                                        mainAxisSpacing: paddingSmall,
-                                        crossAxisSpacing: paddingSmall,
-                                        children: gerarLista(snapshot.data)
-                                      ),
-                                    ),
-                                   
-                                  ],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: GridView.count(
+                                    padding: EdgeInsets.all(paddingSmall),
+                                    crossAxisCount: 4,
+                                    childAspectRatio: 1.1,
+                                    mainAxisSpacing: paddingSmall,
+                                    crossAxisSpacing: paddingSmall,
+                                    children: gerarLista(snapshot.data)),
+                              ),
+                            ],
                           ),
                         ),
                       )

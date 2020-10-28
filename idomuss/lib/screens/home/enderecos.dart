@@ -32,8 +32,6 @@ class _EnderecosState extends State<Enderecos> {
   void initState() {
     super.initState();
     numero = "";
-
-    
   }
 
   @override
@@ -97,10 +95,11 @@ class _EnderecosState extends State<Enderecos> {
                               padding: const EdgeInsets.all(paddingSmall),
                               child: RaisedButton(
                                   onPressed: () {
-                                    
-                                    _getNumero(context, listPlacemark.data.first.name, LatLng(currentPosition.data.latitude,
+                                    _getNumero(
+                                        context,
+                                        listPlacemark.data.first.name,
+                                        LatLng(currentPosition.data.latitude,
                                             currentPosition.data.longitude));
-                                    
                                   },
                                   padding: EdgeInsets.all(paddingSmall),
                                   child: Row(
@@ -161,9 +160,10 @@ class _EnderecosState extends State<Enderecos> {
   }
 
   void _getNumero(BuildContext context, numero, pos) {
-
-    showModalBottomSheet(context: context, builder: (context){
-      return MenuComplemento(numero, pos);
-    });
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return MenuComplemento(numero, pos);
+        });
   }
 }

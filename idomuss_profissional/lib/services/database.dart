@@ -87,51 +87,51 @@ class DatabaseService {
         .map(_enderecoListFromSnapshot);
   }
 
-  Stream<List<ServicoContratado>> get proximoServico{
-    
+  Stream<List<ServicoContratado>> get proximoServico {
     dynamic now = DateTime.now();
     now = Timestamp.fromDate(DateTime(now.year, now.month, now.day));
-    var tomorrow =  Timestamp.fromDate(DateTime.now().add(Duration(days:1)));
+    var tomorrow = Timestamp.fromDate(DateTime.now().add(Duration(days: 1)));
 
     return servicosContratados
-      .where("uidProfissional", isEqualTo: uid)
-      .where("situacao", whereIn: ['Pendente', "A caminho", "Em andamento"])
-      .where("data", isGreaterThanOrEqualTo: now)
-      .where("data",  isLessThanOrEqualTo: tomorrow)
-      .orderBy("data")
-      .limit(1)
-      .snapshots().map((snapshot) {
-        return snapshot.documents.map((doc) {
-          return ServicoContratado.fromJson(doc.data);
-        }).toList();
-      });
+        .where("uidProfissional", isEqualTo: uid)
+        .where("situacao", whereIn: ['Pendente', "A caminho", "Em andamento"])
+        .where("data", isGreaterThanOrEqualTo: now)
+        .where("data", isLessThanOrEqualTo: tomorrow)
+        .orderBy("data")
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.documents.map((doc) {
+            return ServicoContratado.fromJson(doc.data);
+          }).toList();
+        });
   }
 
-  Future<bool> get temNotificacao async{
-
+  Future<bool> get temNotificacao async {
     List<bool> naoVisualizados = await servicosContratados
-      .where("uidProfissional", isEqualTo: uid)
-      .where("visualizado", isEqualTo: false)
-      .snapshots().map((snapshot) {
-        return snapshot.documents.map((doc) {
-          return doc.data['visualizado'] == true;
-        }).toList();
-      }).first;
+        .where("uidProfissional", isEqualTo: uid)
+        .where("visualizado", isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents.map((doc) {
+        return doc.data['visualizado'] == true;
+      }).toList();
+    }).first;
 
     return Future.value(naoVisualizados.isNotEmpty);
   }
 
-  Stream<List<ServicoContratado>> get servicosPendentes{
-    
+  Stream<List<ServicoContratado>> get servicosPendentes {
     return servicosContratados
-      .where("uidProfissional", isEqualTo: uid)
-      .where("situacao", isEqualTo: 'Solicitando')
-      .orderBy("data")
-      .snapshots().map((snapshot) {
-        return snapshot.documents.map((doc) {
-          return ServicoContratado.fromJson(doc.data);
-        }).toList();
-      });
+        .where("uidProfissional", isEqualTo: uid)
+        .where("situacao", isEqualTo: 'Solicitando')
+        .orderBy("data")
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents.map((doc) {
+        return ServicoContratado.fromJson(doc.data);
+      }).toList();
+    });
   }
 
   List<String> _enderecoListFromSnapshot(QuerySnapshot snapshot) {
@@ -205,10 +205,9 @@ class DatabaseService {
     await profissionais.document(uid).delete();
   }
 
-
-  Stream<Cliente> getCliente(String uid){
+  Stream<Cliente> getCliente(String uid) {
     return clientes.document(uid).snapshots().map((doc) {
-        return Cliente.fromJson(doc.data);
+      return Cliente.fromJson(doc.data);
     });
   }
 }
