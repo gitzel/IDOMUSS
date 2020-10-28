@@ -1,64 +1,63 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:idomuss/models/cliente.dart';
-import 'package:idomuss/models/profissional.dart';
 
 class ServicoContratado {
-  @protected
-  Profissional _profissional;
 
   @protected
-  String _uidServicoContratado,
-      _descricao,
-      _situacao,
-      _uidProfissional,
-      _uidCliente,
-      _servico;
+  GeoPoint _localizacao;
 
-  DateTime _data;
-
-  String get uidServicoContratado => _uidServicoContratado;
-
-  set uidServicoContratado(String value) {
-    _uidServicoContratado = value;
-  }
-
-  get situacao => _situacao;
-
-  set situacao(value) {
-    _situacao = value;
-  }
+  @protected
+  String _uid, _uidCliente, _uidProfissional, _descricao, _situacao, _complemento, _numero;
 
   @protected
   double _preco;
 
-  ServicoContratado(this._descricao, this._preco, this._data, this._situacao,
-      this._uidProfissional, this._uidCliente, this._servico);
+  @protected
+  DateTime _data;
+
+  @protected
+  bool _visualizado;
+
+  ServicoContratado.empty(){
+    _localizacao = null;
+    _situacao = "Solicitando";
+    _uid = _uidCliente = _uidProfissional = _descricao = _complemento = _numero = "";
+    _preco = -1;
+    _data = null;
+    _visualizado = false;
+  }
+  ServicoContratado(this._descricao, this._preco, this._data, this._uidCliente,
+      this._uidProfissional, this._localizacao, this._situacao, this._complemento, this._numero, this._visualizado);
 
   ServicoContratado.fromJson(Map<String, dynamic> json)
-      : _servico = json['servico'],
+      : _descricao = json['descricao'],
+        _situacao = json['situacao'],
+        _preco = json['preco'],
+        _data = DateTime.fromMillisecondsSinceEpoch(
+            json['data'].millisecondsSinceEpoch),
         _uidCliente = json['uidCliente'],
         _uidProfissional = json['uidProfissional'],
-        _data = json['data'],
-        _preco = double.parse(json['preco']),
-        _descricao = json['descricao'],
-        _situacao = json['situacao'];
+        _localizacao = json['localizacao'],
+        _numero = json['numero'],
+        _complemento = json['complemento'],
+        _visualizado = json['visualizado'];
 
-  get descricao => _descricao;
+  String get descricao => _descricao;
 
-  set descricao(value) {
+  set descricao(String value) {
     _descricao = value;
   }
 
-  get data => _data;
+  String get situacao => _situacao;
 
-  set data(value) {
-    _data = value;
+  set situacao(String value) {
+    _situacao = value;
   }
 
-  get uidProfissional => _uidProfissional;
+  get uid => _uid;
 
-  set uidProfissional(value) {
-    _uidProfissional = value;
+  set uid(value) {
+    _uid = value;
   }
 
   get uidCliente => _uidCliente;
@@ -67,11 +66,13 @@ class ServicoContratado {
     _uidCliente = value;
   }
 
-  get servico => _servico;
+  get uidProfissional => _uidProfissional;
 
-  set servico(value) {
-    _servico = value;
+  set uidProfissional(value) {
+    _uidProfissional = value;
   }
+
+  
 
   double get preco => _preco;
 
@@ -79,9 +80,37 @@ class ServicoContratado {
     _preco = value;
   }
 
-  Profissional get profissional => _profissional;
+  get data => _data;
 
-  set profissional(Profissional value) {
-    _profissional = value;
+  set data(dynamic value) {
+    if (value.runtimeType == DateTime)
+      _data = value;
+    else if (value.runtimeType == Timestamp)
+      _data =
+          DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
+  }
+
+  GeoPoint get localizacao => _localizacao;
+
+  set localizacao(GeoPoint localizacao) {
+    _localizacao = localizacao;
+  }
+
+  get numero => _numero;
+
+  set numero(value) {
+    _numero = value;
+  }
+
+  get complemento => _complemento;
+
+  set complemento(value) {
+    _complemento = value;
+  }
+
+  get visualizado => _visualizado;
+
+  set visualizado(value) {
+    _visualizado = value;
   }
 }

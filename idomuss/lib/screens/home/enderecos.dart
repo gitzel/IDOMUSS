@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:idomuss/components/menu_complemento.dart';
 import 'package:idomuss/components/textFieldOutline.dart';
 import 'package:idomuss/components/titulo_cadastro.dart';
 import 'package:idomuss/helpers/ColorsSys.dart';
@@ -31,6 +32,8 @@ class _EnderecosState extends State<Enderecos> {
   void initState() {
     super.initState();
     numero = "";
+
+    
   }
 
   @override
@@ -94,11 +97,10 @@ class _EnderecosState extends State<Enderecos> {
                               padding: const EdgeInsets.all(paddingSmall),
                               child: RaisedButton(
                                   onPressed: () {
-                                    _getNumero(
-                                        context,
-                                        LatLng(currentPosition.data.latitude,
-                                            currentPosition.data.longitude),
-                                        listPlacemark.data.first.name);
+                                    
+                                    _getNumero(context, listPlacemark.data.first.name, LatLng(currentPosition.data.latitude,
+                                            currentPosition.data.longitude));
+                                    
                                   },
                                   padding: EdgeInsets.all(paddingSmall),
                                   child: Row(
@@ -158,90 +160,10 @@ class _EnderecosState extends State<Enderecos> {
     );
   }
 
-  void _getNumero(context, pos, numero) {
-    _numeroController = new TextEditingController(text: numero);
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(paddingSmall),
-                  child: Text(
-                    "Veja se o número da residência está correto",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: fontSizeRegular),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(paddingSmall),
-                  child: TextFormField(
-                    controller: _numeroController,
-                    keyboardType: TextInputType.datetime,
-                    decoration: InputDecoration(
-                      hintText: "Digite o número da residência",
-                      prefixIcon: Icon(Icons.search),
-                      fillColor: ColorSys.lightGray,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(paddingSmall),
-                  child: Text(
-                    "Se tiver complemento, pode me falar!",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: fontSizeRegular),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(paddingSmall),
-                  child: TextFormField(
-                    controller: _complementoController,
-                    decoration: InputDecoration(
-                      hintText: "Ex. Torre XX APT XX",
-                      prefixIcon: Icon(Icons.search),
-                      fillColor: ColorSys.lightGray,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(paddingSmall),
-                    child: Container(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        child: Text("Salvar"),
-                        onPressed: _numeroController.text.isEmpty
-                            ? null
-                            : () {
-                                Navigator.pop(context);
-                                Navigator.pop(context, [pos, numero]);
-                              },
-                      ),
-                    )),
-              ],
-            ),
-          );
-        });
+  void _getNumero(BuildContext context, numero, pos) {
+
+    showModalBottomSheet(context: context, builder: (context){
+      return MenuComplemento(numero, pos);
+    });
   }
 }

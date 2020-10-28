@@ -31,6 +31,15 @@ final BoxDecoration box = BoxDecoration(
   ],
 );
 
+final List<BoxShadow> shadow = [
+  BoxShadow(
+    color: Colors.grey.withOpacity(0.5),
+    spreadRadius: 0.5,
+    blurRadius: 10,
+    offset: Offset(0, 3), // changes position of shadow
+  ),
+];
+
 final InputDecoration textFilled = InputDecoration(
   fillColor: ColorSys.lightGray,
   filled: true,

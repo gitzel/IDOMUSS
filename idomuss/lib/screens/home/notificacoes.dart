@@ -19,8 +19,8 @@ class _NotificacoesState extends State<Notificacoes> {
             padding: const EdgeInsets.fromLTRB(paddingSmall,
                 2 * paddingExtraLarge, paddingSmall, paddingSmall),
             child: RichText(
-              text: new TextSpan(
-                style: new TextStyle(
+              text: TextSpan(
+                style:  TextStyle(
                     fontSize: fontSizeSubTitle,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Montserrat',

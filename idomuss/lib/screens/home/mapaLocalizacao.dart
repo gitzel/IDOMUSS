@@ -112,7 +112,7 @@ class _MapaLocalizacaoState extends State<MapaLocalizacao> {
                           child: RaisedButton(
                             child: Text("Salvar"),
                             onPressed: () {
-                              Navigator.pop(context, [latLng, numero]);
+                              Navigator.pop(context, [numero, latLng]);
                             },
                           ),
                         ),

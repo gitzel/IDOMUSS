@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -57,46 +58,46 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                           width: double.infinity,
                           color: ColorSys.primary.withOpacity(0.6),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: RadialProgress(
-                                width: 4,
-                                goalCompleted: 0.9,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(widget.profissional.foto),
-                                  radius: screen.width * 0.15,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(paddingSmall),
-                                  child: Container(
-                                    child: Text(
-                                      widget.profissional.nome,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: fontSizeSubTitle,
-                                          fontWeight: FontWeight.bold),
+                         Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: RadialProgress(
+                                      width: 4,
+                                      goalCompleted: 0.9,
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(widget.profissional.foto),
+                                        radius: screen.width * 0.15,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                !widget.profissional.vip
-                                    ? SizedBox.shrink()
-                                    : Image.asset(
-                                        "assets/geral/premium_white.png",
-                                      )
-                              ],
-                            ),
-                          ],
+                                  widget.profissional.vip? Positioned(
+                                    left: MediaQuery.of(context).size.width / 2 + 60,
+                                    top: 0,
+                                    child: Image.asset("assets/geral/premium_white.png")): SizedBox.shrink()
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: paddingSmall),
+                                child: Container(
+                                        child: FittedBox(
+                                          fit: BoxFit.fitWidth,
+                                                                                child: Text(
+                                              widget.profissional.nome,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fontSizeSubTitle,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                        ),
+                                      ),
+                              ),
+                            ],
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -291,7 +292,7 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AssinarServico(
-                                        widget.profissional.uid)));
+                                        widget.profissional.uid, widget.profissional.nome)));
                           },
                         ),
                       )

@@ -23,7 +23,7 @@ class DatabaseService {
   final CollectionReference enderecos =
       Firestore.instance.collection("endereco");
   final CollectionReference servicosContratados =
-      Firestore.instance.collection("servicoContratado");
+      Firestore.instance.collection("servicosContratados");
   final CollectionReference servicos =
       Firestore.instance.collection("servicos");
   final CollectionReference ranking = Firestore.instance.collection("ranking");
@@ -142,21 +142,30 @@ class DatabaseService {
       "uidProfissional": servicoContratado.uidProfissional,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
-      "servico": servicoContratado.servico,
-      "situacao": servicoContratado.situacao,
-      "preco": servicoContratado.preco,
+      "situacao": "Pendente",
+      "preco": -1.0,
       "descricao": servicoContratado.descricao,
+      "localizacao": servicoContratado.localizacao,
+      "numero": servicoContratado.numero,
+      "complemento": servicoContratado.complemento,
+      "visualizado": false
     });
   }
 
-  Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime hora) {
+  Stream<List<DateTime>> horarioDisponivel(String uidProf, DateTime data) {
+
+    var min = Timestamp.fromDate(DateTime(data.year, data.month, data.day));
+    var max = Timestamp.fromDate(DateTime.now().add(Duration(days:1)));
+
     return servicosContratados
         .where("uidProfissional", isEqualTo: uidProf)
+        .where("data", isGreaterThanOrEqualTo: min)
+      .where("data",  isLessThanOrEqualTo: max)
         .snapshots()
-        .map(_HorariosFromSnapshot);
+        .map(_horariosFromSnapshot);
   }
 
-  List<DateTime> _HorariosFromSnapshot(QuerySnapshot snapshot) {
+  List<DateTime> _horariosFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       Timestamp time = doc.data["data"];
       return DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
@@ -165,12 +174,11 @@ class DatabaseService {
 
   Future updateServicoContratado(ServicoContratado servicoContratado) async {
     return await servicosContratados
-        .document(servicoContratado.uidServicoContratado)
+        .document(servicoContratado.uid)
         .updateData({
-      "uidProfissional": servicoContratado.profissional.uid,
+      "uidProfissional": servicoContratado.uidProfissional,
       "uidCliente": servicoContratado.uidCliente,
       "data": servicoContratado.data,
-      "servico": servicoContratado.servico,
       "situacao": servicoContratado.situacao,
       "preco": servicoContratado.preco,
       "descricao": servicoContratado.descricao,
@@ -207,7 +215,7 @@ class DatabaseService {
       QuerySnapshot snapshot) {
     List<ServicoContratado> servicos = snapshot.documents.map((doc) {
       ServicoContratado ret = ServicoContratado.fromJson(doc.data);
-      ret.uidServicoContratado = doc.documentID;
+      ret.uid = doc.documentID;
       return ret;
     }).toList();
 
