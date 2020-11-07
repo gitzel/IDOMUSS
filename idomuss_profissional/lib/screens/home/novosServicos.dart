@@ -1,10 +1,8 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expandable/expandable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:idomussprofissional/components/servico_item%20copy.dart';
 import 'package:idomussprofissional/components/servico_item.dart';
 import 'package:idomussprofissional/helpers/ColorsSys.dart';
 import 'package:idomussprofissional/helpers/constantes.dart';
@@ -12,6 +10,7 @@ import 'package:idomussprofissional/helpers/loadPage.dart';
 import 'package:idomussprofissional/models/cliente.dart';
 import 'package:idomussprofissional/models/servicoContrado.dart';
 import 'package:idomussprofissional/screens/home/home.dart';
+import 'package:idomussprofissional/screens/home/infoServico.dart';
 import 'package:idomussprofissional/screens/home/ranking.dart';
 import 'package:idomussprofissional/services/database.dart';
 import 'package:provider/provider.dart';
@@ -97,35 +96,44 @@ class _NovosServicosState extends State<NovosServicos> {
                     padding: EdgeInsets.zero,
                     itemCount: servicosPendentes.data.length,
                     itemBuilder: (ctx, index) {
-                      return Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(paddingSmall),
-                            child: ServicoItem(
-                              servicosPendentes.data[index],
-                              width: MediaQuery.of(context).size.width -
-                                  paddingSmall * 2,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return InfoServico(servicosPendentes.data[index]);
+                          }));
+                        },
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(paddingSmall),
+                              child: ServicoItem(
+                                servicosPendentes.data[index],
+                                width: MediaQuery.of(context).size.width -
+                                    paddingSmall * 2,
+                              ),
                             ),
-                          ),
-                          servicosPendentes.data[index].visualizado
-                              ? SizedBox.shrink()
-                              : Positioned(
-                                  left: paddingSmall / 2,
-                                  top: paddingSmall / 2,
-                                  child: Container(
-                                    padding: EdgeInsets.all(paddingTiny),
-                                    decoration: BoxDecoration(
-                                        color: ColorSys.primary,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Text(
-                                      "Novo",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                            servicosPendentes.data[index].visualizado
+                                ? SizedBox.shrink()
+                                : Positioned(
+                                    left: paddingSmall / 2,
+                                    top: paddingSmall / 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(paddingTiny),
+                                      decoration: BoxDecoration(
+                                          color: ColorSys.primary,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text(
+                                        "Novo",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ),
-                                )
-                        ],
+                                  )
+                          ],
+                        ),
                       );
                     });
               }),

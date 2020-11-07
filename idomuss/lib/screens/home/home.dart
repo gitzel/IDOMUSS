@@ -31,15 +31,18 @@ class _HomeState extends State<Home> {
         return Feed();
         break;
       case 1:
-        return Favorite();
+        return Feed();
         break;
       case 2:
-        return Busca();
+        return Favorite();
         break;
       case 3:
-        return Notificacoes();
+        return Busca();
         break;
       case 4:
+        return Notificacoes();
+        break;
+      case 5:
         return StreamProvider<Cliente>.value(
             value: DatabaseService(uid: user.uid).cliente,
             child: Perfil(user.uid));
@@ -64,6 +67,11 @@ class _HomeState extends State<Home> {
             backgroundColor: ColorSys.gray,
             index: _index,
             items: <Widget>[
+              Icon(
+                Icons.assistant,
+                size: 30,
+                color: ColorSys.primary,
+              ),
               Icon(
                 Icons.home,
                 size: 30,

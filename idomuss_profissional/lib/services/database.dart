@@ -129,7 +129,9 @@ class DatabaseService {
         .snapshots()
         .map((snapshot) {
       return snapshot.documents.map((doc) {
-        return ServicoContratado.fromJson(doc.data);
+        var serv = ServicoContratado.fromJson(doc.data);
+        serv.uid = doc.documentID;
+        return serv;
       }).toList();
     });
   }
@@ -199,6 +201,10 @@ class DatabaseService {
     }).toList();
 
     return p;
+  }
+
+  void verServico(String uidServico) {
+    servicosContratados.document(uid).updateData({"visualizado": uidServico});
   }
 
   void deleteUserData() async {

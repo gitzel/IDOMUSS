@@ -36,7 +36,7 @@ dependencies:
   geolocator: ^6.0.0+4
   geocoding: ^1.0.3+1
   search_cep: ^3.0.0+2
-  expandable: ^4.1.4
+  auto_size_text: ^2.1.0
 
 
 flutter_launcher_name:

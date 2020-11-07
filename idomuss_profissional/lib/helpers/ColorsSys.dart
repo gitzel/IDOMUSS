@@ -7,7 +7,6 @@ class ColorSys {
   static Color secundarygray = Colors.grey[400];
   static Color black = Color.fromRGBO(52, 53, 37, 1);
   static Color secundaryLight = Color.fromRGBO(137, 137, 137, 1);
-  static Color test = Color(0xf953c6);
 }
 
 const Gradients = [

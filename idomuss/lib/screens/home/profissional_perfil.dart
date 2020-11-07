@@ -211,7 +211,8 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(paddingSmall),
-                        child: ProfissionalInfo(Row(
+                        child: ProfissionalInfo(
+                          Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [

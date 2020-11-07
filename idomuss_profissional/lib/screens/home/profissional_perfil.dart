@@ -93,17 +93,6 @@ class _PerfilPrestadorState extends State<PerfilPrestador> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: paddingSmall, vertical: paddingLarge),
-                        child: IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
                     ],
                   )),
               Expanded(

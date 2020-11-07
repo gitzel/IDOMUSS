@@ -11,36 +11,19 @@ import 'package:idomussprofissional/models/servicoContrado.dart';
 import 'package:idomussprofissional/services/database.dart';
 
 class ServicoItem extends StatefulWidget {
-  bool destaque;
   ServicoContratado servico;
   double width, height;
-  ServicoItem(this.servico,
-      {this.destaque = false, this.width = null, this.height = null});
+  ServicoItem(this.servico, {this.width = null, this.height = null});
 
   @override
   _State createState() => _State();
 }
 
 class _State extends State<ServicoItem> with TickerProviderStateMixin {
-  //Animation
-  Animation<double> _animation;
-
-//Animation Controller
-  AnimationController _animationController;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.destaque) {
-      _animationController =
-          AnimationController(vsync: this, duration: Duration(seconds: 1));
-      _animationController.repeat(reverse: true);
-      _animation = Tween(begin: 1.0, end: 15.0).animate(_animationController)
-        ..addListener(() {
-          setState(() {});
-        });
-    }
   }
 
   @override
@@ -77,14 +60,7 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                       color: ColorSys.gray,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: widget.destaque
-                          ? [
-                              BoxShadow(
-                                  color: ColorSys.primary.withOpacity(0.5),
-                                  blurRadius: _animation.value,
-                                  spreadRadius: _animation.value)
-                            ]
-                          : shadow),
+                      boxShadow: shadow),
                   padding: EdgeInsets.all(paddingSmall),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +74,7 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
                           ),
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(cliente.data.foto),
+                            backgroundColor: Colors.white,
                             radius: MediaQuery.of(context).size.width * 0.1,
                           ),
                         ),

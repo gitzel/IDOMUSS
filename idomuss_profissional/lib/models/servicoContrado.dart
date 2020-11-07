@@ -6,7 +6,8 @@ class ServicoContratado {
   GeoPoint _localizacao;
 
   @protected
-  String _uidCliente,
+  String _uid,
+      _uidCliente,
       _uidProfissional,
       _descricao,
       _situacao,
@@ -57,6 +58,12 @@ class ServicoContratado {
 
   set situacao(String value) {
     _situacao = value;
+  }
+
+  get uid => _uid;
+
+  set uid(value) {
+    _uid = value;
   }
 
   get uidCliente => _uidCliente;
