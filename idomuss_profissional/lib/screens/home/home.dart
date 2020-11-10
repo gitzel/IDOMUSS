@@ -5,7 +5,7 @@ import 'package:idomussprofissional/helpers/ColorsSys.dart';
 import 'package:idomussprofissional/helpers/loadPage.dart';
 import 'package:idomussprofissional/models/profissional.dart';
 import 'package:idomussprofissional/screens/home/feed.dart';
-import 'package:idomussprofissional/screens/home/novosServicos.dart';
+import 'package:idomussprofissional/screens/home/servicos.dart';
 import 'package:idomussprofissional/screens/home/profissional_perfil.dart';
 import 'package:idomussprofissional/screens/home/ranking.dart';
 import 'package:idomussprofissional/services/auth.dart';

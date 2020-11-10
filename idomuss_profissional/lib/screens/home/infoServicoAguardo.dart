@@ -14,14 +14,14 @@ import 'package:idomussprofissional/screens/home/home.dart';
 import 'package:idomussprofissional/screens/home/orcamento.dart';
 import 'package:idomussprofissional/services/database.dart';
 
-class InfoServico extends StatefulWidget {
+class AguardarClienteInfo extends StatefulWidget {
   ServicoContratado servicoContratado;
-  InfoServico(this.servicoContratado);
+  AguardarClienteInfo(this.servicoContratado);
   @override
-  _InfoServicoState createState() => _InfoServicoState();
+  _AguardarClienteInfoState createState() => _AguardarClienteInfoState();
 }
 
-class _InfoServicoState extends State<InfoServico> {
+class _AguardarClienteInfoState extends State<AguardarClienteInfo> {
   String formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
@@ -112,50 +112,55 @@ class _InfoServicoState extends State<InfoServico> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(paddingSmall),
-                              child: Text(
-                                "Forneça um orçamento para este serviço!",
-                                style: TextStyle(
-                                    color: ColorSys.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: fontSizeRegular),
+                              padding: EdgeInsets.all(paddingSmall),
+                              child: Container(
+                                padding: EdgeInsets.all(paddingSmall),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: shadow,
+                                    color: Colors.white),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: -1,
+                                        child: Icon(
+                                          Icons.monetization_on,
+                                          color: ColorSys.primary,
+                                        )),
+                                    Expanded(
+                                      child: AutoSizeText("R\$${widget.servicoContratado.preco}"),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(paddingSmall),
+                              padding: EdgeInsets.all(paddingSmall),
                               child: Container(
-                                child: RaisedButton(
-                                  padding: EdgeInsets.all(paddingSmall),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: -1,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                right: paddingTiny),
-                                            child: Icon(Icons.monetization_on),
-                                          )),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          "Avalie e forneça o orçamento",
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return AvaliarOrcamento(widget.servicoContratado);
-                                    }));
-                                  },
+                                padding: EdgeInsets.all(paddingSmall),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: shadow,
+                                    color: Colors.white),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: -1,
+                                        child: Icon(
+                                          Icons.info,
+                                          color: ColorSys.primary,
+                                        )),
+                                    Expanded(
+                                      child: AutoSizeText("${widget.servicoContratado.descricao}"),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(paddingSmall),
                               child: Text(
-                                "Precisa de mais informações?",
+                                "Deseja falar com ${cliente.data.nome.split(' ')[0]}?",
                                 style: TextStyle(
                                     color: ColorSys.black,
                                     fontWeight: FontWeight.bold,

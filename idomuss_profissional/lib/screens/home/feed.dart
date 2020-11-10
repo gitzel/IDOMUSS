@@ -38,6 +38,10 @@ class _FeedState extends State<Feed> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(paddingSmall),
+                    child: Image.asset("assets/geral/no_favorites.png"),
+                  ),
                   Text(
                     "Infelizmente, não há atividade por agora!",
                     textAlign: TextAlign.center,

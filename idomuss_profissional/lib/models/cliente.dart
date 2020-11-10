@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Cliente {
   @protected
-  String _rg,
+  String _uid,
+    _rg,
       _cpf,
       _nome,
       _email,
@@ -46,6 +47,12 @@ class Cliente {
         _numeroCelular = json['numero'],
         _genero = json['genero'],
         _descricao = json['descricao'];
+
+  get uid => _uid;
+
+  set uid(String value) {
+    _uid = value;
+  }
 
   String get rg => _rg;
 

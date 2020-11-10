@@ -37,6 +37,9 @@ dependencies:
   geocoding: ^1.0.3+1
   search_cep: ^3.0.0+2
   auto_size_text: ^2.1.0
+  awesome_dialog: ^1.2.0
+  month_picker_dialog: ^0.3.3
+  table_calendar: ^2.3.0
 
 
 flutter_launcher_name:

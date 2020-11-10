@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:idomussprofissional/helpers/ColorsSys.dart';
@@ -24,6 +25,32 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  Widget getFrase(){
+    var frase = "";
+    switch(widget.servico.situacao){
+      case "Solicitando": frase = "Forneça um orçamento"; break;
+      case "Analisando": frase = "Aguarde a aprovação do cliente"; break;
+      case "Pendente": frase = "${widget.servico.data.day.toString().padLeft(2, '0')}/${widget.servico.data.month.toString().padLeft(2, '0')}/${widget.servico.data.year} ${widget.servico.data.hour.toString().padLeft(2, '0')}:${widget.servico.data.minute.toString().padLeft(2, '0')}"; break;
+    }
+
+    return Text(
+                                 frase,
+                                  style: TextStyle(
+                                      fontSize: fontSizeSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorSys.black),
+                                );
+  }
+
+  IconData getIcon(){
+    switch(widget.servico.situacao){
+      case "Solicitando": return Icons.monetization_on; break;
+      case "Analisando": return Icons.timer; break;
+      case "Pendente": return Icons.info; break;
+      default: return Icons.ac_unit;
+    }
   }
 
   @override
@@ -91,8 +118,9 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    AutoSizeText(
                                       cliente.data.nome,
+                                      maxLines: 1,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: ColorSys.black),
@@ -117,20 +145,14 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  "Forneça um orçamento",
-                                  style: TextStyle(
-                                      fontSize: fontSizeSmall,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorSys.black),
-                                ),
+                                getFrase()
                               ],
                             ),
                           ),
                         ),
                       ),
                       Icon(
-                        Icons.monetization_on,
+                        getIcon(),
                         color: ColorSys.primary,
                       )
                     ],
