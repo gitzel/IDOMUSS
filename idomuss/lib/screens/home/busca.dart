@@ -26,23 +26,18 @@ class _BuscaState extends State<Busca> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double size = MediaQuery.of(context).size.width;
-    final user = Provider.of<FirebaseUser>(context);
-    var width =
-        (size - ((_crossAxisCount - 1) * _crossAxisSpacing)) / _crossAxisCount;
-    var height = width / _aspectRatio;
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: ColorSys.primary),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(paddingSmall,
-                  2 * paddingExtraLarge, paddingSmall, paddingSmall),
+            Container(
+              height: 75,
+              padding: EdgeInsets.all(paddingSmall),
               child: RichText(
-                text: new TextSpan(
-                  style: new TextStyle(
+                text: TextSpan(
+                  style: TextStyle(
                       fontSize: fontSizeSubTitle,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat',

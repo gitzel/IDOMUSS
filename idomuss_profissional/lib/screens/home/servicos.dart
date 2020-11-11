@@ -18,28 +18,35 @@ class _NovosServicosState extends State<NovosServicos> {
 
     return DefaultTabController(
       length: 3,
-          child: Scaffold(
-            appBar: AppBar(elevation: 0,
-            title: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.new_releases),),
-                Tab(icon: Icon(Icons.access_time),),
-                Tab(icon: Icon(Icons.work),)
-              ],
-            ),
-            titleSpacing: 0,
-            ),
-            body: Container(
-              color: ColorSys.gray,
-              child: TabBarView(
-                children: [
-                  RequisicoesServicos(),
-                  AnaliseServicos(),
-                  CalendarioServicos()
-                ],
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.new_releases),
               ),
-            ),
+              Tab(
+                icon: Icon(Icons.access_time),
+              ),
+              Tab(
+                icon: Icon(Icons.work),
+              )
+            ],
           ),
+          titleSpacing: 0,
+        ),
+        body: Container(
+          color: ColorSys.gray,
+          child: TabBarView(
+            children: [
+              RequisicoesServicos(),
+              AnaliseServicos(),
+              CalendarioServicos()
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

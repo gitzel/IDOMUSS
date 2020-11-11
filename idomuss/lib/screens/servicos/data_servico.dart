@@ -137,13 +137,14 @@ class _DataServicoState extends State<DataServico> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:paddingSmall),
-                                child: Text("Selecione a data e hora pretendida",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,                                  
-                                  fontSize: fontSizeRegular
-                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: paddingSmall),
+                                child: Text(
+                                  "Selecione a data e hora pretendida",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeRegular),
                                 ),
                               ),
                               GestureDetector(

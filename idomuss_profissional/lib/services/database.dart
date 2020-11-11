@@ -26,8 +26,7 @@ class DatabaseService {
   final CollectionReference servicosContratados =
       Firestore.instance.collection("servicosContratados");
 
-    final CollectionReference chat =
-      Firestore.instance.collection("chat");
+  final CollectionReference chat = Firestore.instance.collection("chat");
 
   Future updateUserData(Profissional profissional) async {
     return await profissionais.document(uid).setData({
@@ -216,16 +215,16 @@ class DatabaseService {
     await profissionais.document(uid).delete();
   }
 
-  Stream<List<Mensagem>> getMensagensCliente(String uidCliente){
+  Stream<List<Mensagem>> getMensagensCliente(String uidCliente) {
     return chat
-              .where("uidProfissional", isEqualTo: uid)
-              .where("uidCliente", isEqualTo: uidCliente)
-              .orderBy("data", descending: true)
-              .snapshots()
-              .map(_listMensagemFromSnapshot);
+        .where("uidProfissional", isEqualTo: uid)
+        .where("uidCliente", isEqualTo: uidCliente)
+        .orderBy("data", descending: true)
+        .snapshots()
+        .map(_listMensagemFromSnapshot);
   }
 
-  List<Mensagem> _listMensagemFromSnapshot(QuerySnapshot snapshot){
+  List<Mensagem> _listMensagemFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       var msg = Mensagem.fromJson(doc.data);
       msg.uidMensagem = doc.documentID;
@@ -233,13 +232,13 @@ class DatabaseService {
     }).toList();
   }
 
-  void sendMessage(String uidCliente, String msg){
+  void sendMessage(String uidCliente, String msg) {
     chat.add({
       "uidCliente": uidCliente,
       "uidProfissional": uid,
       "mensagem": msg,
       "autorCliente": false,
-      "data":  Timestamp.fromDate(DateTime.now()),
+      "data": Timestamp.fromDate(DateTime.now()),
       "visualizado": false
     });
   }
@@ -259,16 +258,14 @@ class DatabaseService {
   }
 
   void sendOrcamento(ServicoContratado servicoContratado, String orcamento) {
-    servicosContratados.document(servicoContratado.uid).updateData({
-      "preco": double.parse(orcamento),
-      "situacao": "Analisando"
-    });
+    servicosContratados.document(servicoContratado.uid).updateData(
+        {"preco": double.parse(orcamento), "situacao": "Analisando"});
   }
 
   void visualizarServico(uidServico) {
-    servicosContratados.document(uidServico).updateData({
-      "visualizadoProfissional": true
-    });
+    servicosContratados
+        .document(uidServico)
+        .updateData({"visualizadoProfissional": true});
   }
 
   Future<bool> temMensagem(condicao, uidCliente) async {
@@ -287,22 +284,22 @@ class DatabaseService {
   }
 
   void visualizarMensagem(uidMensagem) {
-    chat.document(uidMensagem).updateData({
-      "visualizado": true
-    });
+    chat.document(uidMensagem).updateData({"visualizado": true});
   }
 
-  Stream<List<ServicoContratado>> diasOcupados(DateTime dataSelecionada){
+  Stream<List<ServicoContratado>> diasOcupados(DateTime dataSelecionada) {
     DateTime nowDate = DateTime.now();
     nowDate = DateTime(nowDate.year, nowDate.month, 1);
     return servicosContratados
-      .where("uidProfissional", isEqualTo: uid)
-      .where("data", isGreaterThanOrEqualTo: Timestamp.fromDate(nowDate))
-      .where("situacao", isEqualTo:"Pendente")
-      .where("data", isLessThan: Timestamp.fromDate(DateTime(nowDate.year, nowDate.month + 1, 0)))
-      .orderBy("data")
-      .snapshots()
-      .map(_listServicosFromSnapshot);
+        .where("uidProfissional", isEqualTo: uid)
+        .where("data", isGreaterThanOrEqualTo: Timestamp.fromDate(nowDate))
+        .where("situacao", isEqualTo: "Pendente")
+        .where("data",
+            isLessThan: Timestamp.fromDate(
+                DateTime(nowDate.year, nowDate.month + 1, 0)))
+        .orderBy("data")
+        .snapshots()
+        .map(_listServicosFromSnapshot);
   }
 
   List<ServicoContratado> _listServicosFromSnapshot(QuerySnapshot snapshot) {

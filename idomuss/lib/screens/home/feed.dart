@@ -40,8 +40,10 @@ class _FeedState extends State<Feed> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     numero = prefs.getString("numero") ?? "";
     complemento = prefs.getString("complemento") ?? "";
-    pos = LatLng(prefs.getDouble("latitude"), prefs.getDouble("longitude")) ??
-        null;
+
+    pos = prefs.get("latitude") == null
+        ? null
+        : LatLng(prefs.getDouble("latitude"), prefs.getDouble("longitude"));
   }
 
   _requestPermission() async {

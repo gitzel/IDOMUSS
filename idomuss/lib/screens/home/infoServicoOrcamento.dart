@@ -1,27 +1,24 @@
-import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:idomussprofissional/components/head_servico.dart';
-import 'package:idomussprofissional/helpers/ColorsSys.dart';
-import 'package:idomussprofissional/helpers/constantes.dart';
-import 'package:idomussprofissional/helpers/loadPage.dart';
-import 'package:idomussprofissional/models/cliente.dart';
-import 'package:idomussprofissional/models/servicoContrado.dart';
-import 'package:idomussprofissional/screens/home/chat.dart';
-import 'package:idomussprofissional/screens/home/home.dart';
-import 'package:idomussprofissional/screens/home/orcamento.dart';
-import 'package:idomussprofissional/services/database.dart';
+import 'package:idomuss/components/head_servico.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/models/servicoContratado.dart';
+import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/database.dart';
 
-class InfoServico extends StatefulWidget {
+import 'chat.dart';
+
+class InfoServicoOrcamento extends StatefulWidget {
   ServicoContratado servicoContratado;
-  InfoServico(this.servicoContratado);
+  InfoServicoOrcamento(this.servicoContratado);
   @override
-  _InfoServicoState createState() => _InfoServicoState();
+  _InfoServicoOrcamentoState createState() => _InfoServicoOrcamentoState();
 }
 
-class _InfoServicoState extends State<InfoServico> {
+class _InfoServicoOrcamentoState extends State<InfoServicoOrcamento> {
   String formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
@@ -39,11 +36,11 @@ class _InfoServicoState extends State<InfoServico> {
         appBar: AppBar(
           elevation: 0,
         ),
-        body: StreamBuilder<Cliente>(
+        body: StreamBuilder<Profissional>(
             stream: DatabaseService()
-                .getCliente(widget.servicoContratado.uidCliente),
-            builder: (context, cliente) {
-              if (!cliente.hasData) return LoadPage();
+                .getProfissional(widget.servicoContratado.uidProfissional),
+            builder: (context, profissional) {
+              if (!profissional.hasData) return LoadPage();
 
               return FutureBuilder<List<Placemark>>(
                   future: placemarkFromCoordinates(
@@ -57,8 +54,8 @@ class _InfoServicoState extends State<InfoServico> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           HeadServico(
-                              cliente.data.nome,
-                              cliente.data.foto,
+                              profissional.data.nome,
+                              profissional.data.foto,
                               formatDate(widget.servicoContratado.data),
                               location.data.first.subLocality),
                           Padding(
@@ -117,7 +114,7 @@ class _InfoServicoState extends State<InfoServico> {
                           Padding(
                             padding: const EdgeInsets.all(paddingSmall),
                             child: Text(
-                              "Forneça um orçamento para este serviço!",
+                              "${profissional.data.nome.split(' ')[0]} trouxe um orçamento para você!",
                               style: TextStyle(
                                   color: ColorSys.black,
                                   fontWeight: FontWeight.bold,
@@ -140,19 +137,13 @@ class _InfoServicoState extends State<InfoServico> {
                                         )),
                                     Expanded(
                                       child: AutoSizeText(
-                                        "Avalie e forneça o orçamento",
+                                        "Avalie e aprove ou não o orçamento",
                                         maxLines: 1,
                                       ),
                                     ),
                                   ],
                                 ),
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return AvaliarOrcamento(
-                                        widget.servicoContratado);
-                                  }));
-                                },
+                                onPressed: () {},
                               ),
                             ),
                           ),
@@ -188,7 +179,7 @@ class _InfoServicoState extends State<InfoServico> {
                                         )),
                                     Expanded(
                                       child: AutoSizeText(
-                                        "Entre em contato com ${cliente.data.nome.split(' ')[0]}",
+                                        "Entre em contato com ${profissional.data.nome.split(' ')[0]}",
                                         maxLines: 1,
                                       ),
                                     ),
@@ -197,7 +188,7 @@ class _InfoServicoState extends State<InfoServico> {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return Chat(cliente.data);
+                                    return Chat(profissional.data);
                                   }));
                                 },
                               ),

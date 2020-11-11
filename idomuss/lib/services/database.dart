@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:idomuss/models/avaliacao.dart';
 import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/models/mensagem.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/endereco.dart';
 import 'package:idomuss/models/servico.dart';
@@ -16,7 +17,7 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  final CollectionReference collection =
+  final CollectionReference clientes =
       Firestore.instance.collection("clientes");
   final CollectionReference prof =
       Firestore.instance.collection("profissionais");
@@ -31,9 +32,30 @@ class DatabaseService {
       Firestore.instance.collection("favoritos");
   final CollectionReference avalicao =
       Firestore.instance.collection("avaliacao");
+  final CollectionReference chat = Firestore.instance.collection("chat");
+
+  Stream<List<ServicoContratado>> proximoServico() {
+    dynamic now = DateTime.now();
+    now = Timestamp.fromDate(DateTime(now.year, now.month, now.day));
+    var tomorrow = Timestamp.fromDate(DateTime.now().add(Duration(days: 1)));
+
+    return servicosContratados
+        .where("uidProfissional", isEqualTo: uid)
+        .where("situacao", whereIn: ['Pendente', "A caminho", "Em andamento"])
+        .where("data", isGreaterThanOrEqualTo: now)
+        .where("data", isLessThanOrEqualTo: tomorrow)
+        .orderBy("data")
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.documents.map((doc) {
+            return ServicoContratado.fromJson(doc.data);
+          }).toList();
+        });
+  }
 
   Future updateUserData(Cliente cliente) async {
-    return await collection.document(uid).setData({
+    return await clientes.document(uid).setData({
       "rg": cliente.rg,
       "cpf": cliente.cpf,
       "email": cliente.email,
@@ -287,7 +309,7 @@ class DatabaseService {
   Future<Cliente> getCliente() async {
     Cliente cliente;
 
-    await collection.document(uid).snapshots().map((doc) {
+    await clientes.document(uid).snapshots().map((doc) {
       cliente = Cliente.fromJson(doc.data);
       cliente.uid = doc.documentID;
     });
@@ -296,7 +318,7 @@ class DatabaseService {
   }
 
   Stream<Cliente> get cliente {
-    return collection.document(uid).snapshots().map(_clienteFromSnapshot);
+    return clientes.document(uid).snapshots().map(_clienteFromSnapshot);
   }
 
   Cliente _clienteFromSnapshot(DocumentSnapshot snapshot) {
@@ -307,7 +329,7 @@ class DatabaseService {
   }
 
   void deleteUserData() async {
-    await collection.document(uid).delete();
+    await clientes.document(uid).delete();
   }
 
   Stream<List<Profissional>> get ListaProfissionaisByNota {
@@ -419,7 +441,7 @@ class DatabaseService {
   Future getFoto() {
     return FirebaseStorage.instance
         .ref()
-        .child("//clientes//" + uid + ".jpg")
+        .child("/clientes/" + uid + ".jpg")
         .getDownloadURL();
   }
 
@@ -492,5 +514,103 @@ class DatabaseService {
     } catch (e) {
       print(e);
     }
+  }
+
+  Stream<Profissional> getProfissional(uidProfissional) {
+    return prof
+        .document(uidProfissional)
+        .snapshots()
+        .map(_profissionalFromSnapshot);
+  }
+
+  void visualizarMensagem(uidMensagem) {
+    chat.document(uidMensagem).updateData({"visualizado": true});
+  }
+
+  void sendMessage(String uidProfissional, String msg) {
+    chat.add({
+      "uidCliente": uid,
+      "uidProfissional": uidProfissional,
+      "mensagem": msg,
+      "autorCliente": true,
+      "data": Timestamp.fromDate(DateTime.now()),
+      "visualizado": false
+    });
+  }
+
+  Stream<List<Mensagem>> getMensagensProfissional(String uidCliente) {
+    return chat
+        .where("uidProfissional", isEqualTo: uid)
+        .where("uidCliente", isEqualTo: uidCliente)
+        .orderBy("data", descending: true)
+        .snapshots()
+        .map(_listMensagemFromSnapshot);
+  }
+
+  List<Mensagem> _listMensagemFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      var msg = Mensagem.fromJson(doc.data);
+      msg.uidMensagem = doc.documentID;
+      return msg;
+    }).toList();
+  }
+
+  Future<bool> temMensagem(condicao, uidProfissional) async {
+    List<bool> naoVisualizados = await chat
+        .where("uidProfissional", isEqualTo: uidProfissional)
+        .where("uidCliente", isEqualTo: uid)
+        .where("autorCliente", isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents.map((doc) {
+        return doc.data['visualizado'] == true;
+      }).toList();
+    }).first;
+
+    return Future.value(naoVisualizados.contains(false));
+  }
+
+  Stream<List<ServicoContratado>> diasOcupados(DateTime dataSelecionada) {
+    DateTime nowDate = DateTime.now();
+    nowDate = DateTime(nowDate.year, nowDate.month, 1);
+    return servicosContratados
+        .where("uidCliente", isEqualTo: uid)
+        .where("data", isGreaterThanOrEqualTo: Timestamp.fromDate(nowDate))
+        .where("situacao", isEqualTo: "Pendente")
+        .where("data",
+            isLessThan: Timestamp.fromDate(
+                DateTime(nowDate.year, nowDate.month + 1, 0)))
+        .orderBy("data")
+        .snapshots()
+        .map(_listServicosFromSnapshot);
+  }
+
+  List<ServicoContratado> _listServicosFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      ServicoContratado ret = ServicoContratado.fromJson(doc.data);
+      ret.uid = doc.documentID;
+      return ret;
+    }).toList();
+  }
+
+  Stream<List<ServicoContratado>> servicosPendentes(condicao) {
+    return servicosContratados
+        .where("uidCliente", isEqualTo: uid)
+        .where("situacao", whereIn: condicao)
+        .orderBy("data")
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents.map((doc) {
+        var serv = ServicoContratado.fromJson(doc.data);
+        serv.uid = doc.documentID;
+        return serv;
+      }).toList();
+    });
+  }
+
+  void visualizarServico(uidServico) {
+    servicosContratados
+        .document(uidServico)
+        .updateData({"visualizadoCliente": true});
   }
 }

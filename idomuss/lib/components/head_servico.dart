@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:idomussprofissional/helpers/ColorsSys.dart';
-import 'package:idomussprofissional/helpers/constantes.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
 
 class HeadServico extends StatelessWidget {
   String foto, data, bairro, nome;

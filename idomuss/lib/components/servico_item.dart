@@ -1,15 +1,12 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:idomussprofissional/helpers/ColorsSys.dart';
-import 'package:idomussprofissional/helpers/constantes.dart';
-import 'package:idomussprofissional/helpers/loadPage.dart';
-import 'package:idomussprofissional/models/cliente.dart';
-import 'package:idomussprofissional/models/servicoContrado.dart';
-import 'package:idomussprofissional/services/database.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/models/servicoContratado.dart';
+import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/database.dart';
 
 class ServicoItem extends StatefulWidget {
   ServicoContratado servico;
@@ -31,10 +28,10 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
     var frase = "";
     switch (widget.servico.situacao) {
       case "Solicitando":
-        frase = "Forneça um orçamento";
+        frase = "Aguardando orçamento";
         break;
       case "Analisando":
-        frase = "Aguarde a aprovação do cliente";
+        frase = "Aprove ou não o orçamento";
         break;
       case "Pendente":
         frase =
@@ -69,8 +66,9 @@ class _State extends State<ServicoItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Cliente>(
-        stream: DatabaseService().getCliente(widget.servico.uidCliente),
+    return StreamBuilder<Profissional>(
+        stream:
+            DatabaseService().getProfissional(widget.servico.uidProfissional),
         builder: (context, cliente) {
           if (!cliente.hasData)
             return Container(

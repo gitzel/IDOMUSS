@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Cliente {
   @protected
   String _uid,
-    _rg,
+      _rg,
       _cpf,
       _nome,
       _email,

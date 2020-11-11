@@ -48,6 +48,7 @@ dependencies:
   search_cep: ^3.0.0+2
   shared_preferences: ^0.5.12+2
   auto_size_text: ^2.1.0
+  table_calendar: ^2.3.0
 
 flutter_launcher_name:
   name: "Idomuss"

@@ -19,10 +19,6 @@ import 'package:provider/provider.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 
 class Perfil extends StatefulWidget {
-  String uid;
-
-  Perfil(this.uid);
-
   @override
   _PerfilState createState() => _PerfilState();
 }
@@ -37,11 +33,11 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    final cliente = Provider.of<Cliente>(context) ?? Cliente.empty();
-    return FutureBuilder<dynamic>(
-        future: DatabaseService(uid: widget.uid).getFoto(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
+    final user = Provider.of<FirebaseUser>(context);
+    return StreamBuilder<Cliente>(
+        stream: DatabaseService(uid: user.uid).cliente,
+        builder: (context, cliente) {
+          if (cliente.hasData) {
             return Column(
               children: <Widget>[
                 Expanded(
@@ -53,7 +49,7 @@ class _PerfilState extends State<Perfil> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                snapshot.data,
+                                cliente.data.foto,
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -73,7 +69,8 @@ class _PerfilState extends State<Perfil> {
                                 width: 4,
                                 goalCompleted: 0.9,
                                 child: CircleAvatar(
-                                  backgroundImage: NetworkImage(snapshot.data),
+                                  backgroundImage:
+                                      NetworkImage(cliente.data.foto),
                                   radius: screen.width * 0.15,
                                 ),
                               ),
@@ -85,7 +82,7 @@ class _PerfilState extends State<Perfil> {
                                 Padding(
                                   padding: const EdgeInsets.all(paddingSmall),
                                   child: Text(
-                                    cliente.nome,
+                                    cliente.data.nome,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -101,7 +98,7 @@ class _PerfilState extends State<Perfil> {
                               ],
                             ),
                             Text(
-                              cliente.dataNascimento,
+                              cliente.data.dataNascimento,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -119,7 +116,7 @@ class _PerfilState extends State<Perfil> {
                         child: Padding(
                           padding: const EdgeInsets.all(paddingMedium),
                           child: Text(
-                            cliente.descricao,
+                            cliente.data.descricao,
                             textAlign: TextAlign.center,
                           ),
                         ),

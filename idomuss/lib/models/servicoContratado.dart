@@ -21,7 +21,7 @@ class ServicoContratado {
   DateTime _data;
 
   @protected
-  bool _visualizado;
+  bool _visualizadoCliente, _visualizadoProfissional;
 
   ServicoContratado.empty() {
     _localizacao = null;
@@ -30,8 +30,10 @@ class ServicoContratado {
         _uidProfissional = _descricao = _complemento = _numero = "";
     _preco = -1;
     _data = null;
-    _visualizado = false;
+    _visualizadoProfissional = false;
+    _visualizadoCliente = false;
   }
+
   ServicoContratado(
       this._descricao,
       this._preco,
@@ -42,7 +44,8 @@ class ServicoContratado {
       this._situacao,
       this._complemento,
       this._numero,
-      this._visualizado);
+      this._visualizadoCliente,
+      this._visualizadoProfissional);
 
   ServicoContratado.fromJson(Map<String, dynamic> json)
       : _descricao = json['descricao'],
@@ -55,7 +58,8 @@ class ServicoContratado {
         _localizacao = json['localizacao'],
         _numero = json['numero'],
         _complemento = json['complemento'],
-        _visualizado = json['visualizado'];
+        _visualizadoProfissional = json['visualizadoProfissional'],
+        _visualizadoCliente = json['visualizadoCliente'];
 
   String get descricao => _descricao;
 
@@ -120,9 +124,15 @@ class ServicoContratado {
     _complemento = value;
   }
 
-  get visualizado => _visualizado;
+  get visualizadoCliente => _visualizadoCliente;
 
   set visualizado(value) {
-    _visualizado = value;
+    _visualizadoCliente = value;
+  }
+
+  get visualizadoProfissional => _visualizadoProfissional;
+
+  set visualizadoProfissional(value) {
+    _visualizadoProfissional = value;
   }
 }

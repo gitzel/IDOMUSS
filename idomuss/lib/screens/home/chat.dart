@@ -1,21 +1,19 @@
-import 'dart:ui';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:idomussprofissional/helpers/ColorsSys.dart';
-import 'package:idomussprofissional/helpers/constantes.dart';
-import 'package:idomussprofissional/helpers/loadPage.dart';
-import 'package:idomussprofissional/models/cliente.dart';
-import 'package:idomussprofissional/models/mensagem.dart';
-import 'package:idomussprofissional/models/profissional.dart';
-import 'package:idomussprofissional/services/database.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/cliente.dart';
+import 'package:idomuss/models/mensagem.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Chat extends StatefulWidget {
-  Cliente cliente;
-  String fotoProfissional;
-  Chat(this.cliente);
+  Profissional profissional;
+  String fotoCliente;
+
+  Chat(this.profissional);
 
   @override
   _ChatState createState() => _ChatState();
@@ -23,13 +21,12 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   TextEditingController msgController = new TextEditingController();
-  String fotoProfissional;
 
   _bolhaMensagem(String message, DateTime data, bool ehCliente, bool semFoto) {
     return Column(
       children: <Widget>[
         Container(
-          alignment: ehCliente ? Alignment.topLeft : Alignment.topRight,
+          alignment: !ehCliente ? Alignment.topLeft : Alignment.topRight,
           child: Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.8,
@@ -37,7 +34,7 @@ class _ChatState extends State<Chat> {
             padding: EdgeInsets.all(paddingSmall),
             margin: EdgeInsets.symmetric(vertical: paddingSmall),
             decoration: BoxDecoration(
-              color: ehCliente ? Colors.white : ColorSys.primary,
+              color: !ehCliente ? Colors.white : ColorSys.primary,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -50,16 +47,17 @@ class _ChatState extends State<Chat> {
             child: Text(
               message,
               style: TextStyle(
-                color: ehCliente ? Colors.black54 : Colors.white,
+                color: !ehCliente ? Colors.black54 : Colors.white,
               ),
             ),
           ),
         ),
         !semFoto
             ? Row(
-                mainAxisAlignment:
-                    ehCliente ? MainAxisAlignment.start : MainAxisAlignment.end,
-                children: !ehCliente
+                mainAxisAlignment: !ehCliente
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.end,
+                children: ehCliente
                     ? [
                         Text(
                           "${data.hour.toString().padLeft(2, '0')}:${data.minute.toString().padLeft(2, '0')}",
@@ -84,7 +82,7 @@ class _ChatState extends State<Chat> {
                           ),
                           child: CircleAvatar(
                             radius: 15,
-                            backgroundImage: NetworkImage(fotoProfissional),
+                            backgroundImage: NetworkImage(widget.fotoCliente),
                           ),
                         ),
                       ]
@@ -102,7 +100,8 @@ class _ChatState extends State<Chat> {
                           ),
                           child: CircleAvatar(
                             radius: 15,
-                            backgroundImage: NetworkImage(widget.cliente.foto),
+                            backgroundImage:
+                                NetworkImage(widget.profissional.foto),
                           ),
                         ),
                         SizedBox(
@@ -131,18 +130,18 @@ class _ChatState extends State<Chat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.cliente.nome,
+          widget.profissional.nome,
           textAlign: TextAlign.center,
           style:
               TextStyle(fontWeight: FontWeight.bold, fontSize: fontSizeSmall),
         ),
       ),
-      body: StreamBuilder<Profissional>(
-          stream: DatabaseService(uid: user.uid).profissional,
+      body: StreamBuilder<Cliente>(
+          stream: DatabaseService(uid: user.uid).cliente,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return LoadPage();
 
-            this.fotoProfissional = snapshot.data.foto;
+            widget.fotoCliente = snapshot.data.foto;
 
             return Column(
               children: [
@@ -152,7 +151,7 @@ class _ChatState extends State<Chat> {
                       decoration: background,
                       child: StreamBuilder<List<Mensagem>>(
                         stream: DatabaseService(uid: user.uid)
-                            .getMensagensCliente(widget.cliente.uid),
+                            .getMensagensProfissional(widget.profissional.uid),
                         builder: (context, mensagens) {
                           if (!mensagens.hasData) return LoadPage();
 
@@ -217,7 +216,8 @@ class _ChatState extends State<Chat> {
                             onPressed: () {
                               if (msgController.text.isNotEmpty) {
                                 DatabaseService(uid: user.uid).sendMessage(
-                                    widget.cliente.uid, msgController.text);
+                                    widget.profissional.uid,
+                                    msgController.text);
                                 msgController.clear();
                               }
                             },

@@ -6,9 +6,11 @@ import 'package:idomuss/models/cliente.dart';
 import 'package:idomuss/models/profissional.dart';
 import 'package:idomuss/models/servico.dart';
 import 'package:idomuss/screens/home/busca.dart';
+import 'package:idomuss/screens/home/calendario.dart';
 import 'package:idomuss/screens/home/favorite.dart';
 import 'package:idomuss/screens/home/notificacoes.dart';
 import 'package:idomuss/screens/home/perfil.dart';
+import 'package:idomuss/screens/home/servicoAndamento.dart';
 import 'package:idomuss/services/auth.dart';
 import 'package:idomuss/services/database.dart';
 import 'package:provider/provider.dart';
@@ -31,21 +33,62 @@ class _HomeState extends State<Home> {
         return Feed();
         break;
       case 1:
-        return Feed();
-        break;
-      case 2:
         return Favorite();
         break;
+      case 2:
+        return DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                title: TabBar(
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.search),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.assistant),
+                    ),
+                  ],
+                ),
+                titleSpacing: 0,
+              ),
+              body: Container(
+                color: ColorSys.gray,
+                child: TabBarView(
+                  children: [Busca(), ServicoAndamento()],
+                ),
+              ),
+            ));
+        break;
       case 3:
-        return Busca();
+        return DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                title: TabBar(
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.monetization_on),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.calendar_today),
+                    ),
+                  ],
+                ),
+                titleSpacing: 0,
+              ),
+              body: Container(
+                color: ColorSys.gray,
+                child: TabBarView(
+                  children: [Notificacoes(), Calendario()],
+                ),
+              ),
+            ));
         break;
       case 4:
-        return Notificacoes();
-        break;
-      case 5:
-        return StreamProvider<Cliente>.value(
-            value: DatabaseService(uid: user.uid).cliente,
-            child: Perfil(user.uid));
+        return Perfil();
         break;
     }
   }
@@ -67,11 +110,6 @@ class _HomeState extends State<Home> {
             backgroundColor: ColorSys.gray,
             index: _index,
             items: <Widget>[
-              Icon(
-                Icons.assistant,
-                size: 30,
-                color: ColorSys.primary,
-              ),
               Icon(
                 Icons.home,
                 size: 30,

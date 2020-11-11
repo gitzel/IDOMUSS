@@ -1,22 +1,20 @@
-import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:idomussprofissional/components/head_servico.dart';
-import 'package:idomussprofissional/helpers/ColorsSys.dart';
-import 'package:idomussprofissional/helpers/constantes.dart';
-import 'package:idomussprofissional/helpers/loadPage.dart';
-import 'package:idomussprofissional/models/cliente.dart';
-import 'package:idomussprofissional/models/servicoContrado.dart';
-import 'package:idomussprofissional/screens/home/chat.dart';
-import 'package:idomussprofissional/screens/home/home.dart';
-import 'package:idomussprofissional/screens/home/orcamento.dart';
-import 'package:idomussprofissional/services/database.dart';
+import 'package:idomuss/components/head_servico.dart';
+import 'package:idomuss/helpers/ColorsSys.dart';
+import 'package:idomuss/helpers/constantes.dart';
+import 'package:idomuss/models/profissional.dart';
+import 'package:idomuss/models/servicoContratado.dart';
+import 'package:idomuss/services/database.dart';
+
+import 'busca.dart';
+import 'chat.dart';
 
 class InfoServico extends StatefulWidget {
   ServicoContratado servicoContratado;
   InfoServico(this.servicoContratado);
+
   @override
   _InfoServicoState createState() => _InfoServicoState();
 }
@@ -39,11 +37,11 @@ class _InfoServicoState extends State<InfoServico> {
         appBar: AppBar(
           elevation: 0,
         ),
-        body: StreamBuilder<Cliente>(
+        body: StreamBuilder<Profissional>(
             stream: DatabaseService()
-                .getCliente(widget.servicoContratado.uidCliente),
-            builder: (context, cliente) {
-              if (!cliente.hasData) return LoadPage();
+                .getProfissional(widget.servicoContratado.uidProfissional),
+            builder: (context, profissional) {
+              if (!profissional.hasData) return LoadPage();
 
               return FutureBuilder<List<Placemark>>(
                   future: placemarkFromCoordinates(
@@ -57,8 +55,8 @@ class _InfoServicoState extends State<InfoServico> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           HeadServico(
-                              cliente.data.nome,
-                              cliente.data.foto,
+                              profissional.data.nome,
+                              profissional.data.foto,
                               formatDate(widget.servicoContratado.data),
                               location.data.first.subLocality),
                           Padding(
@@ -115,51 +113,57 @@ class _InfoServicoState extends State<InfoServico> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(paddingSmall),
-                            child: Text(
-                              "Forneça um orçamento para este serviço!",
-                              style: TextStyle(
-                                  color: ColorSys.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: fontSizeRegular),
+                            padding: EdgeInsets.all(paddingSmall),
+                            child: Container(
+                              padding: EdgeInsets.all(paddingSmall),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: shadow,
+                                  color: Colors.white),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: -1,
+                                      child: Icon(
+                                        Icons.monetization_on,
+                                        color: ColorSys.primary,
+                                      )),
+                                  Expanded(
+                                    child: AutoSizeText(
+                                        "R\$${widget.servicoContratado.preco}"),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(paddingSmall),
+                            padding: EdgeInsets.all(paddingSmall),
                             child: Container(
-                              child: RaisedButton(
-                                padding: EdgeInsets.all(paddingSmall),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: -1,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              right: paddingTiny),
-                                          child: Icon(Icons.monetization_on),
-                                        )),
-                                    Expanded(
-                                      child: AutoSizeText(
-                                        "Avalie e forneça o orçamento",
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return AvaliarOrcamento(
-                                        widget.servicoContratado);
-                                  }));
-                                },
+                              padding: EdgeInsets.all(paddingSmall),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: shadow,
+                                  color: Colors.white),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: -1,
+                                      child: Icon(
+                                        Icons.info,
+                                        color: ColorSys.primary,
+                                      )),
+                                  Expanded(
+                                    child: AutoSizeText(
+                                        "${widget.servicoContratado.descricao}"),
+                                  )
+                                ],
                               ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(paddingSmall),
                             child: Text(
-                              "Precisa de mais informações?",
+                              "Deseja falar com ${profissional.data.nome.split(' ')[0]}?",
                               style: TextStyle(
                                   color: ColorSys.black,
                                   fontWeight: FontWeight.bold,
@@ -188,7 +192,7 @@ class _InfoServicoState extends State<InfoServico> {
                                         )),
                                     Expanded(
                                       child: AutoSizeText(
-                                        "Entre em contato com ${cliente.data.nome.split(' ')[0]}",
+                                        "Entre em contato com ${profissional.data.nome.split(' ')[0]}",
                                         maxLines: 1,
                                       ),
                                     ),
@@ -197,7 +201,7 @@ class _InfoServicoState extends State<InfoServico> {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return Chat(cliente.data);
+                                    return Chat(profissional.data);
                                   }));
                                 },
                               ),
